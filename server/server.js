@@ -5,10 +5,10 @@ const mongoose = require('mongoose');
 const port = 5000;
 //const MongoClient = require('mongodb').MongoClient;
 
-app.use(express.json());
+app.use(express.json()); 
 
-const userRouter = require('./route/user.route');
-app.use('/user', userRouter);
+const usersRouter = require('./contoller/users');
+app.use('/user', usersRouter);
 
 const uri = "mongodb+srv://jeroee:apples123@testdb.cpfwr.mongodb.net/testDb?retryWrites=true";
 
