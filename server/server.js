@@ -2,13 +2,16 @@ const express = require('express');
 const { waitForDebugger } = require('inspector');
 const app = express();
 const mongoose = require('mongoose');
+const logger = require('morgan');
+const bodyParser = require('body-parser');
+const usersRouter = require('./controller/users');
+const loginRouter = require('./controller/login');
 const port = 5000;
 //const MongoClient = require('mongodb').MongoClient;
 
-app.use(express.json()); 
-
-const usersRouter = require('./contoller/users');
+app.use(express.json());
 app.use('/user', usersRouter);
+app.use('/login', loginRouter);
 
 const uri = "mongodb+srv://jeroee:apples123@testdb.cpfwr.mongodb.net/testDb?retryWrites=true";
 
@@ -19,5 +22,5 @@ connection.once('open', () => {
 });
 
 app.listen(port, () => {
-   console.log(`Server is running on port: ${port}`);
+    console.log(`Server is running on port: ${port}`);
 });
