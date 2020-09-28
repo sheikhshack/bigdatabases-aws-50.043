@@ -11,6 +11,7 @@ import Center from 'react-center'
 
 
 const App = () => {
+
     // Dispatchers and selectors //
     const dispatch = useDispatch()
     const user = useSelector(state => state.user)
@@ -34,7 +35,7 @@ const App = () => {
 
     return (
         <>
-            <Navigation />
+            <Navigation user={user} />
             <Switch>
                 <Route path="/users">
                     <h1>User page</h1>

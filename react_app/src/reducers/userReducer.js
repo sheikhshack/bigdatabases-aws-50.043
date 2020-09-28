@@ -9,16 +9,18 @@ const userReducer = (state = null, action) => {
         return null
     case 'INIT_USER':
         return action.data.user
+    case 'REG_USER':
+        return null
     default:
         return state
 
     }
 }
 // this are the action creators. They make accessing the store easier //
-export const login = (username, password) => {
+export const login = (email, password) => {
     return async dispatch => {
         try {
-            const user = await loginService.login({ username, password })
+            const user = await loginService.login({ email, password })
             window.localStorage.setItem('loggedInUser', JSON.stringify(user))
             // TODO: Look into adding token into the reviewService
             dispatch({
@@ -52,6 +54,19 @@ export const initUser = () => {
             })
         } catch (e) {
             console.log('Not ready')
+        }
+    }
+}
+
+export const registerUser = (registrationObject) => {
+    return async dispatch => {
+        try {
+            await loginService.register(registrationObject)
+            dispatch({
+                type:'REG_USER'
+            })
+        } catch (e){
+            console.log('Registration Failed')
         }
     }
 }
