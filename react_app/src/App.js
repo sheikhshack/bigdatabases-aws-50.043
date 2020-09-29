@@ -4,8 +4,8 @@ import {
 } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { initUser, login, logout } from './reducers/userReducer'
-import Navigation from "./components/Navigation";
-import LoginModule from "./components/LoginForm";
+import Navigation from './components/Navigation'
+import LoginModule from './components/LoginForm'
 import './styles/app.css'
 import Center from 'react-center'
 
@@ -16,7 +16,7 @@ const App = () => {
     const dispatch = useDispatch()
     const user = useSelector(state => state.user)
 
-    // Effect hooks //
+    // Effect hooks // - added init user
     useEffect(() => {
         try {
             dispatch(initUser())

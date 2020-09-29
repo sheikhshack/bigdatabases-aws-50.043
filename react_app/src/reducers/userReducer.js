@@ -1,6 +1,6 @@
 import loginService from '../services/loginService'
 
-// this is the goto reducer for User
+// this is the goto reducer for User //
 const userReducer = (state = null, action) => {
     switch (action.type){
     case 'LOGIN_USER':
@@ -17,10 +17,10 @@ const userReducer = (state = null, action) => {
     }
 }
 // this are the action creators. They make accessing the store easier //
-export const login = (email, password) => {
+export const login = (username, password) => {
     return async dispatch => {
         try {
-            const user = await loginService.login({ email, password })
+            const user = await loginService.login({ username, password })
             window.localStorage.setItem('loggedInUser', JSON.stringify(user))
             // TODO: Look into adding token into the reviewService
             dispatch({
@@ -37,6 +37,7 @@ export const logout = () => {
     return dispatch => {
         window.localStorage.removeItem('loggedInUser')
         // TODO: Look into setting token to be null in the reviewService
+        console.log('triggered')
         dispatch({
             type:'LOGOUT_USER'
         })
@@ -58,10 +59,10 @@ export const initUser = () => {
     }
 }
 
-export const registerUser = (registrationObject) => {
+export const registerUser = (name, username, email, password) => {
     return async dispatch => {
         try {
-            await loginService.register(registrationObject)
+            await loginService.register({name, username, email, password})
             dispatch({
                 type:'REG_USER'
             })

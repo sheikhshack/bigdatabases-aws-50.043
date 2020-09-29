@@ -22,11 +22,13 @@ loginRouter.post('/', async (req, res) => {
     const token = jwt.sign(userToken, process.env.ACCESS_KEY);
     // response.status(200).send({ token, username: user.username, name: user.name });
     // console.log('login successful')
-    return res.json(token)
+    res
+        .status(200)
+        .send({token, username: user.username, name: user.name, email: user.email })
 });
 
 function authenticateToken(req, res, nex) {
 
 }
 
-module.exports = loginRouter; 
+module.exports = loginRouter;

@@ -9,15 +9,17 @@ import { login, registerUser } from '../reducers/userReducer'
 const LoginForm = ({ handleRegister }) => {
     // State hooks //
     const password = useField('password')
-    const email = useField('email')
+    const username = useField('text')
+    // const email = useField('email')
+
 
     // Dispatcher //
     const dispatch = useDispatch()
 
     const handleLogin = (event) => {
         event.preventDefault()
-        dispatch(login(email, password))
-        resetAll(password, email)
+        dispatch(login(username.value, password.value))
+        resetAll(password, username)
     }
 
 
@@ -26,7 +28,7 @@ const LoginForm = ({ handleRegister }) => {
             <Form onSubmit={handleLogin}>
                 <Form.Group controlId="formBasicEmail" >
                     <Form.Label>Email address</Form.Label>
-                    <Form.Control type={email.type} placeholder="Enter email" value={email.value} onChange={email.onChange}/>
+                    <Form.Control type={username.type} placeholder="Enter email" value={username.value} onChange={username.onChange}/>
                     <Form.Text className="text-muted">
                         We'll never share your email with anyone else.
                     </Form.Text>
@@ -61,7 +63,7 @@ const RegisterForm  = () => {
     const handleRegister = (event) => {
         event.preventDefault()
         console.log('User registering with credentials', { username, name, email, password } )
-        dispatch(registerUser({ username, name, email, password }))
+        dispatch(registerUser(name, username, email, password))
 
     }
 

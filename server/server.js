@@ -1,6 +1,7 @@
 const express = require('express');
 const { waitForDebugger } = require('inspector');
 const app = express();
+const cors = require('cors');
 const mongoose = require('mongoose');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
@@ -10,6 +11,7 @@ const port = 5000;
 //const MongoClient = require('mongodb').MongoClient;
 
 app.use(express.json());
+app.use(cors())
 app.use('/user', usersRouter);
 app.use('/login', loginRouter);
 
