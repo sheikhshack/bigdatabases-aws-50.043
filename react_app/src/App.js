@@ -8,6 +8,8 @@ import Navigation from './components/Navigation'
 import LoginModule from './components/LoginForm'
 import './styles/app.css'
 import Center from 'react-center'
+import Notification from "./components/Notification";
+import {removeNotification, setNotification} from "./reducers/notificationReducer";
 
 
 const App = () => {
@@ -15,6 +17,10 @@ const App = () => {
     // Dispatchers and selectors //
     const dispatch = useDispatch()
     const user = useSelector(state => state.user)
+
+    // Hook declarations //
+    const [timer, setTimer] = useState(0) // for active notifications
+
 
     // Effect hooks // - added init user
     useEffect(() => {
@@ -33,9 +39,12 @@ const App = () => {
         dispatch(logout())
     }
 
+
+
     return (
         <>
             <Navigation user={user} />
+            <Notification />
             <Switch>
                 <Route path="/users">
                     <h1>User page</h1>
