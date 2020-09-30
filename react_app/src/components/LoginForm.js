@@ -4,6 +4,7 @@ import useField from '../hooks/hooks'
 import { removeReset, resetAll } from '../utils/resets'
 import { useDispatch } from 'react-redux'
 import { login, registerUser } from '../reducers/userReducer'
+import {setNotification} from "../reducers/notificationReducer";
 
 
 const LoginForm = ({ handleRegister }) => {
@@ -63,8 +64,8 @@ const RegisterForm  = () => {
     const handleRegister = (event) => {
         event.preventDefault()
         console.log('User registering with credentials', { username, name, email, password } )
+        setNotification(`Registration succeeded for ${username}`, 'success')
         dispatch(registerUser(name, username, email, password))
-
     }
 
     return(

@@ -1,4 +1,5 @@
 import loginService from '../services/loginService'
+import {setNotification} from "./notificationReducer";
 
 // this is the goto reducer for User //
 const userReducer = (state = null, action) => {
@@ -21,6 +22,7 @@ export const login = (username, password) => {
     return async dispatch => {
         try {
             const user = await loginService.login({ username, password })
+            dispatch(setNotification(`Welcome Back ${username}`, 'success'))
             window.localStorage.setItem('loggedInUser', JSON.stringify(user))
             // TODO: Look into adding token into the reviewService
             dispatch({
@@ -29,6 +31,7 @@ export const login = (username, password) => {
             })
         } catch (e) {
             // TODO: Insert notification stuff here
+            dispatch(setNotification(`Oops, wrong password there`, 'warning'))
         }
     }
 }
