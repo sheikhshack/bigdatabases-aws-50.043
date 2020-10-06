@@ -18,7 +18,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.6.2",
     "mongoose": "^5.10.7",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "sequelize": "^6.3.5"
   },
   "devDependencies": {
     "eslint": "^4.12.1",
