@@ -1,7 +1,15 @@
 const reviewsRouter = require('express').Router();
-const bodyParser = require('body-parser');
-reviewsRouter.use(bodyParser.json())
-const port = 3000
+
+
+reviewsRouter.get('/', async (req, res) => {
+// TODO: figure out how to use query params to get the necessary filters
+// TODO: Parse the filters into the sql query statement
+// TODO: Decide what is the limit that we will send to frontend each time
+// TODO: How to keep track of the reviews that we have sent and the ones to send
+    // Something like first 10, then the next time the same user requests, we need to send the next 10
+    res.send('Receiving on reviews URI')
+    console.log('Check 12 12 12')
+})
 
 // RETRIEVE SPECIFIC REVIEW
 reviewsRouter.get('/review/:reviewID', (req, res) => {
@@ -51,6 +59,5 @@ reviewsRouter.get('/review', (req, res) => {
     res.send('Hello World!')
   })
 
-reviewsRouter.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
+  
+module.exports = reviewsRouter;
