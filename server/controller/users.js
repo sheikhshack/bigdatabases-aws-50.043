@@ -5,7 +5,7 @@ const { response, json } = require('express')
 const User = require('../model/user');    //User is the Collection
 
 // get all the users
-usersRouter.get('/viewAll', async (req, res) => {
+usersRouter.get('/all', async (req, res) => {
     const getAll = await User.find()
     return res.json(getAll)
 })
