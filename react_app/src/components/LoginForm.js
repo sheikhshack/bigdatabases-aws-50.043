@@ -1,14 +1,35 @@
 import React, { useState } from 'react'
 import { Form, Button, Col } from 'react-bootstrap'
+import useField from '../hooks/hooks'
+import { removeReset, resetAll } from '../utils/resets'
+import { useDispatch } from 'react-redux'
+import { login, registerUser } from '../reducers/userReducer'
+import {setNotification} from "../reducers/notificationReducer";
 
 
-const LoginForm = ({ handleRegister, handleLogin }) => {
+const LoginForm = ({ handleRegister }) => {
+    // State hooks //
+    const password = useField('password')
+    const username = useField('text')
+    // const email = useField('email')
+
+
+    // Dispatcher //
+    const dispatch = useDispatch()
+
+    const handleLogin = (event) => {
+        event.preventDefault()
+        dispatch(login(username.value, password.value))
+        resetAll(password, username)
+    }
+
+
     return(
         <>
-            <Form>
-                <Form.Group controlId="formBasicEmail">
+            <Form onSubmit={handleLogin}>
+                <Form.Group controlId="formBasicEmail" >
                     <Form.Label>Email address</Form.Label>
-                    <Form.Control type="email" placeholder="Enter email"/>
+                    <Form.Control type={username.type} placeholder="Enter email" value={username.value} onChange={username.onChange}/>
                     <Form.Text className="text-muted">
                         We'll never share your email with anyone else.
                     </Form.Text>
@@ -16,9 +37,9 @@ const LoginForm = ({ handleRegister, handleLogin }) => {
 
                 <Form.Group controlId="formBasicPassword">
                     <Form.Label>Password</Form.Label>
-                    <Form.Control type="password" placeholder="Password"/>
+                    <Form.Control type={password.type} placeholder="Password" value={password.value} onChange={password.onChange}/>
                 </Form.Group>
-                <Button variant="primary" type="submit" onClick={handleLogin}>
+                <Button variant="primary" type="submit">
                     Login
                 </Button>
                 <Button variant="outline-primary" onClick={handleRegister}>
@@ -31,28 +52,43 @@ const LoginForm = ({ handleRegister, handleLogin }) => {
 }
 
 const RegisterForm  = () => {
+    // State hooks //
+    const name  = useField('text')
+    const email = useField('email')
+    const password = useField('password')
+    const username = useField('text')
+
+    const dispatch = useDispatch()
+
+
+    const handleRegister = (event) => {
+        event.preventDefault()
+        console.log('User registering with credentials', { username, name, email, password } )
+        setNotification(`Registration succeeded for ${username}`, 'success')
+        dispatch(registerUser(name, username, email, password))
+    }
 
     return(
         <>
-            <Form>
+            <Form onSubmit={handleRegister}>
                 <Form.Row>
                     <Form.Group as={Col} controlId="formGridFN">
-                        <Form.Label>First Name</Form.Label>
-                        <Form.Control placeholder="Adam" />
+                        <Form.Label>Name</Form.Label>
+                        <Form.Control {...removeReset(name)} placeholder='Adam' />
                     </Form.Group>
 
                     <Form.Group as={Col} controlId="formGridLN">
-                        <Form.Label>Last Name</Form.Label>
-                        <Form.Control placeholder="Smith" />
+                        <Form.Label>Username</Form.Label>
+                        <Form.Control placeholder="ironwalrus97" {...removeReset(username)}/>
                     </Form.Group>
                 </Form.Row>
                 <Form.Group controlId="formGroupEmail">
                     <Form.Label>Email address</Form.Label>
-                    <Form.Control type="email" placeholder="Enter email" />
+                    <Form.Control placeholder="Enter email" {...removeReset(email)} />
                 </Form.Group>
                 <Form.Group controlId="formGroupPassword">
                     <Form.Label>Password</Form.Label>
-                    <Form.Control type="password" placeholder="Password" />
+                    <Form.Control  placeholder="Password" {...removeReset(password)} />
                 </Form.Group>
                 <Button variant="primary" type="submit">
                     Register
@@ -74,11 +110,12 @@ const LoginModule = () => {
         console.log('Register Mode')
     }
 
+
     if (!registerMode) {
         return (
             <div>
                 <h2>Login</h2>
-                <LoginForm handleRegister={handleRegister} />
+                <LoginForm handleRegister={handleRegister}  />
             </div>)
     }
     else {

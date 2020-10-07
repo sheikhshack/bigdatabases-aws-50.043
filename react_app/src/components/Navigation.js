@@ -1,8 +1,18 @@
 import React from 'react'
 import { Navbar, Nav, NavDropdown, Form, FormControl, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { logout } from '../reducers/userReducer'
 
-const Navigation = () => {
+const Navigation = ({ user }) => {
+
+    const dispatch = useDispatch()
+
+    const logoutFromNav = () => {
+        console.log('Logging out')
+        dispatch(logout())
+    }
+
 
     return (
         <>
@@ -20,6 +30,12 @@ const Navigation = () => {
                         <FormControl type="text" placeholder="Search" className="mr-sm-2" />
                         <Button variant="outline-success">Search</Button>
                     </Form>
+                    <div className="pull-right btn-toolbar" style={{ margin:10 }}>
+                        {/*TODO: This part here is a quicky way for me to check user state lol*/}
+                        {user === null?
+                            <Button>LOGIN</Button>:
+                            <Button onClick={logoutFromNav}>Hi {user.name}</Button> }
+                    </div>
                 </Navbar.Collapse>
             </Navbar>
         </>

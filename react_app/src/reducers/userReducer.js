@@ -1,6 +1,7 @@
 import loginService from '../services/loginService'
+import {setNotification} from "./notificationReducer";
 
-// this is the goto reducer for User
+// this is the goto reducer for User //
 const userReducer = (state = null, action) => {
     switch (action.type){
     case 'LOGIN_USER':
@@ -9,6 +10,8 @@ const userReducer = (state = null, action) => {
         return null
     case 'INIT_USER':
         return action.data.user
+    case 'REG_USER':
+        return null
     default:
         return state
 
@@ -19,6 +22,7 @@ export const login = (username, password) => {
     return async dispatch => {
         try {
             const user = await loginService.login({ username, password })
+            dispatch(setNotification(`Welcome Back ${username}`, 'success'))
             window.localStorage.setItem('loggedInUser', JSON.stringify(user))
             // TODO: Look into adding token into the reviewService
             dispatch({
@@ -27,6 +31,7 @@ export const login = (username, password) => {
             })
         } catch (e) {
             // TODO: Insert notification stuff here
+            dispatch(setNotification(`Oops, wrong password there`, 'warning'))
         }
     }
 }
@@ -35,6 +40,7 @@ export const logout = () => {
     return dispatch => {
         window.localStorage.removeItem('loggedInUser')
         // TODO: Look into setting token to be null in the reviewService
+        console.log('triggered')
         dispatch({
             type:'LOGOUT_USER'
         })
@@ -52,6 +58,19 @@ export const initUser = () => {
             })
         } catch (e) {
             console.log('Not ready')
+        }
+    }
+}
+
+export const registerUser = (name, username, email, password) => {
+    return async dispatch => {
+        try {
+            await loginService.register({name, username, email, password})
+            dispatch({
+                type:'REG_USER'
+            })
+        } catch (e){
+            console.log('Registration Failed')
         }
     }
 }
