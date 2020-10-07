@@ -27,12 +27,12 @@ connection.once('open', () => {
     console.log("MongoDB database connection established successfully");
 });
 
-const sequelize = new Sequelize('kindle_Review_Data', 'root', null, {
-    host: '54.91.52.173',
+const sequelize = new Sequelize('kindleReview', 'root', null, {
+    host: '54.145.207.233',
     dialect: 'mysql'
   });
 
-app.listen(port, () => {
+app.listen(port, async () => {
     console.log(`Server is running on port: ${port}`);
     try {
         await sequelize.authenticate();
