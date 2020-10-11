@@ -41,7 +41,7 @@ module.exports = sequelize.define("book", {
     reviewerName: {
         type: Sequelize.STRING(20),
         allowNull: false
-    }
+    },
     summary: {
         type: Sequelize.STRING(20),
         allowNull: false
