@@ -5,7 +5,7 @@ const User = require('../model/user');    //User is the Collection
 // get all the users
 usersRouter.get('/all', async (req, res) => {
     const getAll = await User.find()
-    return res.json(getAll)
+    res.json(getAll)
 })
 
 //adding new users to the collection with password of created users hashed in the db
@@ -19,29 +19,29 @@ usersRouter.post('/register', async (req, res) => {
     //Admin status
     const newUser = User({ name, username, email, passwordHash, isAdmin: false });
     const addedUser = await newUser.save()
-    return res.json(addedUser)
+    res.json(addedUser)
 });
 //locate individual user by username
 usersRouter.get('/searchByUsername=:username', async (req, res) => {
     const searchByUsername = await User.findOne({ "username": req.params.username })
-    return res.json(searchByUsername)
+    res.json(searchByUsername)
 });
 //locate individual user by email
 usersRouter.get('/searchByEmail=:email', async (req, res) => {
     const searchByEmail = await User.findOne({ "email": req.params.email })
-    return res.json(searchByEmail)
+    res.json(searchByEmail)
 });
 
 //delete individual user by id
 usersRouter.delete('/deleteById=:id', async (req, res) => {
     const deleteById = await User.findByIdAndDelete(req.params.id)
-    return res.json(deleteById)
+    res.json(deleteById)
 });
 
 //delete all non-admin users
 usersRouter.delete('/deleteNonAdmins', async (req, res) => {
     const deleteNonAdmins = await User.deleteMany({ isAdmin: false });
-    return res.json(deleteNonAdmins)
+    res.json(deleteNonAdmins)
 });
 
 module.exports = usersRouter;

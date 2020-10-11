@@ -11,7 +11,7 @@ loginRouter.post('/', async (req, res) => {
         ? false
         : await bcrypt.compare(password, user.passwordHash);
     if (!(user && passwordCheck)) {
-        return res.status(401).json({ error: "Invalid username or password" });
+        res.status(401).json({ error: "Invalid username or password" });
     }
 
     const userToken = {
