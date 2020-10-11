@@ -56,18 +56,17 @@ reviewsRouter.get('/:reviewID', (req, res) => {
 
 // RETRIEVE REVIEWS BASED ON BOOKID
 reviewsRouter.post('/:bookID', (req, res) => {
-    // TODO: Conduct SELECT sql query to retrieve all reviews for specific
-    // TODO: Decide what is the limit that we will send to frontend each time
-    // TODO: How to keep track of the reviews that we have sent and the ones to send
-        // Something like first 10, then the next time the same user requests, we need to send the next 10
-    
-    console.log(req.body)
+  // Frontend is to let us know which reviews we are to send. This populates the start and amount fields in the reqeuest body
+  
+  // console.log(req.body)
+  try{
     // Check if the offset values make sense
-    try{
-      checkOffsets(req.body.start, req.body.amount)
-
-      var sqlQuery = 'SELECT * FROM kindle_Review_Data WHERE asin = "'+req.params.bookID+'" LIMIT '+req.body.start+','+req.body.amount
-
+    checkOffsets(req.body.start, req.body.amount)
+    
+    // Raw query constructed for sequelize query
+    var sqlQuery = 'SELECT * FROM kindle_Review_Data WHERE asin = "'+req.params.bookID+'" LIMIT '+req.body.start+','+req.body.amount
+    
+    //  Conduct SELECT sql query to retrieve all reviews for specific
       const allBookReviews = sequelize.query(sqlQuery)
       .then((result) => {
         console.log(result)
@@ -99,10 +98,6 @@ reviewsRouter.post('/:bookID', (req, res) => {
       console.log(err)
       res.send(badRequestMsgGen(err))
     }
-
-    // checkOffsets(req.body)
-    // res.send(req.body)
-    // res.send('Hello World!')
   })
 
 // ADD A NEW REVIEW
