@@ -2,8 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const loginRouter = require('express').Router();
 const User = require('../model/user');
-require('dotenv').config()
-
+const config = require('../utils/config')
 loginRouter.post('/', async (req, res) => {
     const { username, password } = req.body;
     const user = await User.findOne({ "username": username });
@@ -18,7 +17,7 @@ loginRouter.post('/', async (req, res) => {
         username: user.username,
         id: user._id
     };
-    const token = jwt.sign(userToken, process.env.ACCESS_KEY);
+    const token = jwt.sign(userToken, config.ACCESS_KEY);
 
     res
         .status(200)
