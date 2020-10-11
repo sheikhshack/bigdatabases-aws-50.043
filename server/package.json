@@ -20,7 +20,8 @@
     "mongoose": "^5.10.7",
     "morgan": "^1.10.0",
     "mysql2": "^2.2.5",
-    "sequelize": "^6.3.5"
+    "sequelize": "^6.3.5",
+    "sequelize-cli": "^6.2.0"
   },
   "devDependencies": {
     "eslint": "^4.12.1",

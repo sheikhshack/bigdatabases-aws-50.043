@@ -10,6 +10,7 @@ const loginRouter = require('./controller/login');
 const reviewsRouter = require('./controller/reviews');
 const port = 5000;
 const { Sequelize } = require('sequelize');
+const sequelize = require('./sql-connection');
 //const MongoClient = require('mongodb').MongoClient;
 
 
@@ -27,16 +28,16 @@ connection.once('open', () => {
     console.log("MongoDB database connection established successfully");
 });
 
-const sequelize = new Sequelize('kindleReview', 'root', null, {
-    host: '54.145.207.233',
-    dialect: 'mysql'
-  });
+// const sequelize = new Sequelize('kindleReview', 'root', null, {
+//     host: '54.145.207.233',
+//     dialect: 'mysql'
+//   });
 
 app.listen(port, async () => {
     console.log(`Server is running on port: ${port}`);
     try {
         await sequelize.authenticate();
-        console.log('Connection has been established successfully.');
+        console.log('SQL connection has been established successfully.');
       } catch (error) {
         console.error('Unable to connect to the database:', error);
       }

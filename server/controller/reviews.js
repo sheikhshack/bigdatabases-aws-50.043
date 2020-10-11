@@ -1,5 +1,5 @@
 const reviewsRouter = require('express').Router();
-
+const Review = require('../model/review');
 
 reviewsRouter.get('/', async (req, res) => {
 // TODO: figure out how to use query params to get the necessary filters
@@ -7,8 +7,20 @@ reviewsRouter.get('/', async (req, res) => {
 // TODO: Decide what is the limit that we will send to frontend each time
 // TODO: How to keep track of the reviews that we have sent and the ones to send
     // Something like first 10, then the next time the same user requests, we need to send the next 10
-    res.send('Receiving on reviews URI')
-    console.log('Check 12 12 12')
+    const oneReview = Review.findOne({
+      where:{
+        asin: "B000FA64PA"
+      }
+    });
+    oneReview.then(function(result){
+      console.log(result)
+      res.send(result)
+    }).catch(function(result){
+      console.log('shit hit the fan')
+    })
+    // console.log(json(oneReview))
+    // console.log('Check 12 12 12')
+    // return res.json(oneReview)
 })
 
 // RETRIEVE SPECIFIC REVIEW
