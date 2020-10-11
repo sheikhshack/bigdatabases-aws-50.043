@@ -1,5 +1,6 @@
 const bookRouter = require('express').Router();
 const Meta = require('../model/book');
+const utils = require('../utils/util')
 
 //getting only title, imageURL, price
 bookRouter.get('/all', async (req, res) => {
@@ -32,7 +33,7 @@ bookRouter.get('/selectTitle=:title', async (req, res) => {
 //add book with title, author, price (will add more later)
 bookRouter.post('/add', async (req, res) => {
     const { title, author, price } = req.body;
-    const asin = "ADD".concat(stringGenerator(7));
+    const asin = "ADD".concat(utils.asinStringGenerator(7));
     console.log(asin)
     const newBook = Meta({ title, author, asin, price });
     const addedBook = await newBook.save({ title, author, asin, price })
@@ -50,13 +51,6 @@ bookRouter.get('/count', async (req, res) => {
     return res.json(metadata)
 })
 
-function stringGenerator(length) {
-    var result = '';
-    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-    for (i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    return result;
-}
+
 
 module.exports = bookRouter;

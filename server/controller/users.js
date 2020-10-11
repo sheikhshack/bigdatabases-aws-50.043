@@ -1,7 +1,5 @@
 const usersRouter = require('express').Router();
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const { response, json } = require('express')
 const User = require('../model/user');    //User is the Collection
 
 // get all the users
@@ -11,16 +9,15 @@ usersRouter.get('/all', async (req, res) => {
 })
 
 //adding new users to the collection with password of created users hashed in the db
-usersRouter.post('/signUp', async (req, res) => {
+usersRouter.post('/register', async (req, res) => {
     const { name, username, email, password } = req.body;
     if (!password || password.length < 10 || password.match(/^[A-Za-z]+$/) || password.match(/^[0-9]+$/)) {
         return res.status(400).json({ error: "Please key in an alphanumeric password of minimum 10 characters" });
     }
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(password, saltRounds);
-    //Admin status 
-    var isAdmin = false;
-    const newUser = User({ name, username, email, passwordHash, isAdmin });
+    //Admin status
+    const newUser = User({ name, username, email, passwordHash, isAdmin: false });
     const addedUser = await newUser.save()
     return res.json(addedUser)
 });

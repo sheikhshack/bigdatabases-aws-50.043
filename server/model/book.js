@@ -1,32 +1,17 @@
 // metadata.js
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
 
 //Define Schema for book Collection
-const bookSchema = new Schema({
-    title: {
-        type: String,
-        default: "no title yet"
-    },
-    author: {
-        type: String,
-        default: "no author yet"
-    },
-    asin: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    description: {
-        type: String,
-    },
-    price: {
-        type: Number,
-        default: null
-    },
-    imUrl: {
-        type: String,
-    },
+const bookSchema = mongoose.Schema ({
+    title: { type: String, default: "no title yet" },
+    author: { type: String, default: "no author yet" },
+    asin: { type: String, required: true, unique: true },
+    description: String,
+    price: { type: Number,  default: null },
+    imUrl: { type: String },
     related: {
         also_bought: {
             type: [String],
@@ -38,9 +23,7 @@ const bookSchema = new Schema({
             type: [String],
         }
     },
-    categories: {
-        type: Array
-    },
+    categories: { type: Array },
 
 },
     {
