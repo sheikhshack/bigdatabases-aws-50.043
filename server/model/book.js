@@ -6,6 +6,11 @@ const Schema = mongoose.Schema;
 const bookSchema = new Schema({
     title: {
         type: String,
+        default: "no title yet"
+    },
+    author: {
+        type: String,
+        default: "no author yet"
     },
     asin: {
         type: String,
@@ -17,6 +22,7 @@ const bookSchema = new Schema({
     },
     price: {
         type: Number,
+        default: null
     },
     imUrl: {
         type: String,
