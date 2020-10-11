@@ -1,10 +1,23 @@
 
 const Sequelize = require("sequelize");
-sequelize.define('User', {
-    // ... (attributes)
-  }, {
-    freezeTableName: true
-  });
+
+//
+const db = require('../model');
+db.sequelize.sync()
+  .then(()=>{
+    server.listen(port);
+  })
+  .catch(e=>console.log(e));
+
+server.on('error', onerror);
+server.on('listening' , onlistening);
+
+
+// sequelize.define('User', {
+//     // ... (attributes)
+//   }, {
+//     freezeTableName: true
+//   });
 
 module.exports = sequelize.define("reviewerID", {
   id: {
@@ -33,6 +46,10 @@ module.exports = sequelize.define("book", {
         type: Sequelize.INTEGER(35),
         allowNull: false,
     },
+    summary: {
+      type: Sequelize.STRING(20),
+      allowNull: false
+    },
     reviewTime: {
         type: Sequelize.STRING(35),
         allowNull: false,
@@ -42,11 +59,5 @@ module.exports = sequelize.define("book", {
         type: Sequelize.STRING(20),
         allowNull: false
     }
-    summary: {
-        type: Sequelize.STRING(20),
-        allowNull: false
-    }
   });
 
-await sequelize.sync({ force: true });
-console.log("All models were synchronized successfully.");
