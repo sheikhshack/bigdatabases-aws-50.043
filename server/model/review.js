@@ -55,7 +55,7 @@ module.exports = sequelize.define("Reviews", {
   },
   summary: {
       type: Sequelize.STRING(20),
-      allowNull: false
+      allowNull: true
   },
   unixReviewTime: {
     type: Sequelize.BIGINT(11),
