@@ -1,5 +1,13 @@
 const reviewsRouter = require('express').Router();
 const Review = require('../model/review');
+const sequelize = require('../sql-connection')
+
+const serverErrorReponse = {
+  statusCode: 400,
+  body: JSON.stringify({
+    message: 'Server not responding',
+  }),
+};
 
 reviewsRouter.get('/', async (req, res) => {
 // TODO: figure out how to use query params to get the necessary filters
@@ -11,31 +19,90 @@ reviewsRouter.get('/', async (req, res) => {
       where:{
         asin: "B000FA64PA"
       }
-    });
-    oneReview.then(function(result){
+    }).then((result) => {
       console.log(result)
       res.send(result)
-    }).catch(function(result){
+    }).catch((error) => {
       console.log('shit hit the fan')
-    })
-    // console.log(json(oneReview))
-    // console.log('Check 12 12 12')
-    // return res.json(oneReview)
+      res.send(error)
+    });
+
 })
 
 // RETRIEVE SPECIFIC REVIEW
-reviewsRouter.get('/review/:reviewID', (req, res) => {
-    // TODO: Conduct SELECT sql query to retrieve the review based on reviewID
-  res.send('Hello World!')
+reviewsRouter.get('/:reviewID', (req, res) => {
+  
+  // Ensure that the reviewID is an int
+  if(parseInt(req.param.reviewID)!= NaN){
+    
+    // Conduct SELECT sql query to retrieve the review based on reviewID
+      const oneReview = Review.findOne({
+        where:{
+          id: req.params.reviewID
+        }
+      }).then((result) => {
+        console.log(result)
+        res.send(result)
+      }).catch((error) => {
+        console.log('shit hit the fan')
+        res.send(badQueryMsgGen(error))
+      });
+    }
+  else{
+    res.send(badRequestMsgGen('reviewID must be integer'))
+  }
+
 })
 
 // RETRIEVE REVIEWS BASED ON BOOKID
-reviewsRouter.get('/review/:bookID', (req, res) => {
+reviewsRouter.post('/:bookID', (req, res) => {
     // TODO: Conduct SELECT sql query to retrieve all reviews for specific
     // TODO: Decide what is the limit that we will send to frontend each time
     // TODO: How to keep track of the reviews that we have sent and the ones to send
         // Something like first 10, then the next time the same user requests, we need to send the next 10
-    res.send('Hello World!')
+    
+    console.log(req.body)
+    // Check if the offset values make sense
+    try{
+      checkOffsets(req.body.start, req.body.amount)
+
+      var sqlQuery = 'SELECT * FROM kindle_Review_Data WHERE asin = "'+req.params.bookID+'" LIMIT '+req.body.start+','+req.body.amount
+
+      const allBookReviews = sequelize.query(sqlQuery)
+      .then((result) => {
+        console.log(result)
+        res.send(result)
+      }).catch((error) => {
+        console.log('shit hit the fan')
+        console.log(error)
+        res.send(badQueryMsgGen(error.message))
+      })
+
+      // const allBookReviews = Review.findAll({
+      //   subQuery: false,
+      //   where:{
+      //     asin: req.params.bookID
+      //   },
+      //   offset:req.body.start,
+      //   limit: req.body.amount,
+      // }).then((result) => {
+      //   console.log(result)
+      //   res.send(result)
+      // }).catch((error) => {
+      //   console.log('shit hit the fan')
+      //   console.log(error)
+      //   res.send(badQueryMsgGen(error.message))
+      // });
+    }
+    catch(err){
+      console.log('Some error')
+      console.log(err)
+      res.send(badRequestMsgGen(err))
+    }
+
+    // checkOffsets(req.body)
+    // res.send(req.body)
+    // res.send('Hello World!')
   })
 
 // ADD A NEW REVIEW
@@ -71,5 +138,41 @@ reviewsRouter.get('/review', (req, res) => {
     res.send('Hello World!')
   })
 
-  
+  function badQueryMsgGen(message){
+    return badRequestErrorReponse = {
+      statusCode: 500,
+      body: JSON.stringify({
+        message: message,
+      }),
+    };
+  }
+
+  function badRequestMsgGen(message){
+    return badRequestErrorReponse = {
+      statusCode: 404,
+      headers: {
+        'Access-Control-Allow-Origin': '*', // Required for Cors support to work
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+      body: JSON.stringify({
+        message: message,
+      }),
+    };
+  }
+
+  function checkOffsets(start,amount){
+    try{
+      var numStart = parseInt(start)
+      var numAmount = parseInt(amount)
+      if(numAmount==NaN || numStart==NaN){
+        throw 'Offset limits parsed are not numbers'
+      }
+      else if (numStart<0){
+        throw 'Start parameter invalid. Query Limit error'
+      }
+    }
+    catch (err){
+      throw err
+    }
+  }
 module.exports = reviewsRouter;

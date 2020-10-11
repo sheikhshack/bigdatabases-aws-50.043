@@ -15,6 +15,7 @@ const sequelize = require('./sql-connection');
 
 
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors())
 app.use('/user', usersRouter);
 app.use('/login', loginRouter);
