@@ -125,10 +125,11 @@ reviewsRouter.post('/addReview', (req, res) => {
       console.log(error)
       res.send(badQueryMsgGen(error.message))
     })
-    // res.send('Hello World!')
+
   })
 
 // DELETE REIVEW BASED ON REIVEWID
+//curl -X DELETE http://localhost:5000/review/deleteReview/982621
 reviewsRouter.delete('/deleteReview/:reviewID', (req, res) => {
     // Delete review based on reviewID in the URL parameters
     console.log("Delete review")
@@ -145,15 +146,31 @@ reviewsRouter.delete('/deleteReview/:reviewID', (req, res) => {
       console.log(error)
       res.send(badQueryMsgGen(error.message))
     })
-    // res.send('Hello World!')
+
   })
 
 // UPDATE A SPECIFIC REVIEW
-reviewsRouter.put('/review/:reviewID', (req, res) => {
-    // TODO: Check to make sure all necessary information is available
-    // TODO: Check to ensure data types are enforced
-    // TODO: Conduct the necessary sql query to update the review based on reviewID given 
-    res.send('Hello World!')
+//curl -d "overall=5&reviewText=OkayLaIChangethetext" -X POST http://localhost:5000/review/updateReview/982623
+reviewsRouter.post('/updateReview/:reviewID', (req, res) => {
+
+    console.log("Update review")
+    const deleteReview = Review.update({
+      overall: req.body.overall,
+      reviewText: req.body.reviewText,
+    },{
+      where:{
+        id: req.params.reviewID
+      }
+    }).then((result) => {
+      console.log(result)
+      // console.log(result)
+      res.send('Update successsful')
+    }).catch((error) => {
+      console.log('shit hit the fan')
+      console.log(error)
+      res.send(badQueryMsgGen(error.message))
+    })
+
   })
 
 // RETRIEVE REVIEWS BASED ON PROVIDED FILTERS
