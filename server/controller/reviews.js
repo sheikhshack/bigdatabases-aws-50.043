@@ -101,6 +101,7 @@ reviewsRouter.post('/filterBook/:bookID', (req, res) => {
   })
 
 // curl -d "asin=B0324714&helpful=[0,0]&overall=3&reviewText=NotThatBadIGuess&reviewTime=201012&reviewerID=J05EJ011N50N&unixReviewTime=1234567890&reviewerName=JoseJohnson" -X POST http://localhost:5000/review/addReview
+// id = 982620
 // ADD A NEW REVIEW
 reviewsRouter.post('/addReview', (req, res) => {
     // Generate UID for new review. 
@@ -124,13 +125,27 @@ reviewsRouter.post('/addReview', (req, res) => {
       console.log(error)
       res.send(badQueryMsgGen(error.message))
     })
-    res.send('Hello World!')
+    // res.send('Hello World!')
   })
 
 // DELETE REIVEW BASED ON REIVEWID
-reviewsRouter.delete('/review/:reviewID', (req, res) => {
-    // TODO: Use the necessary sql query to delete review based on reviewID given
-    res.send('Hello World!')
+reviewsRouter.delete('/deleteReview/:reviewID', (req, res) => {
+    // Delete review based on reviewID in the URL parameters
+    console.log("Delete review")
+    const deleteReview = Review.destroy({
+      where:{
+        id: req.params.reviewID
+      }
+    }).then((result) => {
+      console.log(result)
+      // console.log(result)
+      res.send('Delete successsful')
+    }).catch((error) => {
+      console.log('shit hit the fan')
+      console.log(error)
+      res.send(badQueryMsgGen(error.message))
+    })
+    // res.send('Hello World!')
   })
 
 // UPDATE A SPECIFIC REVIEW
