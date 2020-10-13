@@ -65,12 +65,12 @@ reviewsRouter.post('/filterBook/:bookID', (req, res) => {
     
     // Raw query constructed for sequelize query
     var sqlQuery = 'SELECT * FROM kindle_Review_Data WHERE asin = "'+req.params.bookID+'" LIMIT '+req.body.start+','+req.body.amount
-    
+    console.log(req.body)
     //  Conduct SELECT sql query to retrieve all reviews for specific
       const allBookReviews = sequelize.query(sqlQuery)
       .then((result) => {
-        console.log(result)
-        res.send(result)
+        console.log(result[0])
+        res.send(result[0])
       }).catch((error) => {
         console.log('shit hit the fan')
         console.log(error)
