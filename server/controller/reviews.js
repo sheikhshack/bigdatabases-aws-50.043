@@ -110,13 +110,12 @@ reviewsRouter.post('/addReview', (req, res) => {
     // Conduct the INSERT sql query to add review to database
     const addReview = Review.create({
       asin: req.body.asin,
-      helpful: req.body.helpful,
+      //helpful: req.body.helpful,
       overall: req.body.overall,
       reviewText: req.body.reviewText,
       reviewTime: req.body.reviewTime,
       reviewerID: req.body.reviewerID,
       reviewerName: req.body.reviewerName,
-      summary: req.body.summary,
       unixReviewTime: req.body.unixReviewTime
     }).then((result) => {
       console.log(result)

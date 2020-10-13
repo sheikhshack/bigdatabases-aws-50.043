@@ -31,18 +31,17 @@ module.exports = sequelize.define("Reviews", {
     allowNull: false,
     unique: true
   },
-  asin: {
+  helpful: {
     type: Sequelize.STRING(35),
+    allowNull: true,
+  },
+  overall: {
+    type: Sequelize.INTEGER(35),
     allowNull: false,
-    unique: true
   },
   reviewText: {
     type: Sequelize.STRING(255),
     allowNull: false
-  },
-  overall: {
-      type: Sequelize.INTEGER(35),
-      allowNull: false,
   },
   reviewTime: {
       type: Sequelize.STRING(35),
