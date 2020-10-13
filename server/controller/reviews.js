@@ -116,6 +116,7 @@ reviewsRouter.post('/addReview', (req, res) => {
       reviewTime: req.body.reviewTime,
       reviewerID: req.body.reviewerID,
       reviewerName: req.body.reviewerName,
+      summary: req.body.summary,
       unixReviewTime: req.body.unixReviewTime
     }).then((result) => {
       console.log(result)

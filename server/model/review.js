@@ -49,6 +49,10 @@ module.exports = sequelize.define("Reviews", {
       allowNull: false,
       unique: true
   },  
+  reviewerID: {
+      type: Sequelize.STRING(35),
+      allowNull: false
+  },
   reviewerName: {
       type: Sequelize.STRING(20),
       allowNull: false
