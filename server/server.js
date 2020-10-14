@@ -1,6 +1,11 @@
 const config = require('./utils/config')
 const express = require('express')
 require('express-async-errors')
+const bodyParser = require('body-parser');
+const reviewsRouter = require('./controller/reviews');
+const sequelize = require('./sql-connection');
+const { Sequelize } = require('sequelize');
+const { waitForDebugger } = require('inspector');
 
 // const { waitForDebugger } = require('inspector');
 const cors = require('cors')
@@ -28,10 +33,12 @@ mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useCreateIndex: tr
     });
 
 ///// The following are core dependencies for making server work /////
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors())
 app.use(express.json())
 app.use(middleware.requestLogger)
 app.use(middleware.tokenExtractor)
+app.use('/review', reviewsRouter);
 
 
 //// The following are routes, place new ones here /////
@@ -46,3 +53,17 @@ app.use(middleware.errorHandler);
 
 
 module.exports = app
+// const sequelize = new Sequelize('kindleReview', 'root', null, {
+//     host: '54.145.207.233',
+//     dialect: 'mysql'
+//   });
+
+app.listen(port, async () => {
+    console.log(`Server is running on port: ${port}`);
+    try {
+        await sequelize.authenticate();
+        console.log('SQL connection has been established successfully.');
+      } catch (error) {
+        console.error('Unable to connect to the database:', error);
+      }
+});
