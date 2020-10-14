@@ -1,7 +1,7 @@
 
 const Sequelize = require("sequelize");
 // TODO: Import the sequelize connection and use it to create the model
-const sequelize = require('../sql-connection');
+const sequelize = require('../utils/config').sequelize
 
 // sequelize.define('User', {
 //     // ... (attributes)
@@ -47,7 +47,7 @@ module.exports = sequelize.define("Reviews", {
       type: Sequelize.STRING(35),
       allowNull: false,
       unique: true
-  },  
+  },
   reviewerID: {
       type: Sequelize.STRING(35),
       allowNull: false
