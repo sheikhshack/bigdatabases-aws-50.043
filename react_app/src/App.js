@@ -9,7 +9,7 @@ import LoginModule from './components/LoginForm'
 import './styles/app.css'
 import Center from 'react-center'
 import Notification from "./components/Notification";
-import {removeNotification, setNotification} from "./reducers/notificationReducer";
+import { removeNotification, setNotification } from "./reducers/notificationReducer";
 
 
 const App = () => {
@@ -27,13 +27,13 @@ const App = () => {
         try {
             dispatch(initUser())
         }
-        catch (e){
+        catch (e) {
             console.error(e)
         }
     }, [dispatch])
 
-    const handleLogin =  (username, password) => {
-        dispatch(login(username, password))
+    const handleLogin = (email, password) => {
+        dispatch(login(email, password))
     }
     const handleLogout = async () => {
         dispatch(logout())
