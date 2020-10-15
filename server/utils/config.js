@@ -2,6 +2,7 @@ require('dotenv').config()
 const { Sequelize } = require('sequelize')
 
 let MONGODB_URI = process.env.MONGODB_URI
+let MONGODB_URI_LOG = process.env.MONGODB_URI_LOG
 let ACCESS_KEY = process.env.ACCESS_KEY
 
 const sequelize = new Sequelize('kindleReview', 'user', 'password', {
@@ -11,6 +12,7 @@ const sequelize = new Sequelize('kindleReview', 'user', 'password', {
 
 module.exports = {
     MONGODB_URI,
+    MONGODB_URI_LOG,
     ACCESS_KEY,
     sequelize
 };

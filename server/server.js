@@ -13,6 +13,8 @@ const usersRouter = require('./controller/users')
 const loginRouter = require('./controller/login')
 const bookRouter = require('./controller/books')
 const logger = require('./utils/logger')
+const {databaseLogger, healthLogger} = require('./utils/winston')
+
 
 const app = express()
 mongoose.set('useCreateIndex', true)
@@ -23,18 +25,43 @@ logger.info('Connecting to', config.MONGODB_URI)
 mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true  })
     .then(() => {
         logger.info('MongoDB database connection established successfully')
+        healthLogger.info('Successful pairing with MongoDB', {metadata: {
+            category: 'Mongo',
+            address: config.MONGODB_URI,
+            online: true
+            }})
+
     })
     .catch((err) => {
         logger.error('Problems establishing connection to MongoDB: ', err.message )
+        healthLogger.error('Failed pairing with MongoDB', {metadata: {
+                category: 'Mongo',
+                address: config.MONGODB_URI,
+                online: false,
+                error: err.message
+            }})
+
     });
+
+
+
 
 // Sequelize Related Connections //
 config.sequelize.authenticate()
     .then(() => {
         logger.info('MySQL server authenticated and connected successfully')
+        healthLogger.info('Successful pairing with MongoDB', {metadata: {
+                category: 'SQL',
+                online: true
+            }})
     })
     .catch((err) => {
         logger.error('Problems establishing connection to SQL Server: ', err.message )
+        healthLogger.error('Failed pairing with SQL Server', {metadata: {
+                category: 'SQL',
+                online: false,
+                error: err.message
+            }})
     })
 
 ///// The following are core dependencies for making server work /////
@@ -43,6 +70,7 @@ app.use(cors())
 app.use(express.json())
 app.use(middleware.requestLogger)
 app.use(middleware.tokenExtractor)
+app.use(databaseLogger)
 
 //// The following are routes, place new ones here /////
 app.use('/book', bookRouter)
@@ -53,7 +81,9 @@ app.use('/review', reviewsRouter);
 //// The following are special post-middlewares, place new ones here /////
 
 // app.use(middleware.unknownEndpoint);
+// app.use(middleware.databaseLogger);
 app.use(middleware.errorHandler);
+
 
 
 module.exports = app

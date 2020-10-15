@@ -1,7 +1,7 @@
 const app = require('./server'); // the actual Express application
 const http = require('http');
 const logger = require('./utils/logger');
-const PORT = 5000
+const PORT = 5001
 
 const server = http.createServer(app);
 

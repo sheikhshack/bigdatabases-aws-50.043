@@ -3,7 +3,7 @@ const Meta = require('../model/book');
 const utils = require('../utils/util')
 
 //getting only title, imageURL, price
-bookRouter.get('/all', async (req, res) => {
+bookRouter.get('/all', async (req, res, next) => {
     const metadata = await Meta.find({}, { title: 1, asin: 1, imUrl: 1, price: 1, author: 1, _id: 0 })
     res.json(metadata)
 })
