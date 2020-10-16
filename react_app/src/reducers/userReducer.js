@@ -18,11 +18,11 @@ const userReducer = (state = null, action) => {
     }
 }
 // this are the action creators. They make accessing the store easier //
-export const login = (username, password) => {
+export const login = (email, password) => {
     return async dispatch => {
         try {
-            const user = await loginService.login({ username, password })
-            dispatch(setNotification(`Welcome Back ${username}`, 'success'))
+            const user = await loginService.login({ email, password })
+            dispatch(setNotification(`Welcome Back ${email}`, 'success'))
             window.localStorage.setItem('loggedInUser', JSON.stringify(user))
             // TODO: Look into adding token into the reviewService
             dispatch({
