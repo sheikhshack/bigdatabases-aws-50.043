@@ -52,6 +52,7 @@ config.sequelize.authenticate()
         logger.info('MySQL server authenticated and connected successfully')
         healthLogger.info('Successful pairing with MongoDB', {metadata: {
                 category: 'SQL',
+                address: config.SQL_IP_ADDR,
                 online: true
             }})
     })
@@ -59,6 +60,7 @@ config.sequelize.authenticate()
         logger.error('Problems establishing connection to SQL Server: ', err.message )
         healthLogger.error('Failed pairing with SQL Server', {metadata: {
                 category: 'SQL',
+                address: config.SQL_IP_ADDR,
                 online: false,
                 error: err.message
             }})
