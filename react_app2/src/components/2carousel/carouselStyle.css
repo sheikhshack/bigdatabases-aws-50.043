@@ -1,0 +1,84 @@
+.Carousel {
+  background-color: #FAFAFA;
+  height: 40vh;
+  width: 90%;
+  margin: 0 auto;
+  padding: 0 20px 40px 20px;
+  color: #333;
+}
+.slick-arrow {
+  background-color: blue;
+}
+.BookCard {
+  height: 250px;
+  width: 420px;
+  margin: 0 20px 30px 20px;
+  position: relative;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+}
+.Cover {
+  height: 270px;
+  width: auto;
+  max-width: 180px;
+  position: absolute;
+  bottom: -30px;
+  left: 10px;
+  text-align: center;
+  -webkit-box-shadow: 0 10px 8px 0 rgba(0,0,0,0.4);
+	   -moz-box-shadow: 0 4px 8px 0 rgba(0,0,0,0.4);
+	        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.4);
+}
+.Cover img {
+  min-height: 270px;
+  max-width: 100%;
+  max-height: 100%;
+  vertical-align: middle;
+  align-self: center;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  -webkit-box-shadow: 0 4px 8px 0 rgba(0,0,0,0.4);
+	   -moz-box-shadow: 0 4px 8px 0 rgba(0,0,0,0.4);
+	        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.4);
+}
+.Info {
+  height: 250px;
+  width: 220px;
+  position: absolute;
+  right: 0;
+}
+.Info h1 {
+  color: #FFFFFF;
+  font-size: 0.8em;
+  padding: 5px;
+  height: 35px;
+}
+p.Author {
+  margin-top: 0;
+  color: #FFFFFF;
+  font-size: 0.7em;
+  margin-left: 10px;
+}
+.Info Rate {
+  color: #FFFFFF;
+  font-size: 0.7em;
+  margin-left: 15px;
+}
+.Description {
+  color: #FFFFFF;
+  font-size: 0.8em;
+  margin: 10px;
+  text-align: justify;  
+}
+.SeeBook button {
+  font-size: 15px;
+  text-align: center;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+  background-color: #FFFFFF;
+  border: none;
+  height: 30px;
+  width: 200px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}

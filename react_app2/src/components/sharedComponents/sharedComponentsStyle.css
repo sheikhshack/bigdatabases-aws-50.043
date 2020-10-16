@@ -1,0 +1,12 @@
+.Rate {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: #FFCA28;
+  margin-left: 10px;
+  margin-top: -5px;
+}
+.Rate span {
+  font-size: 0.7em;
+  margin-left: 15px;
+}
