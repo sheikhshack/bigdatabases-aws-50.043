@@ -51,6 +51,17 @@ bookRouter.get('/count', async (req, res) => {
     res.json(metadata)
 })
 
+///// Resource Grade Query /////
+
+// core retrieval, to be used for going into one specific product page
+bookRouter.get('/:asin', async (req, res) => {
+    // const individualBook = await Meta.find({}).populate('metadata_beta', {asin: 1, title: 1, author: 1});
+    const individualBook = await Meta.findOne({ asin: req.params.asin }).populate(['related_buys', 'related_views']);
+
+    // const individualBook = await Meta.findOne({ asin: req.params.asin }).exec()
+    res.json(individualBook)
+})
+
 
 
 module.exports = bookRouter;
