@@ -4,7 +4,7 @@ import '../main.css';
 class BestBooks extends Component {
   render() {
     let bestBooks = [];
-    for (let i=0; i<this.props.bestBooks.length; i++) {
+    for (let i = 0; i < this.props.bestBooks.length; i++) {
       bestBooks.push(
         <li key={i}>
           <div className='BookPhoto'>

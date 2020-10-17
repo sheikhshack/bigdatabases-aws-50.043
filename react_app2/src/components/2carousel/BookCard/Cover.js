@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import '../carouselStyle.css';
 
-class BookCover extends Component{
+class BookCover extends Component {
   render() {
     return (
       <div className='Cover'>

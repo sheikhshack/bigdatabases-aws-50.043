@@ -31,7 +31,7 @@ export const login = (email, password) => {
             })
         } catch (e) {
             // TODO: Insert notification stuff here
-            dispatch(setNotification(`Oops, wrong password there`, 'warning'))
+            dispatch(setNotification(`Oops, wrong email or password there`, 'warning'))
         }
     }
 }

@@ -6,10 +6,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { initUser, login, logout } from './reducers/userReducer'
 import Navigation from './components/Navigation'
 import LoginModule from './components/LoginForm'
+import BookModule from './components/main/bookShelf/Books';
 import './styles/app.css'
 import Center from 'react-center'
 import Notification from "./components/Notification";
 import { removeNotification, setNotification } from "./reducers/notificationReducer";
+
+import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+// import Book from './components/main/bookShelf/book/Book';
 
 
 const App = () => {
@@ -59,7 +63,10 @@ const App = () => {
                     </div>
                 </Route>
                 <Route path="/">
-                    <h1>Main page</h1>
+                    <h1>BOOOOOKS</h1>
+                    <div className="container">
+                        <BookModule />
+                    </div>
                 </Route>
             </Switch>
         </>
