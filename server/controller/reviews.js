@@ -15,43 +15,46 @@ reviewsRouter.get('/', async (req, res) => {
 // TODO: Decide what is the limit that we will send to frontend each time
 // TODO: How to keep track of the reviews that we have sent and the ones to send
     // Something like first 10, then the next time the same user requests, we need to send the next 10
-    const oneReview = Review.findOne({
+    const oneReview = await Review.findOne({
       where:{
         asin: "B000FA64PA"
       }
     })
-    .then((result) => {
-      console.log(result)
-      res.send(result)
-    }).catch((error) => {
-      console.log('shit hit the fan')
-      res.send(error)
-    });
+    // .then((result) => {
+    //   console.log(result)
+    //   res.send(result)
+    // }).catch((error) => {
+    //   console.log('shit hit the fan')
+    //   res.send(error)
+    // });
 
 })
 
 // RETRIEVE SPECIFIC REVIEW
-reviewsRouter.get('/:reviewID', (req, res) => {
+reviewsRouter.get('/:reviewID', async (req, res) => {
 
-  // Ensure that the reviewID is an int
-  if(parseInt(req.param.reviewID)!= NaN){
-
-    // Conduct SELECT sql query to retrieve the review based on reviewID
-      const oneReview = Review.findOne({
-        where:{
-          id: req.params.reviewID
-        }
-      }).then((result) => {
-        console.log(result)
-        res.send(result)
-      }).catch((error) => {
-        console.log('shit hit the fan')
-        res.send(badQueryMsgGen(error))
-      });
+  // Should throw validation error if not int
+  
+  // Conduct SELECT sql query to retrieve the review based on reviewID
+  const oneReview = await Review.findOne({
+    where:{
+      id: req.params.reviewID
     }
-  else{
-    res.send(badRequestMsgGen('reviewID must be integer'))
-  }
+  })
+  
+  
+  // if(parseInt(req.param.reviewID)!= NaN){
+      // .then((result) => {
+      //   console.log(result)
+      //   res.send(result)
+      // }).catch((error) => {
+      //   console.log('shit hit the fan')
+      //   res.send(badQueryMsgGen(error))
+      // });
+  //   }
+  // else{
+  //   res.send(badRequestMsgGen('reviewID must be integer'))
+  // }
 
 })
 
