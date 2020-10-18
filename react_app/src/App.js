@@ -6,13 +6,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { initUser, login, logout } from './reducers/userReducer'
 import Navigation from './components/Navigation'
 import LoginModule from './components/LoginForm'
-import BookModule from './components/main/bookShelf/Books';
+import BookModule from './components/main/bookShelf/Books'
 import './styles/app.css'
 import Center from 'react-center'
-import Notification from "./components/Notification";
-import { removeNotification, setNotification } from "./reducers/notificationReducer";
+import Notification from './components/Notification'
+import { removeNotification, setNotification } from './reducers/notificationReducer'
 
-import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
+import BookModuleShakeRefactor from "./components/BookModuleShakeRefactor";
 // import Book from './components/main/bookShelf/book/Book';
 
 
@@ -22,7 +23,7 @@ const App = () => {
     const dispatch = useDispatch()
     const user = useSelector(state => state.user)
 
-    // Hook declarations //
+
     const [timer, setTimer] = useState(0) // for active notifications
 
 
@@ -63,9 +64,15 @@ const App = () => {
                     </div>
                 </Route>
                 <Route path="/">
-                    <h1>BOOOOOKS</h1>
+                    <h1>Books Page (Jemi/Kiat Please see the code)</h1>
+                    <p>FOr the code, i make it such that it uses only 2 component, ShakeSingularBook for each book, and
+                    BookModuleShakeRefactor. I have swapped over from class based to function based. Trust me it is mmmuuchh
+                    muuch better. ALso the lady's code is farking garbage, I rather we use bootstrap cos her shit not even
+                    responsive
+                    Please read about bootstrap and read the docs for react-bootstrap, we can use that to make our life so much
+                    easier than adjusting the css like shag bro</p>
                     <div className="container">
-                        <BookModule />
+                        <BookModuleShakeRefactor />
                     </div>
                 </Route>
             </Switch>
