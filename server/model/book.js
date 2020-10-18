@@ -13,22 +13,45 @@ const bookSchema = mongoose.Schema ({
     price: { type: Number,  default: null },
     imUrl: { type: String },
     related: {
-        also_bought: {
-            type: [String],
-        },
-        also_viewed: {
-            type: [String],
-        },
-        buy_after_viewing: {
-            type: [String],
-        }
+        also_bought: [String],
+        also_viewed: [String],
+        buy_after_viewing: [String]
     },
     categories: { type: Array },
+    id: false,
 
-},
-    {
+}, {
         timestamps: true,
+        toObject: { virtuals: true },
+        toJSON: { virtuals: true }
     }
 );
 
+
+// Format Managing
+bookSchema.set('toJSON', {
+    virtuals: true,
+    transform: (document, returnedObj) => {
+        delete returnedObj.related
+    }
+})
+
+
+// Virtualisations
+
+bookSchema.virtual('related_buys', {
+    ref: 'metadata_beta',
+    localField:'related.also_bought',
+    foreignField: 'asin',
+    justOne: false,
+    options: { select: 'title author asin imUrl -_id '}
+})
+
+bookSchema.virtual('related_views', {
+    ref: 'metadata_beta',
+    localField:'related.also_viewed',
+    foreignField: 'asin',
+    justOne: false,
+    options: { select: 'title author asin imUrl -_id '}
+})
 module.exports = mongoose.model('metadata_beta', bookSchema, 'metadata_beta');

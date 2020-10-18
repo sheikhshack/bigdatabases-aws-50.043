@@ -4,9 +4,11 @@ const requestLogger = (request, response, next) => {
     logger.info('Method:', request.method);
     logger.info('Path:  ', request.path);
     logger.info('Body:  ', request.body);
+
     logger.info('---');
     next();
 };
+
 
 const tokenExtractor = (request, response, next) => {
     const authorization = request.get('authorization');
@@ -17,13 +19,16 @@ const tokenExtractor = (request, response, next) => {
     next();
 };
 
+
+
 const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' });
 };
 
 const errorHandler = (error, request, response, next) => {
-    logger.error(error.message);
-    // this has yet to be implemented. Copied over from part 3
+    /// Logging ///
+
+    // Error handling
     if (error.name === 'CastError') {
         return response.status(400).send({ error: 'malformatted id' });
     } else if (error.name === 'ValidationError') {
@@ -32,14 +37,47 @@ const errorHandler = (error, request, response, next) => {
         return response.status(401).json({
             error: 'invalid token'
         });
+    } else if (error.name === 'ReferenceError'){
+        return response.status(404).json({ error: 'book not found'})
     }
 
     next(error);
 };
 
+
+const databaseLogger = (request, response, next) => {
+    logger.info('-----------------------Entered logger for database----------------------')
+    logger.info(response.body);
+    //
+    // logger.winstonLogger.log({
+    //     level: 'info',
+    //     message: mes,
+    //     meta: {
+    //         request:
+    //             {
+    //                 path: request.path,
+    //                 body: request.body,
+    //                 method: request.method,
+    //             },
+    //         response:
+    //             {
+    //                 statusCode: response.statusCode,
+    //                 statusMessage: response.body
+    //             }
+    //     }
+    // })
+    next()
+
+}
+
+
 module.exports = {
     requestLogger,
     tokenExtractor,
     unknownEndpoint,
-    errorHandler
+    errorHandler,
+    databaseLogger
 };
+
+
+
