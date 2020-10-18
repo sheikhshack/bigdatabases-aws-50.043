@@ -19,7 +19,8 @@ reviewsRouter.get('/', async (req, res) => {
       where:{
         asin: "B000FA64PA"
       }
-    }).then((result) => {
+    })
+    .then((result) => {
       console.log(result)
       res.send(result)
     }).catch((error) => {
