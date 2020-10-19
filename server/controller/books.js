@@ -3,7 +3,7 @@ const Meta = require('../model/book');
 const utils = require('../utils/util')
 
 //getting only title, imageURL, price
-bookRouter.get('/all', async (req, res) => {
+bookRouter.get('/all', async (req, res, next) => {
     const metadata = await Meta.find({}, { title: 1, asin: 1, imUrl: 1, price: 1, author: 1, _id: 0 })
     res.json(metadata)
 })
@@ -49,6 +49,17 @@ bookRouter.delete('/delete=:asin', async (req, res) => {
 bookRouter.get('/count', async (req, res) => {
     const metadata = await Meta.find({}).count()
     res.json(metadata)
+})
+
+///// Resource Grade Query /////
+
+// core retrieval, to be used for going into one specific product page
+bookRouter.get('/:asin', async (req, res) => {
+    // const individualBook = await Meta.find({}).populate('metadata_beta', {asin: 1, title: 1, author: 1});
+    const individualBook = await Meta.findOne({ asin: req.params.asin }).populate(['related_buys', 'related_views']);
+
+    // const individualBook = await Meta.findOne({ asin: req.params.asin }).exec()
+    res.json(individualBook)
 })
 
 

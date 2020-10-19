@@ -11,6 +11,7 @@ usersRouter.get('/all', async (req, res) => {
 //adding new users to the collection with password of created users hashed in the db
 usersRouter.post('/register', async (req, res) => {
     const { name, username, email, password } = req.body;
+    //TODO:  req._routeWhitelists.body = ['username', 'email']; // But not 'password' or 'confirm-password' or 'top-secret'
     if (!password || password.length < 10 || password.match(/^[A-Za-z]+$/) || password.match(/^[0-9]+$/)) {
         return res.status(400).json({ error: "Please key in an alphanumeric password of minimum 10 characters" });
     }
