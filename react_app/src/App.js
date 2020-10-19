@@ -7,6 +7,7 @@ import { initUser, login, logout } from './reducers/userReducer'
 import Navigation from './components/Navigation'
 import LoginModule from './components/LoginForm'
 import BookModule from './components/main/bookShelf/Books';
+import SingleBookModule from './components/singleBook/SingleBook';
 import './styles/app.css'
 import Center from 'react-center'
 import Notification from "./components/Notification";
@@ -53,8 +54,10 @@ const App = () => {
                 <Route path="/users">
                     <h1>User page</h1>
                 </Route>
-                <Route path="/books">
-                    <h1>Books page</h1>
+                <Route path="/bookReview">
+                    <div className="container">
+                        <SingleBookModule />
+                    </div>
                 </Route>
                 <Route path="/login">
                     <h1>Login page</h1>
@@ -63,7 +66,7 @@ const App = () => {
                     </div>
                 </Route>
                 <Route path="/">
-                    <h1>BOOOOOKS</h1>
+                    <h1>Book Database</h1>
                     <div className="container">
                         <BookModule />
                     </div>
