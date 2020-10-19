@@ -39,16 +39,17 @@
 .BookInfo {
   background-color: #FFFFFF;
   height: 180px;
-  width: 185px;
+  width: 180px;
   position: absolute;
   right: 0;
 }
 .BookInfo h1 {
   color: #263238;
-  font-size: 1.3em;
+  font-size: 1.2em;
   padding: 5px;
   padding-right: 8px;
-  height: 20px;
+  margin-bottom: 10px;
+  height: 50px;
   width: 200px;
 }
 .Author {

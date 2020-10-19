@@ -4,13 +4,11 @@ import BookInfo from './BookInfo';
 import './bookStyle.css';
 
 class Book extends Component {
-    // constructor(props) {
-    // }
     render() {
         return (
             <div className='Book'>
                 <BookImage img={this.props.img}></BookImage>
-                <BookInfo></BookInfo>
+                <BookInfo title={this.props.title} author={this.props.author} price={this.props.price}></BookInfo>
             </div>
         );
     }

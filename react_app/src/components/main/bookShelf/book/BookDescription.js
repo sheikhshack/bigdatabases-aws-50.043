@@ -5,8 +5,8 @@ class BookDescription extends Component {
     render() {
         return (
             <div className='BookDescription'>
-                {/* <img src={require('../booksImgs/'+this.props.img)}/> */}
-                <p>book description</p>
+                <p>{this.props.description}</p>
+                {/* <p> Book Description </p> */}
             </div>
         );
     }
