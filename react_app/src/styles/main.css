@@ -135,7 +135,7 @@ ul {
 .Books {
     background-color: #FAFAFA;
     height: auto;
-    width: 100%;
+    width: auto;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;

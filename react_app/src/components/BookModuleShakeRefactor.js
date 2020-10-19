@@ -3,7 +3,6 @@ import '../styles/main.css'
 import bookService from '../services/bookService'
 import ShakeSingularBook from './ShakeSingularBook'
 
-
 const BookModuleShakeRefactor = () => {
 
     // Hook declarations //
@@ -13,14 +12,13 @@ const BookModuleShakeRefactor = () => {
     // This hook will retrieve the books on every render
     useEffect(() => {
         async function fetchBooks() {
-            const bookData = await bookService.getAllBooks()
+            const bookData = await bookService.getAllBooksRanged(0, 12)
             setBooks(bookData)
         }
         fetchBooks()
     }, [])
-
-    return(
-        <div>
+    return (
+        <div className='Books'>
             {books.map(book =>
                 <ShakeSingularBook key={book.asin} book={book} />
             )}

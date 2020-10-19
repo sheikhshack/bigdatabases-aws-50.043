@@ -8,12 +8,11 @@ import Navigation from './components/Navigation'
 import LoginModule from './components/LoginForm'
 import BookModule from './components/main/bookShelf/Books'
 // import BookModule from './components/main/bookShelf/Books';
-// import SingleBookModule from './components/singleBook/SingleBook';
+import FullBookInfo from './components/FullBookInfo';
 import './styles/app.css'
 import Center from 'react-center'
 import Notification from './components/Notification'
 import { removeNotification, setNotification } from './reducers/notificationReducer'
-
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import BookModuleShakeRefactor from "./components/BookModuleShakeRefactor";
 // import Book from './components/main/bookShelf/book/Book';
@@ -27,7 +26,7 @@ const App = () => {
 
 
     const [timer, setTimer] = useState(0) // for active notifications
-
+    const match = useRouteMatch("/book/:asin")
 
     // Effect hooks // - added init user
     useEffect(() => {
@@ -46,8 +45,6 @@ const App = () => {
         dispatch(logout())
     }
 
-
-
     return (
         <>
             <Navigation user={user} />
@@ -56,10 +53,9 @@ const App = () => {
                 <Route path="/users">
                     <h1>User page</h1>
                 </Route>
-                <Route path="/bookReview">
-                    <div className="container">
-                        <SingleBookModule />
-                    </div>
+                <Route path="/book/:asin" children={<FullBookInfo />}>
+                    {/* <div className="container">
+                    </div> */}
                 </Route>
                 <Route path="/login">
                     <h1>Login page</h1>
@@ -68,7 +64,6 @@ const App = () => {
                     </div>
                 </Route>
                 <Route path="/">
-// <<<<<<< jerokokneedshelp
                     <h1>Books Page (Jemi/Kiat Please see the code)</h1>
                     <p>FOr the code, i make it such that it uses only 2 component, ShakeSingularBook for each book, and
                     BookModuleShakeRefactor. I have swapped over from class based to function based. Trust me it is mmmuuchh
@@ -76,9 +71,6 @@ const App = () => {
                     responsive
                     Please read about bootstrap and read the docs for react-bootstrap, we can use that to make our life so much
                     easier than adjusting the css like shag bro</p>
-// =======
-//                     <h1>Book Database</h1>
-// >>>>>>> jeroe
                     <div className="container">
                         <BookModuleShakeRefactor />
                     </div>

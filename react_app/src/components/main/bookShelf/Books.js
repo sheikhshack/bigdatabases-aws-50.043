@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 import '../main.css'
 import Book from './book/Book'
-import retrieveBook from '../../../services/bookService' //extracting book json objects from get request
+// import retrieveBook from '../../../services/bookService' //extracting book json objects from get request
 // =======
 // import React, { Component } from 'react';
 // import '../main.css';
@@ -16,7 +16,7 @@ class Books extends Component {
         let bookCards = []
         for (let i = 0; i < 12; i++) {
             bookCards.push(<Book></Book>)
-            /**todo: populate individual book based from data taken from json response:
+            /**todo: populate individual book based from data taken from json response:*/
         }
         return (
             <div className='Books'>
