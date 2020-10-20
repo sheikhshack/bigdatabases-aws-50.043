@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import '../styles/main.css'
 import bookService from '../services/bookService'
 import ShakeSingularBook from './ShakeSingularBook'
+import paginator from './Paginator'
 
 const BookModuleShakeRefactor = () => {
 
@@ -18,11 +19,17 @@ const BookModuleShakeRefactor = () => {
         fetchBooks()
     }, [])
     return (
-        <div className='Books'>
-            {books.map(book =>
-                <ShakeSingularBook key={book.asin} book={book} />
-            )}
+        <div className='cons'>
+            <div className='Books'>
+                {books.map(book =>
+                    <ShakeSingularBook key={book.asin} book={book} />
+                )}
+            </div>
+            <div className='paginator'>
+                {paginator()}
+            </div>
         </div>
+
     )
 }
 

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { initUser, login, logout } from './reducers/userReducer'
 import Navigation from './components/Navigation'
 import LoginModule from './components/LoginForm'
-import testModule from './components/User'
+import testModule from './components/Paginator'
 // import BookModule from './components/main/bookShelf/Books';
 import FullBookInfo from './components/FullBookInfo';
 import './styles/app.css'
