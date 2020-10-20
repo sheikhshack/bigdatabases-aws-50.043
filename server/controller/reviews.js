@@ -74,7 +74,7 @@ reviewsRouter.post('/filterBook/:bookID', async (req, res) => {
     //  Conduct SELECT sql query to retrieve all reviews for specific
     const allBookReviews = await sequelize.query(sqlQuery)
       
-    res.send(allBookReviews)
+    res.send(allBookReviews[0])
       // .then((result) => {
       //   console.log(result[0])
       //   res.send(result[0])
