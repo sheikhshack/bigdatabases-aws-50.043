@@ -133,11 +133,20 @@ ul {
     transition: 0.3s;
 }
 .Books {
-    background-color: #ffffff;
+    background-color: #FFFFFF;
     height: auto;
     width: 1040px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    margin-bottom: 70px;
+}
+
+.paginator{
+    margin-bottom: 50px;
+    transform: scale(1.5);
+    margin-left: 400px;
+    display: flex;
+    align-items: center;
 
 }
