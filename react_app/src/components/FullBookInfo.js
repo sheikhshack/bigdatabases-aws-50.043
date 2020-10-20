@@ -72,7 +72,7 @@ const FullBookInfo = ({asin}) => {
     const [reload, setReload] = useState(false)
 
     const juicit = () => {
-        setReload(true)
+        setReload(!reload)
     }
 
     useEffect(() => {
