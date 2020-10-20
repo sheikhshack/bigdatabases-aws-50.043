@@ -133,10 +133,11 @@ ul {
     transition: 0.3s;
 }
 .Books {
-    background-color: #FAFAFA;
+    background-color: #ffffff;
     height: auto;
-    width: auto;
+    width: 1040px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+
 }
