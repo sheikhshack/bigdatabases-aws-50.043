@@ -12,7 +12,7 @@ const BookModuleShakeRefactor = () => {
     // This hook will retrieve the books on every render
     useEffect(() => {
         async function fetchBooks() {
-            const bookData = await bookService.getAllBooksRanged(0, 12)
+            const bookData = await bookService.getAllBooksRanged(0, 15)
             setBooks(bookData)
         }
         fetchBooks()
