@@ -26,7 +26,11 @@ const App = () => {
 
 
     const [timer, setTimer] = useState(0) // for active notifications
+    // const [query, setQuery] = useState('')
     const match = useRouteMatch("/book/:asin")
+    const query = match
+        ? String(match.params.asin)
+        : null
 
     // Effect hooks // - added init user
     useEffect(() => {
@@ -56,7 +60,8 @@ const App = () => {
                         {testModule()}
                     </div>
                 </Route>
-                <Route path="/book/:asin" children={<FullBookInfo />}>
+                <Route path="/book/:asin" >
+                    <FullBookInfo asin={query} />
                     {/* <div className="container">
                     </div> */}
                 </Route>

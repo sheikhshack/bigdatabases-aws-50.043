@@ -17,12 +17,13 @@ import Card from '@material-ui/core/Card'
 import Chip from "@material-ui/core/Chip";
 
 
-const SingularRelated = ({ relatedItem }) => {
+const SingularRelated = ({ relatedItem, juiced }) => {
     const history = useHistory()
     const goToView = () => {
         console.log('The asin clicked is: ', relatedItem)
         history.push(`/book/${relatedItem.asin}`)
-        
+        juiced()
+
     }
 
     return (
@@ -44,7 +45,7 @@ const SingularRelated = ({ relatedItem }) => {
     )
 }
 
-const ClusteredRelated = ({ books }) => {
+const ClusteredRelated = ({ books, juiced}) => {
     console.log(books)
 
     return (
@@ -53,7 +54,7 @@ const ClusteredRelated = ({ books }) => {
                 <Typography gutterBottom variant="h5" component="h5">Customers also viewed</Typography>
                 <Box display="flex" justifyContent="flex-start"  >
                     {books.map(book =>
-                        <SingularRelated key={book.asin} relatedItem={book} />
+                        <SingularRelated key={book.asin} relatedItem={book} juiced={juiced} />
                     )}
                 </Box>
             </Box>
@@ -62,12 +63,17 @@ const ClusteredRelated = ({ books }) => {
 
 }
 
-const FullBookInfo = () => {
+const FullBookInfo = ({asin}) => {
     // get request
-    const { asin } = useParams()
+    // const { asin } = useParams()
     const [book, setBook] = useState({})
     const [related, setRelated] = useState([])
     const [categories, setCategories] = useState([])
+    const [reload, setReload] = useState(false)
+
+    const juicit = () => {
+        setReload(true)
+    }
 
     useEffect(() => {
         async function fetchBook() {
@@ -80,7 +86,7 @@ const FullBookInfo = () => {
         }
         fetchBook()
 
-    }, [])
+    }, [reload])
 
 
     const useStyles = makeStyles((theme) => ({
@@ -142,7 +148,7 @@ const FullBookInfo = () => {
 
                 <div>
                     {/*<h1>{related[0].title}</h1>*/}
-                    <ClusteredRelated books={related}></ClusteredRelated>
+                    <ClusteredRelated books={related} juiced={juicit}></ClusteredRelated>
 
                 </div>
 
