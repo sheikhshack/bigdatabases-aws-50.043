@@ -54,4 +54,12 @@ bookSchema.virtual('related_views', {
     justOne: false,
     options: { select: 'title author asin imUrl -_id ' }
 })
+
+bookSchema.virtual('related_views_and_buys', {
+    ref: 'meta_KIndle_12k',
+    localField: 'related.buy_after_viewing',
+    foreignField: 'asin',
+    justOne: false,
+    options: { select: 'title author asin imUrl -_id ' }
+})
 module.exports = mongoose.model('meta_Kindle_12k', bookSchema, 'meta_Kindle_12k');
