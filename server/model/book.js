@@ -48,7 +48,7 @@ bookSchema.virtual('related_buys', {
 })
 
 bookSchema.virtual('related_views', {
-    ref: 'meta_KIndle_12k',
+    ref: 'meta_Kindle_12k',
     localField: 'related.also_viewed',
     foreignField: 'asin',
     justOne: false,
@@ -56,7 +56,7 @@ bookSchema.virtual('related_views', {
 })
 
 bookSchema.virtual('related_views_and_buys', {
-    ref: 'meta_KIndle_12k',
+    ref: 'meta_Kindle_12k',
     localField: 'related.buy_after_viewing',
     foreignField: 'asin',
     justOne: false,
