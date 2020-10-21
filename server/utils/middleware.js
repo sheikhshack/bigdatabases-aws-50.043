@@ -39,6 +39,12 @@ const errorHandler = (error, request, response, next) => {
         });
     } else if (error.name === 'ReferenceError'){
         return response.status(404).json({ error: 'book not found'})
+    } else if (error.name === 'EmptyResultError'){
+        return response.status(404).json({error: error.message})
+    } else if (error.name === 'QueryError'){
+        return response.status(400).json({error: error.message})        // Should not go here
+    } else if (error.name === 'UniqueConstraintError'){
+        return response.status(500).json({error: 'Unique Constraint Error'})
     }
 
     next(error);
