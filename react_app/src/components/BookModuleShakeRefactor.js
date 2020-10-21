@@ -3,6 +3,7 @@ import '../styles/main.css'
 import bookService from '../services/bookService'
 import ShakeSingularBook from './ShakeSingularBook'
 import paginator from './Paginator'
+import Grid from "@material-ui/core/Grid";
 
 const BookModuleShakeRefactor = () => {
 
@@ -26,7 +27,16 @@ const BookModuleShakeRefactor = () => {
                 )}
             </div>
             <div className='paginator'>
-                {paginator()}
+                {/* {paginator()}  */}
+                <Grid
+                    container spacing={0}
+                    direction="column"
+                    alignItems='center'
+                >
+                    <Grid>
+                        {paginator()}
+                    </Grid>
+                </Grid>
             </div>
         </div>
 

@@ -15,6 +15,7 @@ import CardMedia from '@material-ui/core/CardMedia'
 import CardContent from '@material-ui/core/CardContent'
 import Card from '@material-ui/core/Card'
 import Chip from "@material-ui/core/Chip";
+import '../styles/fullBook.css'
 
 
 const SingularRelated = ({ relatedItem, juiced }) => {
@@ -29,11 +30,11 @@ const SingularRelated = ({ relatedItem, juiced }) => {
     return (
         <Card className='book' onClick={() => goToView()}>
             <CardActionArea >
-                <CardMedia >
+                <CardMedia className='image'>
                     <img src={relatedItem.imUrl} />
                 </CardMedia>
                 <CardContent >
-                    <Typography gutterBottom variant="body1" component="body1">
+                    <Typography className='title' gutterBottom variant="body1" component="body1" >
                         {relatedItem.title}
                     </Typography>
                     <Typography variant="body2" color="textSecondary" component="p">
@@ -45,14 +46,14 @@ const SingularRelated = ({ relatedItem, juiced }) => {
     )
 }
 
-const ClusteredRelated = ({ books, juiced}) => {
+const ClusteredRelated = ({ books, juiced }) => {
     console.log(books)
 
     return (
         <div>
             <Box pl={15}>
                 <Typography gutterBottom variant="h5" component="h5">Customers also viewed</Typography>
-                <Box display="flex" justifyContent="flex-start"  >
+                <Box display="flex" justifyContent="flex-start">
                     {books.map(book =>
                         <SingularRelated key={book.asin} relatedItem={book} juiced={juiced} />
                     )}
@@ -63,7 +64,7 @@ const ClusteredRelated = ({ books, juiced}) => {
 
 }
 
-const FullBookInfo = ({asin}) => {
+const FullBookInfo = ({ asin }) => {
     // get request
     // const { asin } = useParams()
     const [book, setBook] = useState({})
@@ -104,7 +105,7 @@ const FullBookInfo = ({asin}) => {
 
     const fullBook = useStyles()
 
-    if (book !== null){
+    if (book !== null) {
 
         return (
             <div>
@@ -113,7 +114,7 @@ const FullBookInfo = ({asin}) => {
                         <Box display="flex" justifyContent="flex-end" >
                             <img className={fullBook.media} src={book.imUrl} />
                         </Box>
-                        <Box  justifyContent="flex-end" pl={25} >
+                        <Box justifyContent="flex-end" pl={25} >
                             <List alignItems='flex-start' classname={fullBook.detailer} >
                                 <ListItem divider={true}>
                                     <ListItemText primary="Author" secondary={book.author}></ListItemText>
@@ -132,7 +133,7 @@ const FullBookInfo = ({asin}) => {
                             <Typography gutterBottom variant="h3" component="h3" >{book.title}</Typography>
                             <hr />
                             <Box fontStyle="italic">
-                                <Typography  variant="body1" fontStyle="italic" >{book.description}</Typography>
+                                <Typography variant="body1" fontStyle="italic" >{book.description}</Typography>
                             </Box>
                             <Box>
                                 {categories.map(cat =>
@@ -157,7 +158,7 @@ const FullBookInfo = ({asin}) => {
         )
     }
     else {
-        return(
+        return (
             <div>
                 <h1> Loading </h1>
             </div>

@@ -1,4 +1,4 @@
-.Main {
+/* .Main {
     background-color: #FAFAFA;
     display: flex;
     flex-direction: row;
@@ -131,9 +131,9 @@ ul {
 .CategoryButtonActive {
     border-bottom: 2px solid #0091EA;
     transition: 0.3s;
-}
+} */
 .Books {
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     height: auto;
     width: 1040px;
     display: flex;
@@ -144,9 +144,9 @@ ul {
 
 .paginator{
     margin-bottom: 50px;
-    transform: scale(1.5);
-    margin-left: 400px;
-    display: flex;
-    align-items: center;
+    /* transform: scale(1.5); */
+    /* margin-left: 400px; */
+    /* display: flex;
+    text-align: left; */
 
 }
