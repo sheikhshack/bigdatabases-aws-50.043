@@ -5,6 +5,7 @@ import ShakeSingularBook from './ShakeSingularBook'
 import paginator from './Paginator'
 import Grid from "@material-ui/core/Grid";
 import Pagination from "@material-ui/lab/Pagination";
+import Box from "@material-ui/core/Box";
 
 
 
@@ -18,7 +19,7 @@ const PaginatorSimple = ({currPage, setCurrPage}) => {
 
 
     return(
-        <Pagination count={10} page={currPage} onChange={handleChange} />
+        <Pagination size="large" count={10} page={currPage} onChange={handleChange} />
 
     )
 
@@ -58,7 +59,10 @@ const BookModuleShakeRefactor = () => {
             {/*        </Grid>*/}
             {/*    </Grid>*/}
             {/*</div>*/}
-            <PaginatorSimple currPage={currPage} setCurrPage={setCurrPage} />
+            {/*Boss sexy anot my no css mode*/}
+            <Box display='flex' justifyContent='center'>
+                <PaginatorSimple currPage={currPage} setCurrPage={setCurrPage} />
+            </Box>
         </div>
 
     )
