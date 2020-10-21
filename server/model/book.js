@@ -5,12 +5,12 @@ mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 
 //Define Schema for book Collection
-const bookSchema = mongoose.Schema ({
+const bookSchema = mongoose.Schema({
     title: { type: String, default: "no title yet" },
     author: { type: String, default: "no author yet" },
     asin: { type: String, required: true, unique: true },
     description: String,
-    price: { type: Number,  default: null },
+    price: { type: Number, default: null },
     imUrl: { type: String },
     related: {
         also_bought: [String],
@@ -21,10 +21,10 @@ const bookSchema = mongoose.Schema ({
     id: false,
 
 }, {
-        timestamps: true,
-        toObject: { virtuals: true },
-        toJSON: { virtuals: true }
-    }
+    timestamps: true,
+    toObject: { virtuals: true },
+    toJSON: { virtuals: true }
+}
 );
 
 
@@ -40,18 +40,26 @@ bookSchema.set('toJSON', {
 // Virtualisations
 
 bookSchema.virtual('related_buys', {
-    ref: 'metadata_beta',
-    localField:'related.also_bought',
+    ref: 'meta_Kindle_12k',
+    localField: 'related.also_bought',
     foreignField: 'asin',
     justOne: false,
-    options: { select: 'title author asin imUrl -_id '}
+    options: { select: 'title author asin imUrl -_id ' }
 })
 
 bookSchema.virtual('related_views', {
-    ref: 'metadata_beta',
-    localField:'related.also_viewed',
+    ref: 'meta_Kindle_12k',
+    localField: 'related.also_viewed',
     foreignField: 'asin',
     justOne: false,
-    options: { select: 'title author asin imUrl -_id '}
+    options: { select: 'title author asin imUrl -_id ' }
 })
-module.exports = mongoose.model('metadata_beta', bookSchema, 'metadata_beta');
+
+bookSchema.virtual('related_views_and_buys', {
+    ref: 'meta_Kindle_12k',
+    localField: 'related.buy_after_viewing',
+    foreignField: 'asin',
+    justOne: false,
+    options: { select: 'title author asin imUrl -_id ' }
+})
+module.exports = mongoose.model('meta_Kindle_12k', bookSchema, 'meta_Kindle_12k');
