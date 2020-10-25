@@ -9,16 +9,17 @@ import Box from "@material-ui/core/Box";
 
 
 
-const PaginatorSimple = ({currPage, setCurrPage}) => {
+const PaginatorSimple = ({ currPage, setCurrPage }) => {
 
 
     const handleChange = (event, page) => {
         console.log('Fired with data', page, event)
+        window.scrollTo(0, 0)   //shift page back to the top on every page change
         setCurrPage(page)
     }
 
 
-    return(
+    return (
         <Pagination size="large" count={10} page={currPage} onChange={handleChange} />
 
     )
