@@ -51,9 +51,9 @@ const ClusteredRelated = ({ books, juiced }) => {
 
     return (
         <div>
-            <Box pl={10} pr={10}>
+            <Box pl={15}>
                 <Typography gutterBottom variant="h5" component="h5">Customers also viewed</Typography>
-                <Box display="flex" justifyContent="flex-start" Scroll overflow="auto">
+                <Box display="flex" justifyContent="flex-start">
                     {books.map(book =>
                         <SingularRelated key={book.asin} relatedItem={book} juiced={juiced} />
                     )}
@@ -65,6 +65,8 @@ const ClusteredRelated = ({ books, juiced }) => {
 }
 
 const FullBookInfo = ({ asin }) => {
+    // get request
+    // const { asin } = useParams()
     const [book, setBook] = useState({})
     const [related, setRelated] = useState([])
     const [categories, setCategories] = useState([])
