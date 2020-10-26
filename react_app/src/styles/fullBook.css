@@ -1,0 +1,9 @@
+.book{
+    min-width: 200px;
+}
+
+.book img{
+    max-width: 80%;
+    max-height: auto;
+    text-align: center;
+}

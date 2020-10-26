@@ -15,6 +15,7 @@ import Notification from './components/Notification'
 import { removeNotification, setNotification } from './reducers/notificationReducer'
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import BookModuleShakeRefactor from "./components/BookModuleShakeRefactor";
+import Grid from "@material-ui/core/Grid";
 
 
 
@@ -73,14 +74,16 @@ const App = () => {
                 </Route>
                 <Route path="/">
                     <h1>Books Page</h1>
-                    {/* <p>FOr the code, i make it such that it uses only 2 component, ShakeSingularBook for each book, and
-                    BookModuleShakeRefactor. I have swapped over from class based to function based. Trust me it is mmmuuchh
-                    muuch better. ALso the lady's code is farking garbage, I rather we use bootstrap cos her shit not even
-                    responsive
-                    Please read about bootstrap and read the docs for react-bootstrap, we can use that to make our life so much
-                    easier than adjusting the css like shag bro</p> */}
                     <div className="container">
-                        <BookModuleShakeRefactor />
+                        <Grid
+                            container spacing={0}
+                            direction="column"
+                            alignItems='center'
+                        >
+                            <Grid>
+                                <BookModuleShakeRefactor />
+                            </Grid>
+                        </Grid>
                     </div>
                 </Route>
             </Switch>
