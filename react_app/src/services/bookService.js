@@ -39,6 +39,7 @@ const singleBookMode = async (asin) => {
 
 const queryBookByTitle = async (title) => {
     const response = await axios.get(baseUrl + `/selectTitle=${title}`)
+    console.log(response.data)
     return response.data
 }
 
@@ -47,4 +48,5 @@ const queryBookByAuthor = async (author) => {
     return response.data
 }
 
-export default { getAllBooks, getAllBooksRanged, queryBookByAsin, singleBookMode, getPaginatedBooks }
+export default { getAllBooks, getAllBooksRanged, queryBookByAsin, singleBookMode, queryBookByAuthor, queryBookByTitle, getPaginatedBooks }
+
