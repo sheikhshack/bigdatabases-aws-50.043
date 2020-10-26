@@ -23,24 +23,28 @@ bookRouter.get('/page=:pagenumber&limit=:limitnumber', async (req, res) => {
 })
 //query for books by author
 bookRouter.get('/selectAuthor=:author', async (req, res) => {
-    const books = await Meta.find({ author: req.params.author }, { title: 1, asin: 1, imUrl: 1, price: 1, author: 1, _id: 0 })
+    // const books = await Meta.find({ author: req.params.author }, { title: 1, asin: 1, imUrl: 1, price: 1, author: 1, _id: 0 })
+    const books = await Meta.find({ author:{$regex: req.params.author, $options:'i'} }, { title: 1, asin: 1, imUrl: 1, price: 1, author: 1, _id: 0 })
     res.json(books)
 })
 
 //query for individual book by asin
 bookRouter.get('/selectAsin=:asin', async (req, res) => {
     const individualBook = await Meta.find({ asin: req.params.asin }, { _id: 0 })
+    // const resultMatches = await Meta.find({ asin: {$regex: req.params.asin, $options:'i'} }, { _id: 0 }).limit(20)
     res.json(individualBook)
 })
 //query for book by title
 bookRouter.get('/selectTitle=:title', async (req, res) => {
-    const individualBook = await Meta.find({ title: req.params.title }, { _id: 0 })
-    res.json(individualBook)
+    // const individualBook = await Meta.find({ title: req.params.title }, { _id: 0 })
+    const resultMatches = await Meta.find({ title: {$regex: req.params.title, $options:'i'} }, { title: 1, asin: 1, imUrl: 1, price: 1, author: 1, _id: 0 }).limit(20)
+
+    res.json(resultMatches)
 })
 
 //add book with title, author, price (will add more later)
 bookRouter.post('/add', async (req, res) => {
-    const { title, author, price } = req.body;
+    const { title, author, price, imUrl, description } = req.body;
     const asin = "ADD".concat(utils.asinStringGenerator(7));
     console.log(asin)
     const newBook = Meta({ title, author, asin, price });
@@ -49,7 +53,7 @@ bookRouter.post('/add', async (req, res) => {
 });
 //delete book by asin
 bookRouter.delete('/delete=:asin', async (req, res) => {
-    const deleteById = await User.findOneAndeDelete({ asin: req.params.asin })
+    const deleteById = await Meta.findOneAndDelete({ asin: req.params.asin })
     res.json(deleteById)
 });
 

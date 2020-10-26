@@ -18,6 +18,7 @@ const bookSchema = mongoose.Schema({
         buy_after_viewing: [String]
     },
     categories: { type: Array },
+    reviewCount: {type: Number, default: 0},
     id: false,
 
 }, {

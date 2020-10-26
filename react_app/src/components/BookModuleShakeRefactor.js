@@ -48,19 +48,7 @@ const BookModuleShakeRefactor = () => {
                     <ShakeSingularBook key={book.asin} book={book} />
                 )}
             </div>
-            {/*<div className='paginator'>*/}
-            {/*    /!* {paginator()}  *!/*/}
-            {/*    <Grid*/}
-            {/*        container spacing={0}*/}
-            {/*        direction="column"*/}
-            {/*        alignItems='center'*/}
-            {/*    >*/}
-            {/*        <Grid>*/}
-            {/*            {paginator()}*/}
-            {/*        </Grid>*/}
-            {/*    </Grid>*/}
-            {/*</div>*/}
-            {/*Boss sexy anot my no css mode*/}
+
             <Box display='flex' justifyContent='center'>
                 <PaginatorSimple currPage={currPage} setCurrPage={setCurrPage} />
             </Box>
