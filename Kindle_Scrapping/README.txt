@@ -1,0 +1,1 @@
+Open Kindle Database Cleaner.ipynb, Jupyter notebook is annotated with instructions and expirations. All other files used in the Jupyter notebook are included in this folder (except for original metadata file as file > 100mb)
