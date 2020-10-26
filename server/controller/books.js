@@ -7,6 +7,19 @@ bookRouter.get('/all', async (req, res, next) => {
     const metadata = await Meta.find({}, { title: 1, asin: 1, imUrl: 1, price: 1, author: 1, _id: 0 })
     res.json(metadata)
 })
+
+
+bookRouter.get('/page=:pagenumber&limit=:limitnumber/sortby=:sorty&order=:order', async (req, res) => {
+    const pageNumber = parseInt(req.params.pagenumber) -1
+    const sortyMorty = req.params.sorty //suports reviews and genres yet
+    const orderino = parseInt(req.params.order) // can be 1 or -1
+    const limitNumber = parseInt(req.params.limitnumber)
+    const selectedMetadata = sortyMorty === 'reviews'
+        ? await Meta.find({}, { title: 1, asin: 1, imUrl: 1, price: 1, author: 1, _id: 0 }).sort({'reviewCount': orderino}).skip(pageNumber * limitNumber).limit(limitNumber)
+        : await Meta.find({}, { title: 1, asin: 1, imUrl: 1, price: 1, author: 1, _id: 0 }).sort({'categories': orderino}).skip(pageNumber * limitNumber).limit(limitNumber)
+    res.json(selectedMetadata)
+})
+
 //for main page book list, split querying book data into pages from index {value1} to index {value2}
 bookRouter.get('/from=:value1/to=:value2', async (req, res) => {
     const selectedMetadata = await Meta.find({}, { title: 1, asin: 1, imUrl: 1, price: 1, author: 1, _id: 0 })
@@ -15,7 +28,7 @@ bookRouter.get('/from=:value1/to=:value2', async (req, res) => {
 })
 
 bookRouter.get('/page=:pagenumber&limit=:limitnumber', async (req, res) => {
-    const pageNumber = parseInt(req.params.pagenumber)
+    const pageNumber = parseInt(req.params.pagenumber) - 1
     const limitNumber = parseInt(req.params.limitnumber)
     const selectedMetadata = await Meta.find({}, { title: 1, asin: 1, imUrl: 1, price: 1, author: 1, _id: 0 })
         .skip(pageNumber * limitNumber).limit(limitNumber)
