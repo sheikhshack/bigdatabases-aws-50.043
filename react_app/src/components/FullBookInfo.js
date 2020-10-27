@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import '../styles/bookStyle.css'
 import bookService from '../services/bookService'
+import reviewService from '../services/reviewService'
 import Box from '@material-ui/core/Box'
 import Grid from '@material-ui/core/Grid'
 import { Typography } from '@material-ui/core'
@@ -69,6 +70,7 @@ const FullBookInfo = ({asin}) => {
     const [book, setBook] = useState({})
     const [related, setRelated] = useState([])
     const [categories, setCategories] = useState([])
+    const [reviews,setReviews] = useState([])
     const [reload, setReload] = useState(false)
 
     const juicit = () => {
@@ -84,7 +86,17 @@ const FullBookInfo = ({asin}) => {
             setRelated(bookData.related_buys)
             setCategories(bookData.categories[0])
         }
+
         fetchBook()
+        
+        async function getReviews(){
+            const getreviews = await reviewService.reviewsBasedonAsin(asin,0,6)
+            console.log('All my reviews')
+            setReviews(getreviews)
+            console.log(reviews)
+        }
+
+        getReviews()
 
     }, [reload])
 
@@ -145,16 +157,12 @@ const FullBookInfo = ({asin}) => {
                             <Typography gutterBottom variant="h4" component="h4" >Book Reviews</Typography>
                             <hr />
                             <Grid container direction="column" justify="center" spacing={1}>
-                                <Grid item>
-                                    <ReviewCard reviewerName={'Gail'} reviewTime={'Reviewed on: 03 28, 2014'} reviewText={'The Iron Marshall, by Louie L`Amour is one of his best. Of course all of his are the best.Louie is a man who knew the west. His books make it possible to really feel how it was.'} rating={'5'} ></ReviewCard>
+                                {reviews.map(review => (
+                                <Grid key={review.id} item>
+                                    <ReviewCard key={review.id} review={review} ></ReviewCard>
                                 </Grid>
-                                <Grid item>
-                                    <ReviewCard reviewerName={'Jose'} reviewTime={'Reviewed on: 27 10, 2020'} reviewText={'Aeneid is a latin poem. Not a fan of latin poetry'} rating={'2'} ></ReviewCard>
-                                </Grid>
+                                ))}
                             </Grid>
-                            {/* <Box fontStyle="italic">
-                                <Typography  variant="body1" fontStyle="italic" >Book reviews</Typography>
-                            </Box> */}
                         </Box>
                         </Box>
                     </Grid>

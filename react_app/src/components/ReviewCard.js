@@ -63,7 +63,10 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const ReviewCard = ({ reviewerName, reviewTime, reviewText, rating}) => {
+// { reviewerName, reviewTime, reviewText, rating}
+const ReviewCard = ({review}) => {
+  console.log('this is the review to show')
+  console.log(review)
   const styles = useStyles();
   return (
     <div className={styles.root}>
@@ -71,17 +74,15 @@ const ReviewCard = ({ reviewerName, reviewTime, reviewText, rating}) => {
         <Row p={2} gap={2}>
           <Avatar className={styles.logo} variant={'rounded'} src={genericProfileIcon} />
           <Info position={'middle'}>
-            <InfoTitle>{reviewerName}</InfoTitle>
-            {/* <Typography variant="h6">{reviewerName}</Typography> */}
-            {/* <InfoSubtitle>{reviewTime}</InfoSubtitle> */}
-            <Typography variant="caption" fontStyle="italic">{reviewTime}</Typography>
+            <InfoTitle>{review.reviewerName}</InfoTitle>
+            <Typography variant="caption" fontStyle="italic">{'Reviewed on:'+review.reviewTime}</Typography>
             <InfoSubtitle>
-                <Rating name="read-only" size="small"  value={rating} readOnly />
+                <Rating name="read-only" size="small"  value={review.overall} readOnly />
             </InfoSubtitle>
           </Info>
         </Row>
         <Box pb={1} px={2} color={'grey.600'} fontSize={'0.875rem'}>
-            <Typography  variant="body1">{reviewText}</Typography>
+            <Typography  variant="body1">{review.reviewText}</Typography>
         </Box>
       </Column>
     </div>
