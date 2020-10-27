@@ -11,7 +11,7 @@ const getAllBooksRanged = async (startingRange, endingRange) => {
     return response.data
 }
 
-const getPaginatedBooks = async(pageNumber, limit = 20) => {
+const getPaginatedBooks = async (pageNumber, limit = 20) => {
     const response = await axios.get(baseUrl + `/page=${pageNumber}&limit=${limit}`)
     return response.data
 }
@@ -48,5 +48,5 @@ const queryBookByAuthor = async (author) => {
     return response.data
 }
 
-export default { getAllBooks, getAllBooksRanged, queryBookByAsin, singleBookMode, queryBookByAuthor, queryBookByTitle, getPaginatedBooks }
+export default { getAllBooks, getAllBooksRanged, queryBookByAsin, singleBookMode, queryBookByAuthor, queryBookByTitle, getPaginatedBooks, addNewBook }
 

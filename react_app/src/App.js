@@ -9,6 +9,7 @@ import LoginModule from './components/LoginForm'
 import testModule from './components/Paginator'
 // import BookModule from './components/main/bookShelf/Books';
 import FullBookInfo from './components/FullBookInfo';
+import AddBook from './components/AddBook'
 import './styles/app.css'
 import Center from 'react-center'
 import Notification from './components/Notification'
@@ -55,6 +56,11 @@ const App = () => {
             <Navigation user={user} />
             <Notification />
             <Switch>
+                <Route path="/add-book">
+                    <div className='container'>
+                        <AddBook />
+                    </div>
+                </Route>
                 <Route path="/users">
                     <h1>User page</h1>
                     <div className='container'>
