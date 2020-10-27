@@ -15,7 +15,7 @@ import CardMedia from '@material-ui/core/CardMedia'
 import CardContent from '@material-ui/core/CardContent'
 import Card from '@material-ui/core/Card'
 import Chip from "@material-ui/core/Chip";
-
+import ReviewCard from '../components/ReviewCard.js'
 
 const SingularRelated = ({ relatedItem, juiced }) => {
     const history = useHistory()
@@ -141,6 +141,14 @@ const FullBookInfo = ({asin}) => {
                                     </Box>
                                 )}
                             </Box>
+                            <Box>
+                            <Typography gutterBottom variant="h4" component="h4" >Reviews</Typography>
+                            <hr />
+                            <ReviewCard reviewerName="johnson" reviewTime="today" reviewText="Hopefully this works" ></ReviewCard>
+                            {/* <Box fontStyle="italic">
+                                <Typography  variant="body1" fontStyle="italic" >Book reviews</Typography>
+                            </Box> */}
+                        </Box>
                         </Box>
                     </Grid>
                 </Grid>
