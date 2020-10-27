@@ -142,9 +142,16 @@ const FullBookInfo = ({asin}) => {
                                 )}
                             </Box>
                             <Box>
-                            <Typography gutterBottom variant="h4" component="h4" >Reviews</Typography>
+                            <Typography gutterBottom variant="h4" component="h4" >Book Reviews</Typography>
                             <hr />
-                            <ReviewCard reviewerName="johnson" reviewTime="today" reviewText="Hopefully this works" ></ReviewCard>
+                            <Grid container direction="column" justify="center" spacing={1}>
+                                <Grid item>
+                                    <ReviewCard reviewerName={'Gail'} reviewTime={'Reviewed on: 03 28, 2014'} reviewText={'The Iron Marshall, by Louie L`Amour is one of his best. Of course all of his are the best.Louie is a man who knew the west. His books make it possible to really feel how it was.'} rating={'5'} ></ReviewCard>
+                                </Grid>
+                                <Grid item>
+                                    <ReviewCard reviewerName={'Jose'} reviewTime={'Reviewed on: 27 10, 2020'} reviewText={'Aeneid is a latin poem. Not a fan of latin poetry'} rating={'2'} ></ReviewCard>
+                                </Grid>
+                            </Grid>
                             {/* <Box fontStyle="italic">
                                 <Typography  variant="body1" fontStyle="italic" >Book reviews</Typography>
                             </Box> */}
