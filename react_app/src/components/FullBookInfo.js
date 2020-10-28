@@ -162,7 +162,7 @@ const FullBookInfo = ({ asin }) => {
                                     <Typography gutterBottom variant="h4" component="h4" >Book Reviews</Typography>
                                 </Grid>
                                 <Grid item>
-                                    <Button variant="contained" color='secondary'>{'Add my review'}</Button>
+                                    <AddReviewForm/>
                                 </Grid>
                             </Grid>
                             <hr />
@@ -177,7 +177,6 @@ const FullBookInfo = ({ asin }) => {
                                     :<Typography  variant="body1">{'No reviews as of now. Add one!'}</Typography>
                                 }
                             </Grid>
-                            <AddReviewForm/>
                         </Box>
                         </Box>
                     </Grid>
