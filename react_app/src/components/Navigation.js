@@ -1,18 +1,17 @@
 import React from 'react'
 import { Navbar, Nav, NavDropdown, Form, FormControl, Button } from 'react-bootstrap'
-import { Link, Route } from 'react-router-dom'
+import { Link, Route, useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { logout } from '../reducers/userReducer'
 import SelectSearch from 'react-select-search'
 import bookService from "../services/bookService"
 import { Redirect } from "react-router-dom"
 import { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
 import SelectInput from '@material-ui/core/Select/SelectInput'
 
 
-const Navigation = ({ user }) => { 
-   
+const Navigation = ({ user }) => {
+
     //hook to store URL
     const [state, setState] = useState("")
 
@@ -20,6 +19,7 @@ const Navigation = ({ user }) => {
     const [input, setInput] = useState("")
 
     const dispatch = useDispatch()
+    const history = useHistory()
 
     const logoutFromNav = () => {
         console.log('Logging out')
@@ -28,8 +28,8 @@ const Navigation = ({ user }) => {
 
     const queryTitle = (title) => {
         console.log(title)
-        bookService.queryBookByTitle(String(title)).then(response => 
-            {   
+        bookService.queryBookByTitle(String(title)).then(response =>
+            {
                 //const history = useHistory()
                 console.log(response)
                 console.log(response[0].asin)
@@ -41,9 +41,9 @@ const Navigation = ({ user }) => {
 
     const options = [
         {name: 'Title', value: 'title'},
-        {name: 'Author', value: 'author'},  
+        {name: 'Author', value: 'author'},
     ];
-    
+
 
     if (state != ""){
         return (<Redirect to={"/book/"+state}/>)}
@@ -62,12 +62,12 @@ const Navigation = ({ user }) => {
                     <Form inline>
                         <SelectSearch options={options} value="sv" name="searchBy" placeholder="Search by" />
                         <FormControl type="text" placeholder="Search" className="mr-sm-2" onChange={(e) => setInput(e.target.value)}/>
-                        <Button variant="outline-success" onClick = {(e) => {queryTitle(input)}} > Search</Button> 
+                        <Button variant="outline-success" onClick = {(e) => {queryTitle(input)}} > Search</Button>
                     </Form>
                     <div className="pull-right btn-toolbar" style={{ margin:10 }}>
                         {/*TODO: This part here is a quicky way for me to check user state lol*/}
                         {user === null?
-                            <Button>LOGIN</Button>:
+                            <Button onClick={() => history.push('/login')}>LOGIN</Button>:
                             <Button onClick={logoutFromNav}>Hi {user.name}</Button> }
                     </div>
                 </Navbar.Collapse>

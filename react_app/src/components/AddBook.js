@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import '../styles/bookStyle.css'
 import bookService from '../services/bookService'
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import SaveIcon from '@material-ui/icons/Save';
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
+import SaveIcon from '@material-ui/icons/Save'
 import BackIcon from '@material-ui/icons/ArrowBack'
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box'
@@ -113,10 +113,10 @@ function getStyles(genre, genreName, theme) {
 
 function getModalStyle() {
     return {
-        top: `50%`,
-        left: `50%`,
-        transform: `translate(-50%, -50%)`,
-    };
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+    }
 }
 
 const AddBook = () => {
@@ -153,8 +153,8 @@ const AddBook = () => {
         setTicked(e.target.checked)
     }
     const toMainPage = () => {
-        let path = `/`;
-        history.push(path);
+        const path = '/'
+        history.push(path)
     }
     const handleChange = (e) => {
         setGenreName(e.target.value)
@@ -172,10 +172,10 @@ const AddBook = () => {
             <h2 id="simple-modal-title">Book Uploaded</h2>
             <p id="simple-modal-description">
                 A new book "{title}" {asin} has been successfully added to the database
-          </p>
+            </p>
             <Button variant='contained' color='primary' onClick={toMainPage} > Back to Main Page </Button>
         </div>
-    );
+    )
 
     const handleAddBook = async (event) => {
         event.preventDefault()
@@ -202,7 +202,7 @@ const AddBook = () => {
             <Box mx={1}>
                 <h5>
                     Fill in the fields to add a new book into the database
-                    </h5>
+                </h5>
             </Box>
             <Box display='flex' flexWrap='wrap'>
                 <Box m={1} flexGrow={1}>
@@ -277,12 +277,12 @@ const AddBook = () => {
                 <Box mx={2}>
                     <Button variant="contained" color="default" onClick={toMainPage} startIcon={<BackIcon />}>
                         Back
-                        </Button>
+                    </Button>
                 </Box>
                 <Box mx={2}>
                     <Button type='submit' variant="contained" color="primary" startIcon={<SaveIcon />}>
                         Save Book
-                        </Button>
+                    </Button>
                 </Box>
             </Box>
             <Modal
@@ -297,4 +297,4 @@ const AddBook = () => {
     )
 }
 
-export default AddBook;
+export default AddBook
