@@ -157,11 +157,15 @@ const FullBookInfo = ({asin}) => {
                             <Typography gutterBottom variant="h4" component="h4" >Book Reviews</Typography>
                             <hr />
                             <Grid container direction="column" justify="center" spacing={1}>
-                                {reviews.map(review => (
-                                <Grid key={review.id} item>
-                                    <ReviewCard key={review.id} review={review} ></ReviewCard>
-                                </Grid>
-                                ))}
+                                {
+                                (reviews.length>0)
+                                    ?reviews.map(review => (
+                                    <Grid key={review.id} item>
+                                        <ReviewCard key={review.id} review={review} ></ReviewCard>
+                                    </Grid>
+                                    ))
+                                    :<Typography  variant="body1">{'No reviews as of now. Add one!'}</Typography>
+                                }
                             </Grid>
                         </Box>
                         </Box>
