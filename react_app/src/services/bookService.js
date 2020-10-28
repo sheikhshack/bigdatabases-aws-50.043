@@ -11,8 +11,10 @@ const getAllBooksRanged = async (startingRange, endingRange) => {
     return response.data
 }
 
-const getPaginatedBooks = async (pageNumber, limit = 20) => {
-    const response = await axios.get(baseUrl + `/page=${pageNumber}&limit=${limit}`)
+const getPaginatedBooks = async (pageNumber, limit = 20, sort=null, order=1) => {
+    const response = sort !== null
+        ? await axios.get(baseUrl + `/page=${pageNumber}&limit=${limit}/sortby=${sort}&order=${order}`)
+        : await axios.get(baseUrl + `/page=${pageNumber}&limit=${limit}`)
     return response.data
 }
 

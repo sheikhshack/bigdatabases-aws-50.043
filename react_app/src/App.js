@@ -80,16 +80,8 @@ const App = () => {
                 </Route>
                 <Route path="/">
                     <h1>Books Page</h1>
-                    <div className="container">
-                        <Grid
-                            container spacing={0}
-                            direction="column"
-                            alignItems='center'
-                        >
-                            <Grid>
-                                <BookModuleShakeRefactor />
-                            </Grid>
-                        </Grid>
+                    <div>
+                        <BookModuleShakeRefactor />
                     </div>
                 </Route>
             </Switch>
