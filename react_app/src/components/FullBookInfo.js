@@ -18,6 +18,7 @@ import Card from '@material-ui/core/Card'
 import Button from '@material-ui/core/Button'
 import Chip from "@material-ui/core/Chip";
 import ReviewCard from '../components/ReviewCard.js'
+import AddReviewForm from '../components/AddReviewForm.js'
 
 const SingularRelated = ({ relatedItem, juiced }) => {
     const history = useHistory()
@@ -176,6 +177,7 @@ const FullBookInfo = ({asin}) => {
                                     :<Typography  variant="body1">{'No reviews as of now. Add one!'}</Typography>
                                 }
                             </Grid>
+                            <AddReviewForm/>
                         </Box>
                         </Box>
                     </Grid>
