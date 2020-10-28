@@ -15,6 +15,7 @@ import CardActionArea from '@material-ui/core/CardActionArea'
 import CardMedia from '@material-ui/core/CardMedia'
 import CardContent from '@material-ui/core/CardContent'
 import Card from '@material-ui/core/Card'
+import Button from '@material-ui/core/Button'
 import Chip from "@material-ui/core/Chip";
 import ReviewCard from '../components/ReviewCard.js'
 
@@ -154,7 +155,15 @@ const FullBookInfo = ({asin}) => {
                                 )}
                             </Box>
                             <Box>
-                            <Typography gutterBottom variant="h4" component="h4" >Book Reviews</Typography>
+                            <br/>
+                            <Grid container direction={'row'} justify='space-between' spacing={2}>
+                                <Grid item>
+                                    <Typography gutterBottom variant="h4" component="h4" >Book Reviews</Typography>
+                                </Grid>
+                                <Grid item>
+                                    <Button variant="contained" color='secondary'>{'Add my review'}</Button>
+                                </Grid>
+                            </Grid>
                             <hr />
                             <Grid container direction="column" justify="center" spacing={1}>
                                 {
