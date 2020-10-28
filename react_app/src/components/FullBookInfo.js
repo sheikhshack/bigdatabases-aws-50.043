@@ -17,7 +17,6 @@ import Card from '@material-ui/core/Card'
 import Chip from "@material-ui/core/Chip";
 import '../styles/fullBook.css'
 
-
 const SingularRelated = ({ relatedItem, juiced }) => {
     const history = useHistory()
     const goToView = () => {
