@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom'
 import FormControl from '@material-ui/core/FormControl';
 import Rating from '@material-ui/lab/Rating';
 import { Typography } from '@material-ui/core'
@@ -10,6 +11,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
+import store from '../store'
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -30,11 +33,15 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
-const AddReviewForm = ({ onSubmit }) => {
+const AddReviewForm = () => {
 
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const [value,setValue] = useState(0)
+
+    const history = useHistory()
+    store.dispatch({type:"user"})
+    const userAvailable = store.getState().user
 
     const handleOpen = () => {
         setOpen(true);
@@ -44,63 +51,98 @@ const AddReviewForm = ({ onSubmit }) => {
         setOpen(false);
     };
 
-    return (
-    <div>
-    <Button variant="contained" color='secondary'  onClick={handleOpen}>{'Add my review'}</Button> 
-    <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        className={classes.modal}
-        open={open}
-        onClose={handleClose}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-            timeout: 500,
-        }}
-    >
-        <Fade in={open}>
-            <div className={classes.paper}>
-                <Grid container direction="column"justify="center" spacing={2} >
-                    <Grid item>
-                        <Typography gutterBottom variant="h4" component="h4" >{'My New Review'}</Typography>
+    if(userAvailable === null){
+        console.log(userAvailable)
+        return(
+            <div>
+                <Button variant="contained" color='secondary'  onClick={handleOpen}>{'Add my review'}</Button> 
+                <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                className={classes.modal}
+                open={open}
+                onClose={handleClose}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                    timeout: 500,
+                }}
+                >
+                    <div className={classes.paper}>
+                        <Grid container direction="column" justify="center" alignItems="center" spacing={2} >
+                        <Grid item>
+                            <Typography gutterBottom variant="h4" component="h4" >{'Login Required'}</Typography>
+                        </Grid>
+                        <Grid item>
+                            <Button  variant='contained' color='primary' onClick={() => history.push('/login')}>{'Click here to login' } </Button>
+                        </Grid>
                     </Grid>
-                    <Grid item>
-                        <TextField
-                            id="ReviewText"
-                            label="My Book Review"
-                            InputProps={{
-                                classes: {
-                                  input: classes.textField,
-                                },
-                              }}
-                            multiline
-                            fullWidth={true} 
-                            rows={10}
-                            placeholder="Write your review here"
-                            variant="outlined"
-                        />
-                    </Grid>
-                    <Grid item>
-                        <Typography variant="h6" >{'My Book Rating'}</Typography>
-                    </Grid>
-                    <Grid item> 
-                        <Rating name="simple-controlled" 
-                            value={value}
-                            onChange={(event, newValue) => {
-                                setValue(newValue);
-                            }}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <Button variant="contained" color='secondary'>{'Add my review'}</Button> 
-                    </Grid>
-                </Grid>
+                    </div>
+                </Modal>
             </div>
-        </Fade>
-    </Modal>
-    </div>
-    );
+        );
+    }
+    else{
+        console.log('No need user')
+        console.log(userAvailable)
+        return (
+        <div>
+        <Button variant="contained" color='secondary'  onClick={handleOpen}>{'Add my review'}</Button> 
+        <Modal
+            aria-labelledby="transition-modal-title"
+            aria-describedby="transition-modal-description"
+            className={classes.modal}
+            open={open}
+            onClose={handleClose}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+                timeout: 500,
+            }}
+        >
+            <Fade in={open}>
+                <div className={classes.paper}>
+                    <Grid container direction="column"justify="center" spacing={2} >
+                        <Grid item>
+                            <Typography gutterBottom variant="h4" component="h4" >{'My New Review'}</Typography>
+                        </Grid>
+                        <Grid item>
+                            <TextField
+                                id="ReviewText"
+                                label="My Book Review"
+                                InputProps={{
+                                    classes: {
+                                      input: classes.textField,
+                                    },
+                                  }}
+                                multiline
+                                fullWidth={true} 
+                                rows={10}
+                                placeholder="Write your review here"
+                                variant="outlined"
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Typography variant="h6" >{'My Book Rating'}</Typography>
+                        </Grid>
+                        <Grid item> 
+                            <Rating name="simple-controlled" 
+                                value={value}
+                                onChange={(event, newValue) => {
+                                    setValue(newValue);
+                                }}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Button variant="contained" color='secondary'>{'Add my review'}</Button> 
+                        </Grid>
+                    </Grid>
+                </div>
+            </Fade>
+        </Modal>
+        </div>
+        );
+    }
 
 
 };
