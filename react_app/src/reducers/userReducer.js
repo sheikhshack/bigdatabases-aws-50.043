@@ -1,19 +1,20 @@
 import loginService from '../services/loginService'
-import { setNotification } from "./notificationReducer";
+import { setNotification } from './notificationReducer'
+import reviewService from '../services/reviewService'
 
 // this is the goto reducer for User //
 const userReducer = (state = null, action) => {
     switch (action.type) {
-        case 'LOGIN_USER':
-            return action.data.user
-        case 'LOGOUT_USER':
-            return null
-        case 'INIT_USER':
-            return action.data.user
-        case 'REG_USER':
-            return null
-        default:
-            return state
+    case 'LOGIN_USER':
+        return action.data.user
+    case 'LOGOUT_USER':
+        return null
+    case 'INIT_USER':
+        return action.data.user
+    case 'REG_USER':
+        return null
+    default:
+        return state
 
     }
 }
@@ -24,6 +25,7 @@ export const login = (email, password) => {
             const user = await loginService.login({ email, password })
             dispatch(setNotification(`Welcome Back ${email}`, 'success'))
             window.localStorage.setItem('loggedInUser', JSON.stringify(user))
+            reviewService.setValidUser(user)
             // TODO: Look into adding token into the reviewService
             dispatch({
                 type: 'LOGIN_USER',
@@ -31,7 +33,7 @@ export const login = (email, password) => {
             })
         } catch (e) {
             // TODO: Insert notification stuff here
-            dispatch(setNotification(`Oops, wrong email or password there`, 'warning'))
+            dispatch(setNotification('Oops, wrong email or password there', 'warning'))
         }
     }
 }
@@ -40,6 +42,7 @@ export const logout = () => {
     return dispatch => {
         window.localStorage.removeItem('loggedInUser')
         // TODO: Look into setting token to be null in the reviewService
+        reviewService.setValidUser(null)
         console.log('triggered')
         dispatch({
             type: 'LOGOUT_USER'
@@ -51,7 +54,7 @@ export const initUser = () => {
     return dispatch => {
         try {
             const user = JSON.parse(window.localStorage.getItem('loggedInUser'))
-            // blogService.setValidToken(JSON.parse(window.localStorage.getItem('loggedInUser')).token)
+            reviewService.setValidUser(user)
             dispatch({
                 type: 'INIT_USER',
                 data: { user }
@@ -69,8 +72,12 @@ export const registerUser = (name, username, email, password) => {
             dispatch({
                 type: 'REG_USER'
             })
+            dispatch(setNotification('Registration successful', 'success'))
         } catch (e) {
             console.log('Registration Failed')
+            dispatch(setNotification(`Registration failed, ${e}`, 'warning'))
+
+
         }
     }
 }

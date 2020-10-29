@@ -22,8 +22,10 @@ const Navigation = ({ user }) => {
     const history = useHistory()
 
     const logoutFromNav = () => {
-        console.log('Logging out')
-        dispatch(logout())
+        if (window.confirm('Wanna log out?')){
+            dispatch(logout())
+        }
+
     }
 
     const queryTitle = (title) => {

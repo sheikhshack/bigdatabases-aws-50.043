@@ -10,7 +10,7 @@ const login = async (credentials) => {
 }
 
 const register = async (registObject) => {
-    const response = await axios.post('http://localhost:5000/user/signUp', registObject)
+    const response = await axios.post('http://localhost:5000/user/register', registObject)
     return response.data
 }
 

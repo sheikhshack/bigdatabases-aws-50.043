@@ -1,9 +1,17 @@
 import axios from 'axios'
-import store from '../store'
 const baseUrl = '/review'
 
+
+// init the api with the token for user auth
+
+let tokenUserHack = null
+
+const setValidUser = (newUser) => {
+    tokenUserHack = newUser
+}
+
 const reviewsBasedonAsin = async (asin, start, amount) => {
-    const response = await axios.post(baseUrl+`/filterBook/${asin}`,{start: start, amount: amount})
+    const response = await axios.post(baseUrl+`/filterBook/${asin}`,{ start: start, amount: amount })
     return response.data
 }
 
@@ -11,8 +19,8 @@ const addReview = async (reviewText, reviewRating, book) => {
     // const currentUser = store.getState().user
     // This book okay la, quite ma fan to read that is all
     const currentUser = {
-        reviewerID: "AAAAAAA",
-        reviewerName: "Jeroeeeeeee",
+        reviewerID: tokenUserHack.username,
+        reviewerName: tokenUserHack.name,
     }
     const reviewDate = dateFormatter()
     const unixReviewTime = Date.now()
@@ -34,13 +42,13 @@ const addReview = async (reviewText, reviewRating, book) => {
     return response.data
 }
 
-const dateFormatter = () =>{
-    var today = new Date()
-    var date = String(today.getDate()).padStart(2, '0');
-    var month = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var year = today.getFullYear();
+const dateFormatter = () => {
+    const today = new Date()
+    const date = String(today.getDate()).padStart(2, '0')
+    const month = String(today.getMonth() + 1).padStart(2, '0') //January is 0!
+    const year = today.getFullYear()
 
     return month + ' ' + date +', ' + year
 }
 
-export default {reviewsBasedonAsin, addReview}
+export default { reviewsBasedonAsin, addReview, setValidUser }

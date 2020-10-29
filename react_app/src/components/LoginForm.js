@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux'
 import { login, registerUser } from '../reducers/userReducer'
 import { setNotification } from '../reducers/notificationReducer'
 import { Form, Col } from 'react-bootstrap'
+import { useHistory } from 'react-router-dom'
 
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
@@ -45,6 +46,7 @@ const LoginForm = ({ handleRegister }) => {
     // State hooks //
     const password = useField('password')
     const email = useField('email')
+    const history = useHistory()
     // const email = useField('email')
 
 
@@ -54,6 +56,7 @@ const LoginForm = ({ handleRegister }) => {
     const handleLogin = (event) => {
         event.preventDefault()
         dispatch(login(email.value, password.value))
+        history.push('/')
         resetAll(password, email)
     }
 
@@ -74,7 +77,7 @@ const LoginForm = ({ handleRegister }) => {
                         Sign in
                     </Typography>
                     <form className={classes.form} noValidate onSubmit={handleLogin}>
-                        <TextField variant="outlined" margin="normal" required fullWidth id={email.type} label="Email Address"
+                        <TextField variant="outlined" margin="normal" required fullWidth id={email.type} label="Username"
                             name={email.type} autoComplete="email" autoFocus value={email.value} onChange={email.onChange}/>
                         <TextField variant="outlined" margin="normal" required fullWidth name={password.type} label="Password"
                             type={password.type} id="password" value={password.value} autoComplete="current-password" onChange={password.onChange}
@@ -120,9 +123,13 @@ const RegisterForm = ({ handleLoginSwitch }) => {
 
     const handleRegister = (event) => {
         event.preventDefault()
-        console.log('User registering with credentials', { username, name, email, password })
+        if (!password.value || password.value.length < 10 || password.value.match(/^[A-Za-z]+$/) || password.value.match(/^[0-9]+$/)) {
+            dispatch(setNotification('Please key in an alphanumeric password of minimum 10 characters', 'warning'))
+            return 0
+        }
         setNotification(`Registration succeeded for ${username}`, 'success')
-        dispatch(registerUser(name, username, email, password))
+        dispatch(registerUser(name.value, username.value, email.value, password.value))
+        handleLoginSwitch()
     }
 
     return (
