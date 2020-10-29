@@ -8,12 +8,20 @@ const reviewsBasedonAsin = async (asin, start, amount) => {
 }
 
 const addReview = async (reviewText, reviewRating, book) => {
-    const currentUser = store.getState().user
+    // const currentUser = store.getState().user
+    // This book okay la, quite ma fan to read that is all
+    const currentUser = {
+        reviewerID: "AAAAAAA",
+        reviewerName: "Jeroeeeeeee",
+    }
     const reviewDate = dateFormatter()
     const unixReviewTime = Date.now()
 
+    console.log('This is the book')
+    console.log(book)
+
     const postBody = {
-        asin: book.asin,
+        asin: book.reviewBook.asin,
         reviewText: reviewText,
         overall: reviewRating,
         reviewTime: reviewDate,

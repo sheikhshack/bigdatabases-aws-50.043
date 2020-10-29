@@ -82,7 +82,7 @@ const FullBookInfo = ({ asin }) => {
     useEffect(() => {
         async function fetchBook() {
             const bookData = await bookService.singleBookMode(asin)
-            console.log('response')
+            // console.log('response')
             console.log(bookData.related_buys)
             setBook(bookData)
             setRelated(bookData.related_buys)
@@ -93,9 +93,9 @@ const FullBookInfo = ({ asin }) => {
         
         async function getReviews(){
             const getreviews = await reviewService.reviewsBasedonAsin(asin,0,6)
-            console.log('All my reviews')
+            // console.log('All my reviews')
             setReviews(getreviews)
-            console.log(reviews)
+            // console.log(reviews)
         }
 
         getReviews()

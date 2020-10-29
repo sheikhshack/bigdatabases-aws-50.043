@@ -13,7 +13,7 @@ import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import store from '../store'
 import reviewService from '../services/reviewService'
-import bookService from '../services/bookService';
+import { setNotification } from '../reducers/notificationReducer';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -39,11 +39,12 @@ const AddReviewForm = (reviewBook) => {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const [value,setValue] = useState(0)
-    const [reviewText, setText] = useState("")
+    const [reviewText, setText] = useState('')
+    const userAvailable = true
 
     const history = useHistory()
-    store.dispatch({type:"user"})
-    const userAvailable = store.getState().user
+    // store.dispatch({type:"user"})
+    // const userAvailable = store.getState().user
 
     const handleOpen = () => {
         setOpen(true);
@@ -55,23 +56,20 @@ const AddReviewForm = (reviewBook) => {
 
     const postReview = (reviewText, reviewRating, reviewBook) =>{
         if(reviewText!== null && reviewRating!= 0){
-            const reviewAdded = bookService.addReview(reviewText, reviewRating, reviewBook)
+            const reviewAdded = reviewService.addReview(reviewText, reviewRating, reviewBook)
             console.log(reviewAdded)
+            store.dispatch(setNotification("Congrats, your review has been added!", "success"))
+            handleClose()
         }
         else{
-            store.dispatch({
-                type:'SET',
-                data: {
-                    message: 'Please fill in all details',
-                    mode: 'warning'
-                }})
+            store.dispatch(setNotification("Please fill in all details", "warning"))
         }
 
-        // Add new review to review store
+        // TODO:Add new review to review store
     }
 
     if(userAvailable === null){
-        console.log(userAvailable)
+        // console.log(userAvailable)
         return(
             <div>
                 <Button variant="contained" color='secondary'  onClick={handleOpen}>{'Add my review'}</Button> 
@@ -102,8 +100,8 @@ const AddReviewForm = (reviewBook) => {
         );
     }
     else{
-        console.log('No need user')
-        console.log(userAvailable)
+        // console.log('No need user')
+        // console.log(userAvailable)
         return (
         <div>
         <Button variant="contained" color='secondary'  onClick={handleOpen}>{'Add my review'}</Button> 
@@ -135,8 +133,10 @@ const AddReviewForm = (reviewBook) => {
                                       input: classes.textField,
                                     },
                                   }}
-                                onChange={text =>{
-                                    setText(text)
+                                onBlur={e =>{
+                                    console.log(e.target.value)
+                                    setText(e.target.value)
+                                    console.log(e.target.value)
                                 }}
                                 multiline
                                 fullWidth={true} 
@@ -157,7 +157,7 @@ const AddReviewForm = (reviewBook) => {
                             />
                         </Grid>
                         <Grid item>
-                            <Button variant="contained" color='secondary'>{'Add my review'}</Button> 
+                            <Button variant="contained" color='secondary' onClick={() => postReview(reviewText,value,reviewBook)}>{'Add my review'}</Button> 
                         </Grid>
                     </Grid>
                 </div>
