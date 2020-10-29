@@ -57,9 +57,15 @@ const AddReviewForm = (reviewBook) => {
         setOpen(false)
     }
 
+<<<<<<< Updated upstream
     const postReview = (reviewText, reviewRating, reviewBook) => {
         if(reviewText!== null && reviewRating!== 0){
             const reviewAdded = reviewService.addReview(reviewText, reviewRating, reviewBook)
+=======
+    const postReview = async (reviewText, reviewRating, reviewBook) =>{
+        if(reviewText!== null && reviewRating!= 0){
+            const reviewAdded = await reviewService.addReview(reviewText, reviewRating, reviewBook)
+>>>>>>> Stashed changes
             console.log(reviewAdded)
             store.dispatch(setNotification('Congrats, your review has been added!', 'success'))
             handleClose()

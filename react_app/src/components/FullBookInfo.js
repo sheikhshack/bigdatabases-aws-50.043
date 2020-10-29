@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import store from '../store'
 import '../styles/bookStyle.css'
 import bookService from '../services/bookService'
 import reviewService from '../services/reviewService'
@@ -75,12 +77,21 @@ const FullBookInfo = ({ asin }) => {
     const [reviews,setReviews] = useState([])
     const [reload, setReload] = useState(false)
 
+    const dispatch = useDispatch()
+
+    // const unsubscribe = store.subscribe(() => {
+    //     if(reviews.length <= store.getState().reviews[asin].length){
+    //         setReviews(store.getState().reviews[asin])
+    //     }
+    // })
+
     const juicit = () => {
         setReload(!reload)
     }
 
     useEffect(() => {
         async function fetchBook() {
+            console.log(asin)
             const bookData = await bookService.singleBookMode(asin)
             // console.log('response')
             console.log(bookData.related_buys)
@@ -92,9 +103,12 @@ const FullBookInfo = ({ asin }) => {
         fetchBook()
         
         async function getReviews(){
-            const getreviews = await reviewService.reviewsBasedonAsin(asin,0,6)
+            // const getreviews = await reviewService.reviewsBasedonAsin(asin,0,6)
+            // setReviews(getreviews)
+            dispatch(getReviews(asin,0,6))
             // console.log('All my reviews')
-            setReviews(getreviews)
+            const bookReviews = store.getState().reviews[asin]
+            setReviews(bookReviews)
             // console.log(reviews)
         }
 
