@@ -12,7 +12,8 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import store from '../store'
-
+import reviewService from '../services/reviewService'
+import bookService from '../services/bookService';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -33,11 +34,12 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
-const AddReviewForm = () => {
+const AddReviewForm = (reviewBook) => {
 
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const [value,setValue] = useState(0)
+    const [reviewText, setText] = useState("")
 
     const history = useHistory()
     store.dispatch({type:"user"})
@@ -50,6 +52,23 @@ const AddReviewForm = () => {
     const handleClose = () => {
         setOpen(false);
     };
+
+    const postReview = (reviewText, reviewRating, reviewBook) =>{
+        if(reviewText!== null && reviewRating!= 0){
+            const reviewAdded = bookService.addReview(reviewText, reviewRating, reviewBook)
+            console.log(reviewAdded)
+        }
+        else{
+            store.dispatch({
+                type:'SET',
+                data: {
+                    message: 'Please fill in all details',
+                    mode: 'warning'
+                }})
+        }
+
+        // Add new review to review store
+    }
 
     if(userAvailable === null){
         console.log(userAvailable)
@@ -110,11 +129,15 @@ const AddReviewForm = () => {
                             <TextField
                                 id="ReviewText"
                                 label="My Book Review"
+                                required
                                 InputProps={{
                                     classes: {
                                       input: classes.textField,
                                     },
                                   }}
+                                onChange={text =>{
+                                    setText(text)
+                                }}
                                 multiline
                                 fullWidth={true} 
                                 rows={10}

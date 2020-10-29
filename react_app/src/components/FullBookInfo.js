@@ -162,7 +162,7 @@ const FullBookInfo = ({ asin }) => {
                                     <Typography gutterBottom variant="h4" component="h4" >Book Reviews</Typography>
                                 </Grid>
                                 <Grid item>
-                                    <AddReviewForm/>
+                                    <AddReviewForm reviewBook={book}/>
                                 </Grid>
                             </Grid>
                             <hr />
