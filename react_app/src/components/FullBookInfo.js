@@ -103,16 +103,18 @@ const FullBookInfo = ({ asin }) => {
         fetchBook()
         
         async function getReviews(){
-            // const getreviews = await reviewService.reviewsBasedonAsin(asin,0,6)
-            // setReviews(getreviews)
-            dispatch(getReviews(asin,0,6))
+            const getreviews = await reviewService.reviewsBasedonAsin(asin,0,6)
+            setReviews(getreviews)
+            // dispatch(getReviews(asin,0,6))
             // console.log('All my reviews')
-            const bookReviews = store.getState().reviews[asin]
-            setReviews(bookReviews)
+            // const bookReviews = store.getState().reviews[asin]
+            // setReviews(bookReviews)
             // console.log(reviews)
         }
 
-        getReviews()
+        if(reviews.length===0){
+            getReviews()
+        }
 
     }, [reload])
 
@@ -176,7 +178,16 @@ const FullBookInfo = ({ asin }) => {
                                     <Typography gutterBottom variant="h4" component="h4" >Book Reviews</Typography>
                                 </Grid>
                                 <Grid item>
-                                    <AddReviewForm reviewBook={book}/>
+                                    <AddReviewForm reviewBook={book} handleAddReview={(review) => {
+                                        // console.log("one review")
+                                        // console.log(review)
+                                        // console.log("All reviews before")
+                                        // console.log(reviews.length)
+                                        reviews.unshift(review)
+                                        // console.log("All reviews after")
+                                        // console.log(reviews.length)
+                                        // setReviews(newReviews)
+                                    }}/>
                                 </Grid>
                             </Grid>
                             <hr />

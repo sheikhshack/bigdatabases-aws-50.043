@@ -35,7 +35,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-const AddReviewForm = (reviewBook) => {
+const AddReviewForm = ({reviewBook, handleAddReview}) => {
+    console.log(handleAddReview)
 
     const classes = useStyles()
     const [open, setOpen] = useState(false)
@@ -48,6 +49,7 @@ const AddReviewForm = (reviewBook) => {
     const history = useHistory()
     // store.dispatch({type:"user"})
     // const userAvailable = store.getState().user
+    // const userAvailable = true
 
     const handleOpen = () => {
         setOpen(true)
@@ -57,17 +59,12 @@ const AddReviewForm = (reviewBook) => {
         setOpen(false)
     }
 
-<<<<<<< Updated upstream
-    const postReview = (reviewText, reviewRating, reviewBook) => {
-        if(reviewText!== null && reviewRating!== 0){
-            const reviewAdded = reviewService.addReview(reviewText, reviewRating, reviewBook)
-=======
-    const postReview = async (reviewText, reviewRating, reviewBook) =>{
+    const postReview = async (reviewText, reviewRating, reviewBook, handleAddReview) =>{
         if(reviewText!== null && reviewRating!= 0){
             const reviewAdded = await reviewService.addReview(reviewText, reviewRating, reviewBook)
->>>>>>> Stashed changes
             console.log(reviewAdded)
             store.dispatch(setNotification('Congrats, your review has been added!', 'success'))
+            handleAddReview(reviewAdded)
             handleClose()
         }
         else{
@@ -77,6 +74,7 @@ const AddReviewForm = (reviewBook) => {
         // TODO:Add new review to review store
     }
 
+    // if(userAvailable === null){
     if(user === null){
         // console.log(userAvailable)
         return(
@@ -166,7 +164,7 @@ const AddReviewForm = (reviewBook) => {
                                     />
                                 </Grid>
                                 <Grid item>
-                                    <Button variant="contained" color='secondary' onClick={() => postReview(reviewText,value,reviewBook)}>{'Add my review'}</Button>
+                                    <Button variant="contained" color='secondary' onClick={() => postReview(reviewText,value,reviewBook,handleAddReview)}>{'Add my review'}</Button>
                                 </Grid>
                             </Grid>
                         </div>

@@ -29,7 +29,7 @@ const addReview = async (reviewText, reviewRating, book) => {
     console.log(book)
 
     const postBody = {
-        asin: book.reviewBook.asin,
+        asin: book.asin,
         reviewText: reviewText,
         overall: reviewRating,
         reviewTime: reviewDate,
