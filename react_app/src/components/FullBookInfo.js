@@ -183,10 +183,12 @@ const FullBookInfo = ({ asin }) => {
                                         // console.log(review)
                                         // console.log("All reviews before")
                                         // console.log(reviews.length)
-                                        reviews.unshift(review)
+                                        // reviews.unshift(review)
+                                        var newReviews = [...reviews]
+                                        newReviews.unshift(review)
                                         // console.log("All reviews after")
                                         // console.log(reviews.length)
-                                        // setReviews(newReviews)
+                                        setReviews(newReviews)
                                     }}/>
                                 </Grid>
                             </Grid>
