@@ -25,6 +25,7 @@ const App = () => {
     // Dispatchers and selectors //
     const dispatch = useDispatch()
     const user = useSelector(state => state.user)
+    console.log(user)
 
 
     const [timer, setTimer] = useState(0) // for active notifications

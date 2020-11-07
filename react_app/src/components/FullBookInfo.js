@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import store from '../store'
 import '../styles/bookStyle.css'
 import bookService from '../services/bookService'
+import reviewService from '../services/reviewService'
 import Box from '@material-ui/core/Box'
 import Grid from '@material-ui/core/Grid'
 import { Typography } from '@material-ui/core'
@@ -14,7 +17,10 @@ import CardActionArea from '@material-ui/core/CardActionArea'
 import CardMedia from '@material-ui/core/CardMedia'
 import CardContent from '@material-ui/core/CardContent'
 import Card from '@material-ui/core/Card'
+import Button from '@material-ui/core/Button'
 import Chip from "@material-ui/core/Chip";
+import ReviewCard from '../components/ReviewCard.js'
+import AddReviewForm from '../components/AddReviewForm.js'
 import '../styles/fullBook.css'
 
 const SingularRelated = ({ relatedItem, juiced }) => {
@@ -67,7 +73,16 @@ const FullBookInfo = ({ asin }) => {
     const [book, setBook] = useState({})
     const [related, setRelated] = useState([])
     const [categories, setCategories] = useState([])
+    const [reviews,setReviews] = useState([])
     const [reload, setReload] = useState(false)
+
+    const dispatch = useDispatch()
+
+    // const unsubscribe = store.subscribe(() => {
+    //     if(reviews.length <= store.getState().reviews[asin].length){
+    //         setReviews(store.getState().reviews[asin])
+    //     }
+    // })
 
     const juicit = () => {
         setReload(!reload)
@@ -75,14 +90,30 @@ const FullBookInfo = ({ asin }) => {
 
     useEffect(() => {
         async function fetchBook() {
+            console.log(asin)
             const bookData = await bookService.singleBookMode(asin)
-            console.log('response')
+            // console.log('response')
             console.log(bookData.related_buys)
             setBook(bookData)
             setRelated(bookData.related_buys)
             setCategories(bookData.categories[0])
         }
+
         fetchBook()
+        
+        async function getReviews(){
+            const getreviews = await reviewService.reviewsBasedonAsin(asin,0,6)
+            setReviews(getreviews)
+            // dispatch(getReviews(asin,0,6))
+            // console.log('All my reviews')
+            // const bookReviews = store.getState().reviews[asin]
+            // setReviews(bookReviews)
+            // console.log(reviews)
+        }
+
+        if(reviews.length===0){
+            getReviews()
+        }
 
     }, [reload])
 
@@ -139,6 +170,40 @@ const FullBookInfo = ({ asin }) => {
                                     </Box>
                                 )}
                             </Box>
+                            <Box>
+                            <br/>
+                            <Grid container direction={'row'} justify='space-between' spacing={2}>
+                                <Grid item>
+                                    <Typography gutterBottom variant="h4" component="h4" >Book Reviews</Typography>
+                                </Grid>
+                                <Grid item>
+                                    <AddReviewForm reviewBook={book} handleAddReview={(review) => {
+                                        // console.log("one review")
+                                        // console.log(review)
+                                        // console.log("All reviews before")
+                                        // console.log(reviews.length)
+                                        // reviews.unshift(review)
+                                        var newReviews = [...reviews]
+                                        newReviews.unshift(review)
+                                        // console.log("All reviews after")
+                                        // console.log(reviews.length)
+                                        setReviews(newReviews)
+                                    }}/>
+                                </Grid>
+                            </Grid>
+                            <hr />
+                            <Grid container direction="column" justify="center" spacing={1}>
+                                {
+                                (reviews.length>0)
+                                    ?reviews.map(review => (
+                                    <Grid key={review.id} item>
+                                        <ReviewCard key={review.id} review={review} ></ReviewCard>
+                                    </Grid>
+                                    ))
+                                    :<Typography  variant="body1">{'No reviews as of now. Add one!'}</Typography>
+                                }
+                            </Grid>
+                        </Box>
                         </Box>
                     </Grid>
                 </Grid>
