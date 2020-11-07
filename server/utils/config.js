@@ -7,6 +7,7 @@ let ACCESS_KEY = process.env.ACCESS_KEY
 let SQL_IP_ADDR = process.env.SQL_IP_ADDR
 let SQL_USR = process.env.SQL_USR
 let SQL_PASS = process.env.SQL_PASS
+let MONGO_DB_SHORT = 'logger'
 
 const sequelize = new Sequelize('kindleReview', SQL_USR, SQL_PASS, {
     host: SQL_IP_ADDR,

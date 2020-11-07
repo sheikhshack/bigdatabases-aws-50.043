@@ -12,8 +12,10 @@ const middleware = require('./utils/middleware')
 const usersRouter = require('./controller/users')
 const loginRouter = require('./controller/login')
 const bookRouter = require('./controller/books')
+const logsRouter = require('./controller/logs')
 const logger = require('./utils/logger')
 const {databaseLogger, healthLogger} = require('./utils/winston')
+
 
 
 const app = express()
@@ -42,7 +44,6 @@ mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useCreateIndex: tr
             }})
 
     });
-
 
 
 
@@ -79,6 +80,7 @@ app.use('/book', bookRouter)
 app.use('/user', usersRouter)
 app.use('/login', loginRouter)
 app.use('/review', reviewsRouter);
+app.use('/logs', logsRouter);
 
 //// The following are special post-middlewares, place new ones here /////
 
