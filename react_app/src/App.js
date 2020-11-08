@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { initUser, login, logout } from './reducers/userReducer'
 import Navigation from './components/Navigation'
 import LoginModule from './components/LoginForm'
-import testModule from './components/Paginator'
 // import BookModule from './components/main/bookShelf/Books';
 import FullBookInfo from './components/FullBookInfo';
 import AddBook from './components/AddBook'
@@ -17,6 +16,7 @@ import { removeNotification, setNotification } from './reducers/notificationRedu
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import BookModuleShakeRefactor from "./components/BookModuleShakeRefactor";
 import Grid from "@material-ui/core/Grid";
+import SearchResults from './components/SearchResults'
 
 
 
@@ -57,6 +57,11 @@ const App = () => {
             <Navigation user={user} />
             <Notification />
             <Switch>
+                <Route path="/search-results">
+                    <div className='container'>
+                        <SearchResults/>
+                    </div>
+                </Route>
                 <Route path="/add-book">
                     <div className='container'>
                         <AddBook />
@@ -65,7 +70,6 @@ const App = () => {
                 <Route path="/users">
                     <h1>User page</h1>
                     <div className='container'>
-                        {testModule()}
                     </div>
                 </Route>
                 <Route path="/book/:asin" >
