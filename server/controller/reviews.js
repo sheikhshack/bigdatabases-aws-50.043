@@ -1,6 +1,8 @@
 const reviewsRouter = require('express').Router();
 const Review = require('../model/review');
 const sequelize = require('../utils/config').sequelize
+const User = require('../model/reviewer');
+require('../model/associations');
 
 const serverErrorReponse = {
   statusCode: 400,
@@ -25,12 +27,20 @@ reviewsRouter.get('/:reviewID', async (req, res) => {
   // Should throw validation error if not int
   
   // Conduct SELECT sql query to retrieve the review based on reviewID
+  // const oneReview = await Review.findOne({
+  //   where:{
+  //     id: req.params.reviewID
+  //   }
+  // })
   const oneReview = await Review.findOne({
     where:{
       id: req.params.reviewID
+    },
+    include: {
+      model: User,
+      attributes: ['reviewerName']
     }
   })
-  
   res.send(oneReview)
 
 })

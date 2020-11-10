@@ -24,6 +24,5 @@ const User = sequelize.define("User", {
     timestamps: false
   });
 
-User.hasMany(Review);
 
 module.exports = User;
