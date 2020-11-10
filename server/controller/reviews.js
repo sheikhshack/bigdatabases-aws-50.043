@@ -1,6 +1,8 @@
 const reviewsRouter = require('express').Router();
 const Review = require('../model/review');
 const sequelize = require('../utils/config').sequelize
+const User = require('../model/reviewer');
+require('../model/associations');
 
 const serverErrorReponse = {
   statusCode: 400,
@@ -25,12 +27,20 @@ reviewsRouter.get('/:reviewID', async (req, res) => {
   // Should throw validation error if not int
   
   // Conduct SELECT sql query to retrieve the review based on reviewID
+  // const oneReview = await Review.findOne({
+  //   where:{
+  //     id: req.params.reviewID
+  //   }
+  // })
   const oneReview = await Review.findOne({
     where:{
       id: req.params.reviewID
+    },
+    include: {
+      model: User,
+      attributes: ['reviewerName']
     }
   })
-  
   res.send(oneReview)
 
 })
@@ -40,12 +50,25 @@ reviewsRouter.post('/filterBook/:bookID', async (req, res) => {
   // Frontend is to let us know which reviews we are to send. This populates the start and amount fields in the reqeuest body
 
     // Raw query constructed for sequelize query
-    var sqlQuery = 'SELECT * FROM kindle_Review_Data WHERE asin = "'+req.params.bookID+'" LIMIT '+req.body.start+','+req.body.amount
+    // var sqlQuery = 'SELECT * FROM kindle_Review_Data WHERE asin = "'+req.params.bookID+'" LIMIT '+req.body.start+','+req.body.amount
     
-    //  Conduct SELECT sql query to retrieve all reviews for specific
-    const allBookReviews = await sequelize.query(sqlQuery)
+    // //  Conduct SELECT sql query to retrieve all reviews for specific
+    // const allBookReviews = await sequelize.query(sqlQuery)
+
+    const allBookReviews = await Review.findAll({
+      where: {
+        asin: req.params.bookID
+      },
+      offset: req.body.start,
+      limit: req.body.amount,
+      include: {
+        model: User,
+        attributes: ['reviewerName']
+      }
+    })
       
-    res.send(allBookReviews[0])
+    // res.send(allBookReviews[0])
+    res.send(allBookReviews)
 
   })
 
