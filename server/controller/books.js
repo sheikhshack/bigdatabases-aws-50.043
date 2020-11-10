@@ -57,11 +57,11 @@ bookRouter.get('/selectTitle=:title', async (req, res) => {
 
 //add book with title, author, price (will add more later)
 bookRouter.post('/add', async (req, res) => {
-    const { title, author, price, imUrl, description } = req.body;
+    const { title, author, price, imUrl, description, categories } = req.body;
     const asin = "ADD".concat(utils.asinStringGenerator(7));
     console.log(asin)
-    const newBook = Meta({ title, author, asin, price, imUrl, description });
-    const addedBook = await newBook.save({ title, author, asin, price, imUrl, description })
+    const newBook = Meta({ title, author, asin, price, imUrl, description, categories });
+    const addedBook = await newBook.save({ title, author, asin, price, imUrl, description, categories })
     res.json(addedBook)
 });
 //delete book by asin

@@ -130,7 +130,7 @@ const AddBook = () => {
     const [price, setPrice] = useState('')
     const [description, setDescription] = useState('')
     const [asin, setAsin] = useState('')
-    const [url, setUrl] = useState('')
+    const [url, setUrl, getUrl] = useState('')
     const [genreName, setGenreName] = useState([]);
     const [tick, setTicked] = useState(false);
     const [modalStyle] = useState(getModalStyle);
@@ -151,6 +151,15 @@ const AddBook = () => {
     };
     const handleTick = (e) => {
         setTicked(e.target.checked)
+        if (tick == false) {
+            console.log('ticked')
+            setUrl('https://saccar.com/wp-content/uploads/2016/03/amazon-no-image-available.png')
+        }
+        else if (tick == true) {
+            console.log('unticked')
+            setUrl('')
+        }
+
     }
     const toMainPage = () => {
         const path = '/'
@@ -176,19 +185,21 @@ const AddBook = () => {
             <Button variant='contained' color='primary' onClick={toMainPage} > Back to Main Page </Button>
         </div>
     )
-
     const handleAddBook = async (event) => {
         event.preventDefault()
         if (title == '' || author == '' || genreName.length == 0 || isNaN(price)) {
             setAlert(true);
         }
         else {
-            // if not url accepted, use default url
-            if (url == '') {
-                setUrl(`data:image/png;base64,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"alt="`)
-            }
-            const newBook = { title: title, author: author, price: price, description: description, url: url, categories: genreName }
+            console.log(url)
+            const output = [genreName]
+            const newBook = { title: title, author: author, price: price, description: description, imUrl: url, categories: output }
+            console.log('testtest')
             console.log(newBook)
+            // console.log(url)
+            // const newBook = { title: title, author: author, price: price, description: description, url: url, categories: genreName }
+            // console.log('testtest')
+            // console.log(newBook)
             const addedBook = await bookService.addNewBook(newBook)
             console.log(addedBook)
             setAsin(addedBook.asin)
