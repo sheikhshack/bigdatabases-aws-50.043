@@ -23,7 +23,7 @@ loginRouter.post('/', async (req, res) => {
 
     res
         .status(200)
-        .send({ token, username: user.reviewerID, name: user.name, email: user.email })
+        .send({ token, username: user.reviewerID, name: user.reviewerName, email: user.email })
 });
 
 
