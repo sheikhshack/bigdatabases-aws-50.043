@@ -1,6 +1,7 @@
 const usersRouter = require('express').Router();
 const bcrypt = require('bcrypt');
-const User = require('../model/user');    //User is the Collection
+const User = require('../model/reviewer');    //User is the Collection
+const utils = require('../utils/util')
 
 // get all the users
 usersRouter.get('/all', async (req, res) => {
@@ -18,32 +19,40 @@ usersRouter.post('/register', async (req, res) => {
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(password, saltRounds);
     //Admin status
-    const newUser = User({ name, username, email, passwordHash, isAdmin: false });
+    const reviewerID = "CSTMUSR".concat(utils.asinStringGenerator())
+    console.log('ID generated is', reviewerID)
+    const newUser = new User({ reviewerID, username, email, passwordHash});
     const addedUser = await newUser.save()
     res.json(addedUser)
 });
 //locate individual user by username
-usersRouter.get('/searchByUsername=:username', async (req, res) => {
-    const searchByUsername = await User.findOne({ "username": req.params.username })
+usersRouter.get('/searchByID=:id', async (req, res) => {
+    const IDquery = String(req.params.id)
+    const searchByUsername = await User.scope('withoutHash').findOne({where: {
+        reviewerID: IDquery
+        }})
     res.json(searchByUsername)
 });
 //locate individual user by email
 usersRouter.get('/searchByEmail=:email', async (req, res) => {
-    const searchByEmail = await User.findOne({ "email": req.params.email })
+    const searchByEmail = await User.scope('withoutHash').findOne({where: {
+            reviewerID: String(req.params.email)
+        }})
     res.json(searchByEmail)
 });
 
 //delete individual user by id
 usersRouter.delete('/deleteById=:id', async (req, res) => {
-    const deleteById = await User.findByIdAndDelete(req.params.id)
+    const deleteById = await User.scope('withoutHash').destroy({
+        where: {
+            reviewerID: String(req.params.id)
+        }
+    })
     res.json(deleteById)
+
 });
 
-//delete all non-admin users
-usersRouter.delete('/deleteNonAdmins', async (req, res) => {
-    const deleteNonAdmins = await User.deleteMany({ isAdmin: false });
-    res.json(deleteNonAdmins)
-});
+
 
 module.exports = usersRouter;
 

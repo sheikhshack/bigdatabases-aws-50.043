@@ -1,7 +1,6 @@
 const Sequelize = require("sequelize");
 // TODO: Import the sequelize connection and use it to create the model
 const sequelize = require('../utils/config').sequelize
-const Review = require('./review.js')
 
 const User = sequelize.define("User", {
     reviewerID: {
@@ -14,15 +13,26 @@ const User = sequelize.define("User", {
     },
     email: {
         type: Sequelize.STRING(35),
+        allowNull: false,
+        unique: true
       },
-    password: {
+    passwordHash: {
         type: Sequelize.STRING(35),
     },
   },
   {
     tableName: 'kindle_Users',
-    timestamps: false
+    timestamps: false,
+      // defaultScope: {
+      //     attributes: { exclude: ['passwordHash'] },
+      // }
+      scopes: {
+          withoutHash: {
+              attributes: { exclude: ['passwordHash'] },
+          }
+      }
   });
+
 
 
 module.exports = User;
