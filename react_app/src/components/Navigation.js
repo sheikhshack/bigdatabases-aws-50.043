@@ -169,9 +169,12 @@ const Navigation = ({ user }) => {
                                 <Button color="inherit" href = "/users">
                                 Users
                                 </Button>
-                                <Button color="inherit" href = "/login">
+                                {/* <Button color="inherit" href = "/login">
                                 Login
-                                </Button>
+                                </Button> */}
+                                {user === null
+                                    ?<Button color="inherit" onClick={() => history.push('/login')}>LOGIN</Button>
+                                    :<Button color="inherit" onClick={logoutFromNav}>Hi {user.name}</Button> }
                             </div>
                             <IconButton
                                 edge="start"
