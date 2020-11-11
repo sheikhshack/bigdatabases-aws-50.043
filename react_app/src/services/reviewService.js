@@ -4,10 +4,10 @@ const baseUrl = '/review'
 
 // init the api with the token for user auth
 
-let tokenUserHack = null
+let token= null
 
-const setValidUser = (newUser) => {
-    tokenUserHack = newUser
+const setValidToken = (tokenNew) => {
+    token = tokenNew
 }
 
 const reviewsBasedonAsin = async (asin, start, amount) => {
@@ -18,9 +18,15 @@ const reviewsBasedonAsin = async (asin, start, amount) => {
 const addReview = async (reviewText, reviewRating, book) => {
     // const currentUser = store.getState().user
     // This book okay la, quite ma fan to read that is all
-    const currentUser = {
-        reviewerID: tokenUserHack.username,
-        reviewerName: tokenUserHack.name,
+    // const currentUser = {
+    //     reviewerID: tokenUserHack.username,
+    //     reviewerName: tokenUserHack.name,
+    // }
+
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
     }
     const reviewDate = dateFormatter()
     const unixReviewTime = Date.now()
@@ -33,12 +39,10 @@ const addReview = async (reviewText, reviewRating, book) => {
         reviewText: reviewText,
         overall: reviewRating,
         reviewTime: reviewDate,
-        reviewerID: currentUser.reviewerID,
-        reviewerName: currentUser.reviewerName,
         unixReviewTime: unixReviewTime
     }
 
-    const response = await axios.post(baseUrl+'/addReview',postBody)
+    const response = await axios.post(baseUrl+'/addReview',postBody, config)
     return response.data
 }
 
@@ -51,4 +55,4 @@ const dateFormatter = () => {
     return month + ' ' + date +', ' + year
 }
 
-export default { reviewsBasedonAsin, addReview, setValidUser }
+export default { reviewsBasedonAsin, addReview, setValidToken }

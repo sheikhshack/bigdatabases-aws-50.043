@@ -16,7 +16,8 @@ loginRouter.post('/', async (req, res) => {
     }
     const userToken = {
         email: user.email,
-        id: user.reviewerID
+        reviewerName: user.reviewerName,
+        reviewerID: user.reviewerID
     };
     const token = jwt.sign(userToken, config.ACCESS_KEY);
 

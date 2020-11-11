@@ -25,7 +25,7 @@ export const login = (email, password) => {
             const user = await loginService.login({ email, password })
             dispatch(setNotification(`Welcome Back ${email}`, 'success'))
             window.localStorage.setItem('loggedInUser', JSON.stringify(user))
-            reviewService.setValidUser(user)
+            reviewService.setValidToken(user.token)
             // TODO: Look into adding token into the reviewService
             dispatch({
                 type: 'LOGIN_USER',
@@ -42,7 +42,7 @@ export const logout = () => {
     return dispatch => {
         window.localStorage.removeItem('loggedInUser')
         // TODO: Look into setting token to be null in the reviewService
-        reviewService.setValidUser(null)
+        reviewService.setValidToken(null)
         console.log('triggered')
         dispatch({
             type: 'LOGOUT_USER'
@@ -54,7 +54,7 @@ export const initUser = () => {
     return dispatch => {
         try {
             const user = JSON.parse(window.localStorage.getItem('loggedInUser'))
-            reviewService.setValidUser(user)
+            reviewService.setValidToken(user.token)
             dispatch({
                 type: 'INIT_USER',
                 data: { user }
