@@ -74,7 +74,7 @@ const ReviewCard = ({review}) => {
         <Row p={2} gap={2}>
           <Avatar className={styles.logo} variant={'rounded'} src={genericProfileIcon} />
           <Info position={'middle'}>
-            <InfoTitle>{review.reviewerName}</InfoTitle>
+            <InfoTitle>{review.User.reviewerName}</InfoTitle>
             <Typography variant="caption" fontStyle="italic">{'Reviewed on:'+review.reviewTime}</Typography>
             <InfoSubtitle>
                 <Rating name="read-only" size="small"  value={review.overall} readOnly />
