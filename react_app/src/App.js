@@ -16,8 +16,8 @@ import { removeNotification, setNotification } from './reducers/notificationRedu
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import BookModuleShakeRefactor from "./components/BookModuleShakeRefactor";
 import Grid from "@material-ui/core/Grid";
-import SearchResults from './components/SearchResults'
-
+import SearchResultCard from './components/SearchResultCard'
+import SearchResultPage from './components/SearchResultPage'
 
 
 const App = () => {
@@ -30,6 +30,12 @@ const App = () => {
 
     const [timer, setTimer] = useState(0) // for active notifications
     // const [query, setQuery] = useState('')
+    const match2 = useRouteMatch("/search-results/:searchinput")
+    const query2 = match2
+        ? String(match2.params.searchinput)
+        : null
+    console.log(query2)
+
     const match = useRouteMatch("/book/:asin")
     const query = match
         ? String(match.params.asin)
@@ -57,9 +63,9 @@ const App = () => {
             <Navigation user={user} />
             <Notification />
             <Switch>
-                <Route path="/search-results">
+                <Route path="/search-results/:searchinput">
                     <div className='container'>
-                        <SearchResults/>
+                        <SearchResultPage searchinput={query2}/>
                     </div>
                 </Route>
                 <Route path="/add-book">

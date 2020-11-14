@@ -1,5 +1,6 @@
 import Box from '@material-ui/core/Box';
 import React from 'react';
+import { useHistory } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -19,9 +20,9 @@ const useStyles = makeStyles((theme)=>({
         flexGrow: 1,
       },
       paper: {
-        padding: theme.spacing(2),
+        padding: "40px",
         margin: 'auto',
-        maxWidth: 500,
+        maxWidth: 800,
       },
       image: {
         width: 128,
@@ -35,9 +36,17 @@ const useStyles = makeStyles((theme)=>({
       },
     }));
     
-const SearchResults = () => {
+const SearchResultCard = ({book}) => {
 
     const classes = useStyles();
+
+    const asin = book.asin
+    const history = useHistory()
+
+    const GoToTitle = () => {
+        console.log('The asin clicked is: ', asin)
+        history.push(`/book/${book.asin}`)
+    }
 
     return (
         <div className={classes.root}>
@@ -45,30 +54,32 @@ const SearchResults = () => {
                 <Grid container spacing={2}>
                     <Grid item>
                         <ButtonBase className={classes.image}>
-                            <img className={classes.img} alt="Book Picture" src={"/static/images/grid-list/camera.jpg"} />
+                            <img className={classes.img} alt="Book Picture" src={book.imUrl} />
                         </ButtonBase>
                     </Grid>
                     <Grid item xs={12} sm container>
                         <Grid item xs container direction="column" spacing={2}>
                             <Grid item xs>
                                 <Typography gutterBottom variant="subtitle1">
-                                    Book Title
+                                    {book.title}
                                 </Typography>
                                 <Typography variant="body2" gutterBottom>
-                                    Author Name
+                                    Author: {book.author}
                                 </Typography>
                                 <Typography variant="body2" color="textSecondary">
-                                    Asin: 12345678
+                                    Asin: {book.asin}
                                 </Typography>
                             </Grid>
                             <Grid item>
-                                <Typography variant="body2" style={{ cursor: 'pointer' }}>
-                                    Remove
+                                <Typography variant="body2" style={{ cursor: 'pointer' }} onClick={() => GoToTitle()}>
+                                    More Info
                                 </Typography>
                             </Grid>
                         </Grid>
                         <Grid item>
-                            <Typography variant="subtitle1">$XX.XX</Typography>
+                            <Typography variant="subtitle1">
+                                Price : ${book.price}
+                            </Typography>
                         </Grid>
                     </Grid>
                 </Grid>
@@ -77,4 +88,4 @@ const SearchResults = () => {
     );
   }
 
-export default SearchResults
+export default SearchResultCard

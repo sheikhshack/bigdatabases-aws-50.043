@@ -34,7 +34,6 @@ const Navigation = ({ user }) => {
     const handleChange = (event) => {
         setAge(event.target.value);
     };
-
     //hook to store URL
     const [state, setState] = useState("")
 
@@ -42,6 +41,7 @@ const Navigation = ({ user }) => {
     const [input1, setInput] = useState("")
 
     const dispatch = useDispatch()
+
     const history = useHistory()
 
     const logoutFromNav = () => {
@@ -51,15 +51,16 @@ const Navigation = ({ user }) => {
 
     }
 
-    const queryTitle = (title) => {
-        console.log(title)
-        bookService.queryBookByTitle(String(title)).then(response =>
-            {   
-                console.log(response)
-                // console.log(response[0].asin)
-                // setState(response[0].asin)
-            });
-    }
+    // const queryTitle = (title) => {
+    //     console.log(title)
+    //     bookService.queryBookByTitle(String(title)).then(response =>
+    //         {   
+    //             console.log(response)
+    //             // console.log(response[0].asin)
+    //             // setState(response[0].asin)
+    //             setState("/search-results")
+    //         });
+    // }
 
     const options = [
         {name: 'Title', value: 'title'},
@@ -143,7 +144,7 @@ const Navigation = ({ user }) => {
     const classes = useStyles();
 
     if (state != ""){
-        return (<Redirect to={"/book/"+state}/>)}
+        return (<Redirect to={state}/>)}
     else{
         return (
 
@@ -201,8 +202,17 @@ const Navigation = ({ user }) => {
                                 
                                 <SearchIcon className={classes.searchIcon} 
                                 //onClick={() => { console.log('onClick') }}
-                                onClick = {(e) => {queryTitle(input1)}}
-                                onClick={event =>  window.location.href='http://localhost:3000/search-results'}
+                                //href='http://localhost:3000/search-results'
+                                onClick = {(e) => {
+                                    history.push(`/search-results/${input1}`)
+                                    console.log('onClick');
+                                    //window.open('http://localhost:3000/search-results')
+                                    //window.location.href='http://localhost:3000/search-results';
+                                    // queryTitle(input1);
+                                
+                                }}
+                                
+                                //onClick={event =>  window.location.href='http://localhost:3000/search-results'}
                                 /> 
                                 
                                 <InputBase

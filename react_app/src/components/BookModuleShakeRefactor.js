@@ -126,7 +126,7 @@ const BookModuleShakeRefactor = () => {
         <>
             <Box display='flex' justifyContent='flex-start'>
                 <Sorter sortMech={sortMech} setSortMech={setSortMech} order={order} setOrder={setOrder} setCurrPage={setCurrPage} />
-            </Box>
+            
             <Grid container spacing={0} direction="column" alignItems='center'>
                 <div className='cons'>
                     <div className='Books'>
@@ -140,6 +140,7 @@ const BookModuleShakeRefactor = () => {
                     </Box>
                 </div>
             </Grid>
+            </Box>
         </>
 
     )
