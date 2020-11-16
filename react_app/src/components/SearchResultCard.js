@@ -49,12 +49,12 @@ const SearchResultCard = ({book}) => {
     }
 
     return (
-        <div className={classes.root}>
-            <Paper className={classes.paper}>
+        <div className={classes.root}> 
+            <Paper className={classes.paper}> 
                 <Grid container spacing={2}>
                     <Grid item>
                         <ButtonBase className={classes.image}>
-                            <img className={classes.img} alt="Book Picture" src={book.imUrl} />
+                            <img className={classes.img} alt="Book Picture" src={book.imUrl} onClick={() => GoToTitle()} />
                         </ButtonBase>
                     </Grid>
                     <Grid item xs={12} sm container>

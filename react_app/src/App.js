@@ -25,16 +25,20 @@ const App = () => {
     // Dispatchers and selectors //
     const dispatch = useDispatch()
     const user = useSelector(state => state.user)
-    console.log(user)
+    console.log("user state:" + user)
 
 
     const [timer, setTimer] = useState(0) // for active notifications
     // const [query, setQuery] = useState('')
-    const match2 = useRouteMatch("/search-results/:searchinput")
+    const match2 = useRouteMatch("/:searchtype/search-results/:searchinput")
     const query2 = match2
         ? String(match2.params.searchinput)
         : null
-    console.log(query2)
+    const query3 = match2
+        ? String(match2.params.searchtype)
+        :null
+    console.log("route in app.js searchinput:" + query2)
+    console.log("route in app.js searchtype:" + query3)
 
     const match = useRouteMatch("/book/:asin")
     const query = match
@@ -63,9 +67,9 @@ const App = () => {
             <Navigation user={user} />
             <Notification />
             <Switch>
-                <Route path="/search-results/:searchinput">
+                <Route path="/:searchtype/search-results/:searchinput">
                     <div className='container'>
-                        <SearchResultPage searchinput={query2}/>
+                        <SearchResultPage searchtype={query3} searchinput={query2}/>
                     </div>
                 </Route>
                 <Route path="/add-book">
@@ -75,6 +79,11 @@ const App = () => {
                 </Route>
                 <Route path="/users">
                     <h1>User page</h1>
+                    <div className='container'>
+                    </div>
+                </Route>
+                <Route path="/logs">
+                    <h1>Logs</h1>
                     <div className='container'>
                     </div>
                 </Route>

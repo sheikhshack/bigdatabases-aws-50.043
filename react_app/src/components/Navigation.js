@@ -29,10 +29,10 @@ import Button from '@material-ui/core/Button';
 
 const Navigation = ({ user }) => {
 
-    const [age, setAge] = React.useState('');
+    const [searchBy, setsearchBy] = useState("Title");
 
     const handleChange = (event) => {
-        setAge(event.target.value);
+        setsearchBy(event.target.value);
     };
     //hook to store URL
     const [state, setState] = useState("")
@@ -170,6 +170,9 @@ const Navigation = ({ user }) => {
                                 <Button color="inherit" href = "/users">
                                 Users
                                 </Button>
+                                {/* <Button color="inherit" href = "/logs">
+                                Logs
+                                </Button> */}
                                 {/* <Button color="inherit" href = "/login">
                                 Login
                                 </Button> */}
@@ -191,28 +194,20 @@ const Navigation = ({ user }) => {
                                 <Select
                                 labelId="demo-simple-select-helper-label"
                                 id="demo-simple-select-helper"
-                                value={age}
+                                value={searchBy}
                                 onChange={handleChange}
                                 >
-                                <MenuItem value={10}>Title</MenuItem>
-                                <MenuItem value={20}>Author</MenuItem>
+                                <MenuItem value={"Title"}>Title</MenuItem>
+                                <MenuItem value={"Author"}>Author</MenuItem>
                                 </Select>
                             </div>
                             <div className={classes.search}>
                                 
                                 <SearchIcon className={classes.searchIcon} 
-                                //onClick={() => { console.log('onClick') }}
-                                //href='http://localhost:3000/search-results'
                                 onClick = {(e) => {
-                                    history.push(`/search-results/${input1}`)
-                                    console.log('onClick');
-                                    //window.open('http://localhost:3000/search-results')
-                                    //window.location.href='http://localhost:3000/search-results';
-                                    // queryTitle(input1);
-                                
+                                    history.push(`/${searchBy}/search-results/${input1}`)
+                                    console.log('Search Button Clicked');    
                                 }}
-                                
-                                //onClick={event =>  window.location.href='http://localhost:3000/search-results'}
                                 /> 
                                 
                                 <InputBase
