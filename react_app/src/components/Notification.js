@@ -1,19 +1,21 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { Alert } from 'react-bootstrap'
+import Alert from '@material-ui/lab/Alert'
 
 // TODO: Bootstrap it
 const Notification = () => {
     const notification = useSelector(state => state.notification)
-    // we standardise modes can only be 'success', 'danger' and 'warning' for now
+    // we standardise modes can only be 'success', 'info' and 'warning' for now
     if (notification === null){
         return null
     }
 
     return (
-        <Alert variant={notification.mode}>
-            {notification.message}
-        </Alert>
+        <>
+            <Alert severity={notification.mode}>
+                {notification.message}
+            </Alert>
+        </>
     )
 }
 

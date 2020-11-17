@@ -2,6 +2,8 @@
 const Sequelize = require("sequelize");
 // TODO: Import the sequelize connection and use it to create the model
 const sequelize = require('../utils/config').sequelize
+// TODO: Import Users model for association
+const User = require('./reviewer.js')
 
 // sequelize.define('User', {
 //     // ... (attributes)
@@ -20,7 +22,7 @@ const sequelize = require('../utils/config').sequelize
 // });
 
 
-module.exports = sequelize.define("Reviews", {
+const Review = sequelize.define("Reviews", {
   id: {
     type: Sequelize.INTEGER(11),
     autoIncrement: true,
@@ -52,10 +54,6 @@ module.exports = sequelize.define("Reviews", {
       type: Sequelize.STRING(35),
       allowNull: false
   },
-  reviewerName: {
-      type: Sequelize.STRING(20),
-      allowNull: false
-  },
   summary: {
       type: Sequelize.STRING(20),
       allowNull: true
@@ -70,5 +68,8 @@ module.exports = sequelize.define("Reviews", {
   timestamps: false
 });
 
+// Add user model here
+
+module.exports = Review
 // await sequelize.sync({ force: true });
 console.log("All models were synchronized successfully.");

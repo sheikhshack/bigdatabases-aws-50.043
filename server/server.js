@@ -12,8 +12,10 @@ const middleware = require('./utils/middleware')
 const usersRouter = require('./controller/users')
 const loginRouter = require('./controller/login')
 const bookRouter = require('./controller/books')
+const logsRouter = require('./controller/logs')
 const logger = require('./utils/logger')
 const {databaseLogger, healthLogger} = require('./utils/winston')
+
 
 
 const app = express()
@@ -45,7 +47,6 @@ mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useCreateIndex: tr
 
 
 
-
 // Sequelize Related Connections //
 config.sequelize.authenticate()
     .then(() => {
@@ -69,6 +70,10 @@ config.sequelize.authenticate()
 ///// The following are core dependencies for making server work /////
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors())
+if (process.env.NODE_ENV !== 'development'){
+    app.use(express.static('build'))
+}
+
 app.use(express.json())
 app.use(middleware.requestLogger)
 app.use(middleware.tokenExtractor)
@@ -79,6 +84,7 @@ app.use('/book', bookRouter)
 app.use('/user', usersRouter)
 app.use('/login', loginRouter)
 app.use('/review', reviewsRouter);
+app.use('/logs', logsRouter);
 
 //// The following are special post-middlewares, place new ones here /////
 

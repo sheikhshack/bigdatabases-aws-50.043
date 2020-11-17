@@ -1,16 +1,52 @@
 import React, { useState } from 'react'
-import { Form, Button, Col } from 'react-bootstrap'
 import useField from '../hooks/hooks'
 import { removeReset, resetAll } from '../utils/resets'
 import { useDispatch } from 'react-redux'
 import { login, registerUser } from '../reducers/userReducer'
-import { setNotification } from "../reducers/notificationReducer";
+import { setNotification } from '../reducers/notificationReducer'
+import { Form, Col } from 'react-bootstrap'
+import { useHistory } from 'react-router-dom'
 
+import Avatar from '@material-ui/core/Avatar'
+import Button from '@material-ui/core/Button'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import TextField from '@material-ui/core/TextField'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Checkbox from '@material-ui/core/Checkbox'
+import Link from '@material-ui/core/Link'
+import Grid from '@material-ui/core/Grid'
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
+import Typography from '@material-ui/core/Typography'
+import { makeStyles } from '@material-ui/core/styles'
+import Container from '@material-ui/core/Container'
+
+const useStyles = makeStyles((theme) => ({
+    paper: {
+        marginTop: theme.spacing(8),
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
+    avatar: {
+        margin: theme.spacing(1),
+        backgroundColor: theme.palette.secondary.main,
+    },
+    form: {
+        width: '100%', // Fix IE 11 issue.
+        marginTop: theme.spacing(1),
+    },
+    submit: {
+        margin: theme.spacing(3, 0, 2),
+    },
+}))
 
 const LoginForm = ({ handleRegister }) => {
+    const classes = useStyles()
+
     // State hooks //
     const password = useField('password')
     const email = useField('email')
+    const history = useHistory()
     // const email = useField('email')
 
 
@@ -20,38 +56,62 @@ const LoginForm = ({ handleRegister }) => {
     const handleLogin = (event) => {
         event.preventDefault()
         dispatch(login(email.value, password.value))
+        history.push('/')
         resetAll(password, email)
+    }
+
+    const deadFunction = () => {
+        dispatch(setNotification('This is db project, not frontend project', 'info'))
     }
 
 
     return (
         <>
-            <Form onSubmit={handleLogin}>
-                <Form.Group controlId="formBasicEmail" >
-                    <Form.Label>Email address</Form.Label>
-                    <Form.Control type={email.type} placeholder="Enter email" value={email.value} onChange={email.onChange} />
-                    <Form.Text className="text-muted">
-                        We'll never share your email with anyone else.
-                    </Form.Text>
-                </Form.Group>
-
-                <Form.Group controlId="formBasicPassword">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control type={password.type} placeholder="Password" value={password.value} onChange={password.onChange} />
-                </Form.Group>
-                <Button variant="primary" type="submit">
-                    Login
-                </Button>
-                <Button variant="outline-primary" onClick={handleRegister}>
-                    Sign-Up
-                </Button>
-            </Form>
+            <Container component="main" maxWidth="xs">
+                <CssBaseline />
+                <div className={classes.paper}>
+                    <Avatar className={classes.avatar}>
+                        <LockOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Sign in
+                    </Typography>
+                    <form className={classes.form} noValidate onSubmit={handleLogin}>
+                        <TextField variant="outlined" margin="normal" required fullWidth id={email.type} label="Username"
+                            name={email.type} autoComplete="email" autoFocus value={email.value} onChange={email.onChange}/>
+                        <TextField variant="outlined" margin="normal" required fullWidth name={password.type} label="Password"
+                            type={password.type} id="password" value={password.value} autoComplete="current-password" onChange={password.onChange}
+                        />
+                        <FormControlLabel
+                            control={<Checkbox value="remember" color="primary" />}
+                            label="Remember me"
+                        />
+                        <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+                            Sign In
+                        </Button>
+                        <Grid container>
+                            <Grid item xs>
+                                <Link href="#" variant="body2" onClick={deadFunction}>
+                                    Forgot password?
+                                </Link>
+                            </Grid>
+                            <Grid item>
+                                <Link href="#" variant="body2" onClick={handleRegister}>
+                                    {'Don\'t have an account? Register'}
+                                </Link>
+                            </Grid>
+                        </Grid>
+                    </form>
+                </div>
+            </Container>
         </>
     )
 
 }
 
-const RegisterForm = () => {
+const RegisterForm = ({ handleLoginSwitch }) => {
+    const classes = useStyles()
+
     // State hooks //
     const name = useField('text')
     const email = useField('email')
@@ -63,14 +123,18 @@ const RegisterForm = () => {
 
     const handleRegister = (event) => {
         event.preventDefault()
-        console.log('User registering with credentials', { username, name, email, password })
+        if (!password.value || password.value.length < 10 || password.value.match(/^[A-Za-z]+$/) || password.value.match(/^[0-9]+$/)) {
+            dispatch(setNotification('Please key in an alphanumeric password of minimum 10 characters', 'warning'))
+            return 0
+        }
         setNotification(`Registration succeeded for ${username}`, 'success')
-        dispatch(registerUser(name, username, email, password))
+        dispatch(registerUser(name.value, username.value, email.value, password.value))
+        handleLoginSwitch()
     }
 
     return (
         <>
-            <Form onSubmit={handleRegister}>
+            <form className={classes.form} noValidate onSubmit={handleRegister}>
                 <Form.Row>
                     <Form.Group as={Col} controlId="formGridFN">
                         <Form.Label>Name</Form.Label>
@@ -90,11 +154,14 @@ const RegisterForm = () => {
                     <Form.Label>Password</Form.Label>
                     <Form.Control placeholder="Password" {...removeReset(password)} />
                 </Form.Group>
-                <Button variant="primary" type="submit">
+                <Button type="submit" variant="contained" color="primary" className={classes.submit}>
                     Register
                 </Button>
+                <Button variant="contained" color="secondary" className={classes.submit} onClick={handleLoginSwitch}>
+                    Return to Login
+                </Button>
 
-            </Form>
+            </form>
         </>
     )
 
@@ -110,11 +177,15 @@ const LoginModule = () => {
         console.log('Register Mode')
     }
 
+    const handleLoginSwitch = () => {
+        setRegisterMode(false)
+        console.log('Login Mode')
+    }
+
 
     if (!registerMode) {
         return (
             <div>
-                <h2>Login</h2>
                 <LoginForm handleRegister={handleRegister} />
             </div>)
     }
@@ -122,7 +193,7 @@ const LoginModule = () => {
         return (
             <div>
                 <h2>Sign Up</h2>
-                <RegisterForm />
+                <RegisterForm handleLoginSwitch={handleLoginSwitch} />
             </div>)
     }
 }
