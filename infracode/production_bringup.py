@@ -72,20 +72,20 @@ ec2_res = boto3.resource('ec2')
 key_name_provided = 'BOTO_TEST_RUN'
 try:
     print('\nKey Pair found. Moving Forwards .....')
-    key = ec2.describe_key_pairs(KeyNames=[key_name_provided])
+    curr_key = ec2.describe_key_pairs(KeyNames=[key_name_provided])
 except ClientError:  # means it doesnt exit
     print('\nKey Pair not found. Creating .....')
-    key = ec2.create_key_pair(KeyName=key_name_provided)
+    curr_key = ec2.create_key_pair(KeyName=key_name_provided)
     with open('{}.pem'.format(key_name_provided), 'w') as keywriter:
-        keywriter.write(key.key_material)
-    print('Key Created with fingerprint: ', key.key_fingerprint)
+        keywriter.write(curr_key.key_material)
+    print('Key Created with fingerprint: ', curr_key.key_fingerprint)
 
 
 ############## Phase 3: Firing off the instances ##################
 # Managing EC2 Instances - https://boto3.amazonaws.com/v1/documentation/api/latest/guide/ec2-example-managing-instances.html
 # Additonal Docs - https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2.html#EC2.Subnet.create_instances
 # The following are Subnet class instances for provisioning (from docs)
-webserver_instance = ec2.create_instances(
+webserver_instance = ec2_res.create_instances(
     ImageId=UBUNTU_AMI_ID,
     InstanceType='t2.medium',
     SecurityGroups=[SERVER_GROUP],
@@ -95,7 +95,7 @@ webserver_instance = ec2.create_instances(
 )
 
 print('{}: Provisioning and setting up instance'.format(webserver_instance[0].id))
-webserver_instance[0].wait_until_exisits()
+webserver_instance[0].wait_until_exists()
 print('{}: Server setted up and provisioned. Awaiting Run'.format(webserver_instance[0].id))
 webserver_instance[0].wait_until_running()
 print('{}: Success! Server running and ready!'.format(webserver_instance[0].id))
