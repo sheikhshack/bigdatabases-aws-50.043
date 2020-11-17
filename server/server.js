@@ -70,6 +70,10 @@ config.sequelize.authenticate()
 ///// The following are core dependencies for making server work /////
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors())
+if (process.env.NODE_ENV !== 'development'){
+    app.use(express.static('build'))
+}
+
 app.use(express.json())
 app.use(middleware.requestLogger)
 app.use(middleware.tokenExtractor)
