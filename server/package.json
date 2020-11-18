@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
-    "build:front": "rm -rf build && cd ../react_app/ && npm run build --prod && cp -r build ../server/",
-    "build: clear": "rm -rf build",
+    "build:front": "rm -rf build && cd ../react_app/ && npm install --only=prod && npm run build --prod && cp -r build ../server/",
+    "build:clear": "rm -rf build",
     "start:full": "npm run build:front && npm start"
   },
   "author": "",
