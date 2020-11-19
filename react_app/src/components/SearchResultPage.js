@@ -36,15 +36,14 @@ const SearchResultPage = ({searchtype,searchinput}) => {
                 if (searchtype == "Title"){
                     bookData = await bookService.queryBookByTitle(searchinput)
                     console.log("bookdata is:" + bookData)    
-                    if (bookData == null){
-                        console.log("theres nothing")
-                    }
-                    setBooks(bookData)
-                        
+                    // if (bookData == null){
+                    //     console.log("theres nothing")
+                    // }
+                    setBooks(bookData)        
                 }   
                 else {
                     console.log("theres nothing")
-                    handleAlertClick()
+                    // handleAlertClick()
                 }
             
             

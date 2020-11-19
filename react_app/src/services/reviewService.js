@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = '/review'
+const baseUrl = '/api/review'
 
 
 // init the api with the token for user auth

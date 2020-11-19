@@ -14,6 +14,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import ListItem from '@material-ui/core/ListItem'
 import Divider from '@material-ui/core/Divider'
 import CardActionArea from '@material-ui/core/CardActionArea'
+import Pagination from '@material-ui/lab/Pagination';
 import CardMedia from '@material-ui/core/CardMedia'
 import CardContent from '@material-ui/core/CardContent'
 import Card from '@material-ui/core/Card'
@@ -52,7 +53,7 @@ const SingularRelated = ({ relatedItem, juiced }) => {
 }
 
 const ClusteredRelated = ({ books, juiced }) => {
-    console.log(books)
+    // console.log(books)
 
     return (
         <div>
@@ -75,6 +76,12 @@ const FullBookInfo = ({ asin }) => {
     const [categories, setCategories] = useState([])
     const [reviews,setReviews] = useState([])
     const [reload, setReload] = useState(false)
+    const reviewsPerPage = 5;
+    const [noOfPages,setNoOfPages] = useState(1)
+    const [currentPage, setCurrentPage] = useState(1)
+    const numReviewsToPull = 20
+    const [lastReviewPulled, setLastReviewPulled] = useState(20)
+    const [allReviewsPulled, setAllReviewsPulled] = useState(false)
 
     const dispatch = useDispatch()
 
@@ -93,7 +100,7 @@ const FullBookInfo = ({ asin }) => {
             console.log(asin)
             const bookData = await bookService.singleBookMode(asin)
             // console.log('response')
-            console.log(bookData.related_buys)
+            // console.log(bookData.related_buys)
             setBook(bookData)
             setRelated(bookData.related_buys)
             setCategories(bookData.categories[0])
@@ -102,13 +109,14 @@ const FullBookInfo = ({ asin }) => {
         fetchBook()
         
         async function getReviews(){
-            const getreviews = await reviewService.reviewsBasedonAsin(asin,0,6)
+            const getreviews = await reviewService.reviewsBasedonAsin(asin,0,lastReviewPulled)
             setReviews(getreviews)
             // dispatch(getReviews(asin,0,6))
             // console.log('All my reviews')
             // const bookReviews = store.getState().reviews[asin]
             // setReviews(bookReviews)
             // console.log(reviews)
+            setNoOfPages(Math.ceil(getreviews.length / reviewsPerPage))
         }
 
         if(reviews.length===0){
@@ -116,6 +124,28 @@ const FullBookInfo = ({ asin }) => {
         }
 
     }, [reload])
+
+    const addMoreReviews = async () =>{
+        return await reviewService.reviewsBasedonAsin(asin,lastReviewPulled+1,lastReviewPulled+numReviewsToPull)
+    }
+    
+    const handlePageFlip = async (event, value) => {
+        if (value === (noOfPages-1)){
+            console.log(value)
+            console.log(noOfPages)
+            const getMoreReviews = await reviewService.reviewsBasedonAsin(asin,lastReviewPulled+1,lastReviewPulled+numReviewsToPull)
+            // const getMoreReviews = addMoreReviews()
+            if(getMoreReviews.length>0){
+                setLastReviewPulled(lastReviewPulled+getMoreReviews.length)
+                var newReviews = [...reviews]
+                newReviews.concat(getMoreReviews)
+                // newReviews.push(getMoreReviews)
+                setReviews(newReviews)
+                setNoOfPages(Math.ceil(reviews.length / reviewsPerPage))
+            }
+        }
+        setCurrentPage(value);
+      };
 
 
     const useStyles = makeStyles((theme) => ({
@@ -195,7 +225,7 @@ const FullBookInfo = ({ asin }) => {
                             <Grid container direction="column" justify="center" spacing={1}>
                                 {
                                 (reviews.length>0)
-                                    ?reviews.map(review => (
+                                    ?reviews.slice((currentPage - 1) * reviewsPerPage, currentPage * reviewsPerPage).map(review => (
                                     <Grid key={review.id} item>
                                         <ReviewCard key={review.id} review={review} ></ReviewCard>
                                     </Grid>
@@ -203,10 +233,24 @@ const FullBookInfo = ({ asin }) => {
                                     :<Typography  variant="body1">{'No reviews as of now. Add one!'}</Typography>
                                 }
                             </Grid>
+                            <hr />
+                            <Box component="span">
+                                <Pagination
+                                count={noOfPages}
+                                page={currentPage}
+                                onChange={handlePageFlip}
+                                defaultPage={1}
+                                color="primary"
+                                size="large"
+                                showFirstButton
+                                showLastButton
+                                />
+                            </Box>
                         </Box>
                         </Box>
                     </Grid>
                 </Grid>
+                <br/>
                 <Divider></Divider>
 
                 <div>
