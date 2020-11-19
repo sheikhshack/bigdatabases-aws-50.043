@@ -91,7 +91,7 @@ const PaginatorSimple = ({ currPage, setCurrPage }) => {
         setCurrPage(page)
     }
     return (
-        <Pagination size="large" count={10} page={currPage} onChange={handleChange} />
+        <Pagination size="large" count={currPage+10} page={currPage} onChange={handleChange} />
     )
 }
 
@@ -126,20 +126,20 @@ const BookModuleShakeRefactor = () => {
         <>
             <Box display='flex' justifyContent='flex-start'>
                 <Sorter sortMech={sortMech} setSortMech={setSortMech} order={order} setOrder={setOrder} setCurrPage={setCurrPage} />
-            
-            <Grid container spacing={0} direction="column" alignItems='center'>
-                <div className='cons'>
-                    <div className='Books'>
-                        {books.map(book =>
-                            <ShakeSingularBook key={book.asin} book={book} />
-                        )}
-                    </div>
 
-                    <Box display='flex' justifyContent='center'>
-                        <PaginatorSimple currPage={currPage} setCurrPage={setCurrPage} />
-                    </Box>
-                </div>
-            </Grid>
+                <Grid container spacing={0} direction="column" alignItems='center'>
+                    <div className='cons'>
+                        <div className='Books'>
+                            {books.map(book =>
+                                <ShakeSingularBook key={book.asin} book={book} />
+                            )}
+                        </div>
+
+                        <Box display='flex' justifyContent='center'>
+                            <PaginatorSimple currPage={currPage} setCurrPage={setCurrPage} />
+                        </Box>
+                    </div>
+                </Grid>
             </Box>
         </>
 

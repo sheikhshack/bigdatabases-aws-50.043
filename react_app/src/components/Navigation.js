@@ -2,8 +2,8 @@ import React from 'react'
 import { Link, Route, useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { logout } from '../reducers/userReducer'
-import bookService from "../services/bookService"
-import { Redirect } from "react-router-dom"
+import bookService from '../services/bookService'
+import { Redirect } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 
 import SelectInput from '@material-ui/core/Select/SelectInput'
@@ -16,29 +16,29 @@ import { fade, makeStyles } from '@material-ui/core/styles'
 import MenuIcon from '@material-ui/icons/Menu'
 import SearchIcon from '@material-ui/icons/Search'
 import BookIcon from '@material-ui/icons/Book'
-import { MemoryRouter as Router } from 'react-router';
-import { Link as RouterLink } from 'react-router-dom';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
+import { MemoryRouter as Router } from 'react-router'
+import { Link as RouterLink } from 'react-router-dom'
+import AddCircleIcon from '@material-ui/icons/AddCircle'
 
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Select from '@material-ui/core/Select';
-import Button from '@material-ui/core/Button';
+import InputLabel from '@material-ui/core/InputLabel'
+import MenuItem from '@material-ui/core/MenuItem'
+import FormHelperText from '@material-ui/core/FormHelperText'
+import Select from '@material-ui/core/Select'
+import Button from '@material-ui/core/Button'
 
 
 const Navigation = ({ user }) => {
 
-    const [searchBy, setsearchBy] = useState("Title");
+    const [searchBy, setsearchBy] = useState('Title')
 
     const handleChange = (event) => {
-        setsearchBy(event.target.value);
-    };
+        setsearchBy(event.target.value)
+    }
     //hook to store URL
-    const [state, setState] = useState("")
+    const [state, setState] = useState('')
 
     //hook to store user input
-    const [input1, setInput] = useState("")
+    const [input1, setInput] = useState('')
 
     const dispatch = useDispatch()
 
@@ -52,15 +52,15 @@ const Navigation = ({ user }) => {
     }
 
     const options = [
-        {name: 'Title', value: 'title'},
-        {name: 'Author', value: 'author'},
-    ];
+        { name: 'Title', value: 'title' },
+        { name: 'Author', value: 'author' },
+    ]
 
     const useStyles = makeStyles((theme) => ({
         root: {
             flexGrow: 1,
-            "& .MuiFormLabel-root": {color: "white"},
-            "& .MuiInputBase-root":{color: "white"}
+            '& .MuiFormLabel-root': { color: 'white' },
+            '& .MuiInputBase-root':{ color: 'white' }
 
         },
         menuButton: {
@@ -78,7 +78,7 @@ const Navigation = ({ user }) => {
             flexGrow: 1,
             display: 'none',
             [theme.breakpoints.up('sm')]: {
-            display: 'block',
+                display: 'block',
             },
         },
         search: {
@@ -86,13 +86,13 @@ const Navigation = ({ user }) => {
             borderRadius: theme.shape.borderRadius,
             backgroundColor: fade(theme.palette.common.white, 0.15),
             '&:hover': {
-            backgroundColor: fade(theme.palette.common.white, 0.25),
+                backgroundColor: fade(theme.palette.common.white, 0.25),
             },
             marginLeft: 0,
             width: '100%',
             [theme.breakpoints.up('sm')]: {
-            marginLeft: theme.spacing(0),
-            width: 'auto',
+                marginLeft: theme.spacing(0),
+                width: 'auto',
             },
         },
         searchIcon: {
@@ -115,10 +115,10 @@ const Navigation = ({ user }) => {
             transition: theme.transitions.create('width'),
             width: '100%',
             [theme.breakpoints.up('sm')]: {
-            width: '12ch',
-            '&:focus': {
-                width: '22ch',
-            },
+                width: '12ch',
+                '&:focus': {
+                    width: '22ch',
+                },
             },
         },
         searchSelector: {
@@ -126,13 +126,13 @@ const Navigation = ({ user }) => {
             //minWidth: 80,
             font: 1,
             color: 'inherit',
-            display: "inline-block",
+            display: 'inline-block',
         }
     }))
 
-    const classes = useStyles();
+    const classes = useStyles()
 
-    if (state != ""){
+    if (state != ''){
         return (<Redirect to={state}/>)}
     else{
         return (
@@ -178,22 +178,22 @@ const Navigation = ({ user }) => {
                             <div className={classes.searchSelector}>
 
                                 <Select
-                                labelId="demo-simple-select-helper-label"
-                                id="demo-simple-select-helper"
-                                value={searchBy}
-                                onChange={handleChange}
+                                    labelId="demo-simple-select-helper-label"
+                                    id="demo-simple-select-helper"
+                                    value={searchBy}
+                                    onChange={handleChange}
                                 >
-                                <MenuItem value={"Title"}>Title</MenuItem>
-                                <MenuItem value={"Author"}>Author</MenuItem>
+                                    <MenuItem value={'Title'}>Title</MenuItem>
+                                    <MenuItem value={'Author'}>Author</MenuItem>
                                 </Select>
                             </div>
                             <div className={classes.search}>
 
                                 <SearchIcon className={classes.searchIcon}
-                                onClick = {(e) => {
-                                    history.push(`/${searchBy}/search-results/${input1}`)
-                                    console.log('Search Button Clicked');
-                                }}
+                                    onClick = {(e) => {
+                                        history.push(`/${searchBy}/search-results/${input1}`)
+                                        console.log('Search Button Clicked')
+                                    }}
                                 />
 
                                 <InputBase
@@ -204,6 +204,12 @@ const Navigation = ({ user }) => {
                                         input: classes.inputInput,
                                     }}
                                     inputProps={{ 'aria-label': 'search' }}
+                                    onKeyPress={(ev) => {
+                                        if (ev.key === 'Enter')
+                                        {
+                                            history.push(`/${searchBy}/search-results/${input1}`)
+                                        }
+                                    }}
                                 />
                             </div>
                         </Router>

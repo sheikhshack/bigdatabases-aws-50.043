@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = '/logs'
+const baseUrl = '/api/logs'
 
 const getPaginatedLogs = async (logData) => {
     const response = await axios.post(baseUrl, logData)
