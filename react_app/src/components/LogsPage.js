@@ -17,7 +17,7 @@ const PaginatorSimple = ({ currPage, setCurrPage }) => {
       setCurrPage(page)
   }
   return (
-      <Pagination size="large" count={10} page={currPage} onChange={handleChange} />
+      <Pagination size="large" count={100} page={currPage} onChange={handleChange} />
   )
 }
 
@@ -36,11 +36,20 @@ const LogsPage =({logData}) => {
   const [currPage, setCurrPage] = useState(1)
   const [logdisplay, setLogdisplay] = useState(null)
 
+  
+  
   const useStyles = makeStyles({
-    table: {
-      minWidth: 300,
+    root: {
+      minWidth: 1000,
       fontWeight: "bold",
+      color: "inherit",
     },
+    container: {
+      minWidth: 1000,
+      fontWeight: "bold",
+      color: "inherit",
+    }
+  
   });
   
   const logQuery = {pagenumber: currPage, sort: "timestamp", order: -1, limitnumber: 20}  
@@ -62,17 +71,18 @@ const LogsPage =({logData}) => {
   const classes = useStyles();
 
   return (
-    <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="simple table">
-        <TableHead>
+    <div style={{ color: "black", padding: '0 -10px', width: '120%' , height: 700}}>
+    <TableContainer className={classes.paper} component={Paper}>
+      <Table className={classes.root} aria-label="simple table">
+        <TableHead style={{ fontWeight: "fontWeightBold"}}>
           <TableRow>
+            <TableCell align="left">Timestamp</TableCell>
             <TableCell align="left">URL</TableCell>
             <TableCell align="left">Method</TableCell>
             <TableCell align="left">HTTP Version</TableCell>
             <TableCell align="left">Status Code</TableCell>
             <TableCell align="left">Response Time&nbsp;(ms)</TableCell>
             <TableCell align="left">ID</TableCell>
-            <TableCell align="left">Timestamp</TableCell>
             <TableCell align="left">Level</TableCell>
             <TableCell align="left">Message</TableCell>
           </TableRow>
@@ -81,13 +91,13 @@ const LogsPage =({logData}) => {
           {logs.map((row) => (
             <TableRow key={row.name}>
               {/* <TableCell component="th" scope="row"> {row.name}</TableCell> */}
+              <TableCell align="left">{row.timestamp}</TableCell>
               <TableCell align="left">{row.meta.req.url}</TableCell>
               <TableCell align="left">{row.meta.req.method}</TableCell>
               <TableCell align="left">{row.meta.req.httpVersion}</TableCell>
               <TableCell align="left">{row.meta.res.statusCode}</TableCell>
               <TableCell align="left">{row.meta.responseTime}</TableCell>
               <TableCell align="left">{row._id}</TableCell>
-              <TableCell align="left">{row.timestamp}</TableCell>
               <TableCell align="left">{row.level}</TableCell>
               <TableCell align="left">{row.message}</TableCell>
             </TableRow>
@@ -98,6 +108,7 @@ const LogsPage =({logData}) => {
         <PaginatorSimple currPage={currPage} setCurrPage={setCurrPage} />
       </Box>
     </TableContainer>
+    </div>
   );
 }
 
