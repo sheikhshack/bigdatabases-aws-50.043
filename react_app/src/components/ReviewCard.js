@@ -65,8 +65,8 @@ const useStyles = makeStyles(() => ({
 
 // { reviewerName, reviewTime, reviewText, rating}
 const ReviewCard = ({review}) => {
-  console.log('this is the review to show')
-  console.log(review)
+  // console.log('this is the review to show')
+  // console.log(review)
   const styles = useStyles();
   return (
     <div className={styles.root}>

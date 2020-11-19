@@ -130,18 +130,29 @@ const FullBookInfo = ({ asin }) => {
     }
     
     const handlePageFlip = async (event, value) => {
-        if (value === (noOfPages-1)){
+        if (value >= (noOfPages-1)){
             console.log(value)
             console.log(noOfPages)
-            const getMoreReviews = await reviewService.reviewsBasedonAsin(asin,lastReviewPulled+1,lastReviewPulled+numReviewsToPull)
+            const getMoreReviews = await reviewService.reviewsBasedonAsin(asin,lastReviewPulled+1,numReviewsToPull)
             // const getMoreReviews = addMoreReviews()
             if(getMoreReviews.length>0){
-                setLastReviewPulled(lastReviewPulled+getMoreReviews.length)
-                var newReviews = [...reviews]
-                newReviews.concat(getMoreReviews)
+                console.log('Got new reviews')
+                await setLastReviewPulled(lastReviewPulled+getMoreReviews.length)
+                var oldReviews = [...reviews]
+                console.log("Old set of reviews")
+                // console.log(reviews)
+                // console.log(getMoreReviews)
+                const newReviews = oldReviews.concat(getMoreReviews)
+                console.log("New set of reviews")
+                console.log(newReviews)
+                // console.log(newReviews.length)
                 // newReviews.push(getMoreReviews)
-                setReviews(newReviews)
-                setNoOfPages(Math.ceil(reviews.length / reviewsPerPage))
+                console.log("post state change")
+                await setReviews(newReviews)
+                console.log(reviews)
+                await setNoOfPages(Math.ceil(reviews.length / reviewsPerPage))
+                console.log("New pages")
+                console.log(noOfPages)
             }
         }
         setCurrentPage(value);
@@ -208,15 +219,8 @@ const FullBookInfo = ({ asin }) => {
                                 </Grid>
                                 <Grid item>
                                     <AddReviewForm reviewBook={book} handleAddReview={(review) => {
-                                        // console.log("one review")
-                                        // console.log(review)
-                                        // console.log("All reviews before")
-                                        // console.log(reviews.length)
-                                        // reviews.unshift(review)
                                         var newReviews = [...reviews]
                                         newReviews.unshift(review)
-                                        // console.log("All reviews after")
-                                        // console.log(reviews.length)
                                         setReviews(newReviews)
                                     }}/>
                                 </Grid>
