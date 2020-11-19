@@ -85,7 +85,7 @@ const App = () => {
                 </Route>
                 <Route path="/logs">
                     <h1>Logs</h1>
-                    <div className='container'>
+                    <div >
                         <LogsPage />
                     </div>
                 </Route>

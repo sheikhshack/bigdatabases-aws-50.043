@@ -59,7 +59,7 @@ const Navigation = ({ user }) => {
     const useStyles = makeStyles((theme) => ({
         root: {
             flexGrow: 1,
-            "& .MuiFormLabel-root": {color: "white"}, 
+            "& .MuiFormLabel-root": {color: "white"},
             "& .MuiInputBase-root":{color: "white"}
 
         },
@@ -72,7 +72,7 @@ const Navigation = ({ user }) => {
             },
         },
         addbookButton: {
-            
+
         },
         title: {
             flexGrow: 1,
@@ -140,7 +140,7 @@ const Navigation = ({ user }) => {
             <div className={classes.root}>
                 <AppBar position="static">
                     <Toolbar>
-                        <IconButton
+                        <IconButton onClick={() => history.push('/')}
                             edge="start"
                             className={classes.menuButton}
                             color="inherit"
@@ -155,9 +155,6 @@ const Navigation = ({ user }) => {
                             <div className={classes.buttons}>
                                 <Button color="inherit" href = "/">
                                 Home
-                                </Button>
-                                <Button color="inherit" href = "/users">
-                                Users
                                 </Button>
                                 <Button color="inherit" href = "/logs">
                                 Logs
@@ -179,7 +176,7 @@ const Navigation = ({ user }) => {
                                 <AddCircleIcon fontSize="large"/>
                             </IconButton>
                             <div className={classes.searchSelector}>
-                               
+
                                 <Select
                                 labelId="demo-simple-select-helper-label"
                                 id="demo-simple-select-helper"
@@ -191,14 +188,14 @@ const Navigation = ({ user }) => {
                                 </Select>
                             </div>
                             <div className={classes.search}>
-                                
-                                <SearchIcon className={classes.searchIcon} 
+
+                                <SearchIcon className={classes.searchIcon}
                                 onClick = {(e) => {
                                     history.push(`/${searchBy}/search-results/${input1}`)
-                                    console.log('Search Button Clicked');    
+                                    console.log('Search Button Clicked');
                                 }}
-                                /> 
-                                
+                                />
+
                                 <InputBase
                                     placeholder="Search…"
                                     onChange={(e) => setInput(e.target.value)}
