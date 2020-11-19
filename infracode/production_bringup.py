@@ -45,7 +45,7 @@ SECURITY_PERMISSIONS = {
              'IpRanges': [{'CidrIp': '0.0.0.0/0'}]}
         ]
 }
-SERVER_GROUP = 'SECURITY_GROUP_SERVER_TESTTEST'
+SERVER_GROUP = 'SECURITY_GROUP_SERVER_TESTTESTTEST'
 
 
 ########## Helper functions ##########
@@ -87,7 +87,7 @@ except ClientError as e:
 
 ############## Phase 2: Sorting out key pairs for SSH ##################
 # Key Pairs - https://boto3.amazonaws.com/v1/documentation/api/latest/guide/ec2-example-key-pairs.html
-key_name_provided = 'BOTO_TEST_RUN_v8'
+key_name_provided = 'BOTO_TEST_RUN_v11'
 try:
     curr_key = ec2.describe_key_pairs(KeyNames=[key_name_provided])
     print('\nKey Pair found. Moving Forwards .....')
@@ -135,7 +135,7 @@ sleep(50)
 #
 # ]
 webserver_routine = [
-    "cd ~; wget https://www.dropbox.com/s/9z0rw2ares13qa1/buildimage.tar.gz?dl=1 -O - | tar -xz ",
+    "cd ~; wget https://www.dropbox.com/s/8luth3csksbsbct/buildimage.tar.gz?dl=1 -O - | tar -xz ",
     "sed -i 's_<SQLIP>_'54.205.94.117'_g;s_<MONGODBURI>_'mongodb+srv://jeroee:jerokok97@testdb.cpfwr.mongodb.net/testDb?retryWrites=true'_g;s_<MONGODBURILOG>_'mongodb+srv://jeroee:jerokok97@testdb.cpfwr.mongodb.net/testDb?retryWrites=true'_g' server/.env",
     "wget -O - https://www.dropbox.com/s/cuu04w8mtmt5yc5/server_init.sh | bash"
 
@@ -146,9 +146,9 @@ c = setup_ssh_client(key_name_provided+'.pem', webserver_instance[0].public_dns_
 for command in webserver_routine:
     print("Executing {}".format( command ))
     stdin , stdout, stderr = c.exec_command(command)
-    # print(stdout.read().decode('utf=8'))
-    # print( "Errors")
-    # print(stderr.read().decode('utf=8'))
+    print(stdout.read().decode('utf=8'))
+    print( "Errors")
+    print(stderr.read().decode('utf=8'))
 c.close()
 
 print('(+) ---- Successfully deployed server at: {0}:5000'.format(webserver_instance[0].public_dns_name))
