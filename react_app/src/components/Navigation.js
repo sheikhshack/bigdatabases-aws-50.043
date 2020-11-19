@@ -51,17 +51,6 @@ const Navigation = ({ user }) => {
 
     }
 
-    // const queryTitle = (title) => {
-    //     console.log(title)
-    //     bookService.queryBookByTitle(String(title)).then(response =>
-    //         {   
-    //             console.log(response)
-    //             // console.log(response[0].asin)
-    //             // setState(response[0].asin)
-    //             setState("/search-results")
-    //         });
-    // }
-
     const options = [
         {name: 'Title', value: 'title'},
         {name: 'Author', value: 'author'},
@@ -170,9 +159,9 @@ const Navigation = ({ user }) => {
                                 <Button color="inherit" href = "/users">
                                 Users
                                 </Button>
-                                {/* <Button color="inherit" href = "/logs">
+                                <Button color="inherit" href = "/logs">
                                 Logs
-                                </Button> */}
+                                </Button>
                                 {/* <Button color="inherit" href = "/login">
                                 Login
                                 </Button> */}
@@ -224,37 +213,6 @@ const Navigation = ({ user }) => {
                     </Toolbar>
                 </AppBar>
             </div>
-
-
-
-
-
-
-            /*
-            <Navbar bg="light" expand="lg">
-                <Navbar.Brand >DB Project</Navbar.Brand>
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="mr-auto">
-                        <Nav.Link as={Link} to="/">Home</Nav.Link>
-                        <Nav.Link as={Link} to="/users">Users</Nav.Link>
-                        <Nav.Link as={Link} to="/login">Login</Nav.Link>
-
-                    </Nav>
-                    <Form inline>
-                        <FormControl type="text" placeholder="Search" className="mr-sm-2" onChange={(e) => setInput(e.target.value)}/>
-                        <Button variant="outline-success" onClick = {(e) => {queryTitle(input)}} > Search</Button>
-                    </Form>
-                    <div className="pull-right btn-toolbar" style={{ margin:10 }}>
-                        {TODO: This part here is a quicky way for me to check user state lol}
-                        {user === null?
-                            <Button onClick={() => history.push('/login')}>LOGIN</Button>:
-                            <Button onClick={logoutFromNav}>Hi {user.name}</Button> }
-                    </div>
-                </Navbar.Collapse>
-            </Navbar>
-            */
-
         )
     }
 

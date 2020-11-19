@@ -18,6 +18,7 @@ import BookModuleShakeRefactor from "./components/BookModuleShakeRefactor";
 import Grid from "@material-ui/core/Grid";
 import SearchResultCard from './components/SearchResultCard'
 import SearchResultPage from './components/SearchResultPage'
+import LogsPage from './components/LogsPage'
 
 
 const App = () => {
@@ -85,6 +86,7 @@ const App = () => {
                 <Route path="/logs">
                     <h1>Logs</h1>
                     <div className='container'>
+                        <LogsPage />
                     </div>
                 </Route>
                 <Route path="/book/:asin" >

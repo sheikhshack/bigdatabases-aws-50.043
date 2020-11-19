@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme)=>({
         padding: "40px",
         margin: 'auto',
         maxWidth: 800,
+        minWidth: 800,
       },
       image: {
         width: 128,

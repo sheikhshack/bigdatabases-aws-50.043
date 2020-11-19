@@ -50,5 +50,5 @@ const queryBookByAuthor = async (author) => {
     return response.data
 }
 
-export default { getAllBooks, getAllBooksRanged, queryBookByAsin, singleBookMode, queryBookByAuthor, queryBookByTitle, getPaginatedBooks, addNewBook }
+export default { getAllBooks, getAllBooksRanged, queryBookByAsin, singleBookMode, queryBookByAuthor, queryBookByTitle, getPaginatedBooks, addNewBook}
 
