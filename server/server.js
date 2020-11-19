@@ -3,6 +3,7 @@ const express = require('express')
 require('express-async-errors')
 const bodyParser = require('body-parser');
 const reviewsRouter = require('./controller/reviews');
+const path = require('path');
 
 const cors = require('cors')
 const mongoose = require('mongoose')
@@ -72,6 +73,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors())
 if (process.env.NODE_ENV !== 'development'){
     app.use(express.static('build'))
+
 }
 
 app.use(express.json())
@@ -80,19 +82,23 @@ app.use(middleware.tokenExtractor)
 app.use(databaseLogger)
 
 //// The following are routes, place new ones here /////
+
 app.use('/api/book', bookRouter)
 app.use('/api/user', usersRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/review', reviewsRouter);
 app.use('/api/logs', logsRouter);
+app.get('/*', function (req, res) {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
+
 
 //// The following are special post-middlewares, place new ones here /////
 
 // app.use(middleware.unknownEndpoint);
 // app.use(middleware.databaseLogger);
 app.use(middleware.errorHandler);
-
-
 
 module.exports = app
 

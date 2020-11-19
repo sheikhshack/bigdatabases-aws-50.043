@@ -51,7 +51,7 @@ const Sorter = ({ sortMech, setSortMech, order, setOrder, setCurrPage }) => {
         <Box>
             <ButtonGroup variant="contained" color="primary" ref={anchorRef} aria-label="split button">
                 <Button color="primary" size="small" onClick={handleOrderChange}>
-                    {order === 1? <ArrowDownwardIcon /> : <ArrowUpwardIcon />}
+                    {order === 1? <ArrowUpwardIcon /> : <ArrowDownwardIcon />}
                 </Button>
                 <Button>Sort by {options[sortMech]}</Button>
                 <Button color="primary" size="small" aria-controls={open ? 'split-button-menu' : undefined} aria-expanded={open ? 'true' : undefined} aria-label="select merge strategy" aria-haspopup="menu" onClick={handleToggle}>
