@@ -80,11 +80,11 @@ app.use(middleware.tokenExtractor)
 app.use(databaseLogger)
 
 //// The following are routes, place new ones here /////
-app.use('/book', bookRouter)
-app.use('/user', usersRouter)
-app.use('/login', loginRouter)
-app.use('/review', reviewsRouter);
-app.use('/logs', logsRouter);
+app.use('/api/book', bookRouter)
+app.use('/api/user', usersRouter)
+app.use('/api/login', loginRouter)
+app.use('/api/review', reviewsRouter);
+app.use('/api/logs', logsRouter);
 
 //// The following are special post-middlewares, place new ones here /////
 
