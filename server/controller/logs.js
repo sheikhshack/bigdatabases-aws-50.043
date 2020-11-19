@@ -27,8 +27,6 @@ logsRouter.post('/', async (req, res) => {
     res.json(selectedMetadata)
 })
 
-
-
 logsRouter.get('/test', async (req, res) => {
     const data = await Log.find({}).limit(5)
     console.log(data)

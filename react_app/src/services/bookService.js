@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = '/book'
+const baseUrl = '/api/book'
 
 const getAllBooks = async () => {
     const response = await axios.get(baseUrl + '/all')
@@ -50,5 +50,5 @@ const queryBookByAuthor = async (author) => {
     return response.data
 }
 
-export default { getAllBooks, getAllBooksRanged, queryBookByAsin, singleBookMode, queryBookByAuthor, queryBookByTitle, getPaginatedBooks, addNewBook }
+export default { getAllBooks, getAllBooksRanged, queryBookByAsin, singleBookMode, queryBookByAuthor, queryBookByTitle, getPaginatedBooks, addNewBook}
 

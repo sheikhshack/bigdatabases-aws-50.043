@@ -39,7 +39,7 @@ const databaseLogger = expressWinston.logger({
     // ignoreRoute: logsRouter,
     // dynamicMeta: function(req, res, err) { return [Object]; },  // Extract additional meta data from request or response (typically req.user data if using passport). meta must be true for this function to be activated
     bodyBlacklist: ['password'],
-    ignoredRoutes: ['/user', '/logs', '/logs/test']
+    ignoredRoutes: ['/api/user', '/api/logs', '/logs/test']
 
 })
 
