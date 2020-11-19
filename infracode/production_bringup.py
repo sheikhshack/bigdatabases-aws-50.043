@@ -18,7 +18,11 @@ SECURITY_PERMISSIONS = {
         {'IpProtocol': 'tcp',
          'FromPort': 22,
          'ToPort': 22,
-         'IpRanges': [{'CidrIp': '0.0.0.0/0'}]}
+         'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+         {'IpProtocol': 'tcp',
+          'FromPort': 5000,
+          'ToPort': 5000,
+          'IpRanges': [{'CidrIp': '0.0.0.0/0'}]}
     ],
     'Mongo': [
         {'IpProtocol': 'tcp',
