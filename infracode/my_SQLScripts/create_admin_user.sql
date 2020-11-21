@@ -1,5 +1,5 @@
 USE mysql;
 
-CREATE USER 'admin'@'%' IDENTIFIED BY '50043Admin';
+CREATE USER 'jeroe'@'%' IDENTIFIED BY 'Helloworld@!';
 GRANT ALL PRIVILEGES ON *.* TO 'admin'@'% 'WITH GRANT OPTION;
 FLUSH PRIVILEGES;

@@ -37,9 +37,9 @@ def setup_ssh_client(key_file, IP_address):
 ############## Phase 0: Instantiating BOTO ##################
 # Change session variables according to educate creds.
 session = boto3.Session(
-    aws_access_key_id="ASIA4GA3HFDIMENQWXMS",
-    aws_secret_access_key="vca0lV4I9+g/mtJ7aYmUruUDFEKdFCbN8pwwWQQt",
-    aws_session_token="FwoGZXIvYXdzECcaDJHr5yD1EWHU+Z7hLiLNAYyrSXzXMIG1eZ/gWzjQJGNYTOir/B0LhGVUhk5tzwmGtsOciZ0mIivMUL9EJzMJITrndtnLdSmH+QKhilRUnGeFBbNu2APyixFKLf9DQIzW7mH5KL3FX+rJjQ3/aoQ/Stm8DsWvPBHUmzFwtxgz0vP7lsNQpKN7BCASj62xBjDt4+inSUhxfFlnHw4CzQWri3rVZ6PduhyJCqORo8Tm38bAgMemh9qe3cPnfKZ0CjD3RvobXzJuaWzxoJz4iWWzZxQZDHh8F5Cnw9CueIEorLTk/QUyLcQOeh7AwKfF597wONlBjPqn4oHVQtF64sMy2XyDkMt5N/O+rL1N2+X7MCTp7w==",
+    aws_access_key_id="ASIA4GA3HFDIHPBM6YN5",
+    aws_secret_access_key="d00nebDEuwVeqe7c/Yqz9xqUQHShcOGZxsLInHeM",
+    aws_session_token="FwoGZXIvYXdzECgaDDreuhrhVngcW0czbiLNAaxBDgkSIScb0HKsTISTfpx6WK/btFiS2o28zJsh8dGGVU8rusLUyN6j3bwRmmVFDTwLs5b5HhioC1M+UJuPcnL0ySMU7/UrULfCweoDN0Kye503QYvBOWV8pSCr6TsANQcqau/ujo7rFmGty1IUD97puaGa6TDas5YfU/lJE/whJkKvYsMqk5mLeolEN4g58ZZnANAEBUEovg9zwE8MBsMGfh3BsKLo1r1qM7xxHDsrOBUQmnirh1tQmkbj9Hsv0qifmWpSr+JTqHerwFso6crk/QUyLWzwvRDIqVOQQXrIbL9FW9BqKUABzJG4eP4TcgbsFXt4n5wxB3lcxPIUZLmRIA==",
     region_name="us-east-1"
 )
 
@@ -129,7 +129,9 @@ mysql_routine = [
     "cd ~",
     "wget --output-document=setup_sql_instance.sh https://raw.githubusercontent.com/sheikhshack/bigdatabases-aws-50.043/infra/infracode/my_SQLScripts/setup_sql_instance.sh?token=AKXRJGLFQQ5HVYZMWJ2VRAS7YJFXO",
     "chmod +x setup_sql_instance.sh",
-    "./setup_sql_instance.sh"
+    "./setup_sql_instance.sh",
+    "sudo sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mysql/mysql.conf.d/mysqld.cnf"
+    
 ]
 
 # "echo Open instance connection to all IP address .....",
