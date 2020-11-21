@@ -36,11 +36,11 @@ def setup_ssh_client(key_file, IP_address):
 
 ############## Phase 0: Instantiating BOTO ##################
 # Change session variables according to educate creds.
-session = boto3.session.Session(
-    aws_access_key_id="ASIA4DOD5SYHJPUAPQMA",
-    aws_secret_access_key="6okBUZv/y+hQbts8UmY+UfZKw079hBbkMtc5B4De",
-    aws_session_token="FwoGZXIvYXdzECYaDDf859a1xqvIheTK+yLNAbLmOGeBDNd5k65JvhfR3CKOvU5zpNrhj/n7tQqrglDeIzp7EEChlXC1kxuE2unFptydURvFISMn5TmrBCDC0PwBx6QWIGeImqNX5fkpJFzSREeL0vGceNnhH5yTJmEyciKgoctJMfznt4qiTo0cyA1R7f6OaU+IKjJK+oMeREVgCOSGtBi7PTw3W4VoQ7PaC97zhrdX3XpwLEfDb3jMlyDTMDiRhFXNBRG1PdFOAln3VFByWUEA5Trk9gonb2HP9ulShjWuntq2wQch7S8owpnk/QUyLd92aCxQTD3WxNYFRydqgvsv/mqakgOrD/PfJ9InomKSTC/hmOAM0d3pZDiRAA==",
+session = boto3.Session(aws_access_key_id="ASIA4GA3HFDIEN3D2N6P",
+    aws_secret_access_key="tVip6WIr8819oqgLg/tSDy4TQdx2GrpYPVTU4h1p",
+    aws_session_token="FwoGZXIvYXdzECYaDMnawRtmg1nb7foMUiLNAY+tedC2xkzY/x+H60pZ5Z23RC1UHxc2dv46YWds+j2PAcXBbEADUbhTaJSe+CpZw0m9K2SyDzVzLoUXf7rFghgbYQX1vesiSDcZZoP6HRhaX/pNE1YGlHYto2ZhRlBv1uViNMFdbQ9t5jXfo+l7Ziua3cCJZ4UKGHHe8da3Na4WnqKc04/9CsDLFs+CdhbVXT3ICyouab1//7RTDV6P6WpL1N4mxPJNtUotgsG3BAAgN/CNVgnlvgOhIJj5hpf0nFJgdtBloxbsH6RJdb0o7Ifk/QUyLXQ3E9hUfoaJdRESZOD3GOxo4v27IVj+bvcCs6eeNMfdQE8nxUA4cODEcRW4bw==",
     region_name="us-east-1"
+
 )
 
 # TODO: Uncomment this and comment out the next 2 'session' lines if you running with config file instead
@@ -98,7 +98,7 @@ except ClientError:  # means it doesnt exit
 mysql_instance = ec2_res.create_instances(
     ImageId=UBUNTU_AMI_ID,
     InstanceType='t2.small',
-#     SecurityGroups=[SERVER_GROUP],
+    SecurityGroups=[SERVER_GROUP],
     MaxCount=1,
     MinCount=1,
     KeyName=key_name_provided

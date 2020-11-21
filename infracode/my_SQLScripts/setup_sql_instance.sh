@@ -1,8 +1,8 @@
 echo Updating system packages .....
 sudo apt-get update
 echo Install MySQL .....
-sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password 50043Admin'
-sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password 50043Admin'
+sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password 50043'
+sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password 50043'
 sudo apt-get -y install mysql-server
 mkdir data
 cd data/
@@ -16,8 +16,8 @@ wget --output-document=create_tables.sql https://raw.githubusercontent.com/sheik
 wget --output-document=load_data.sql https://raw.githubusercontent.com/sheikhshack/bigdatabases-aws-50.043/infra/infracode/my_SQLScripts/load_data.sql?token=AKXRJGNZP6VRDC5LODINHF27YHA4E
 echo Executing data migration SQL scripts .....
 echo Create new user
-sudo mysql -u root < create_admin_user.sql
-echo Create relevant tables
-sudo mysql -u root < create_tables.sql
+sudo mysql -u root -p50043 < create_admin_user.sql
+echo Create relevant -p tables
+sudo mysql -u root -p50043 < create_tables.sql
 echo Load data from sources
-sudo mysql -u root < load_data.sql
+sudo mysql -u root -p50043 < load_data.sql

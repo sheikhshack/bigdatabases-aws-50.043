@@ -5,7 +5,7 @@ from botocore.exceptions import ClientError
 import paramiko
 import os
 from time import sleep
-import scp
+# import scp
 
 # Defaults
 UBUNTU_AMI_ID = 'ami-0f82752aa17ff8f5d'  # Default Ubuntu 16.04 for US-East region
