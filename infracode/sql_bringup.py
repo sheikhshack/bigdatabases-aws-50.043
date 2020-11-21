@@ -37,9 +37,9 @@ def setup_ssh_client(key_file, IP_address):
 ############## Phase 0: Instantiating BOTO ##################
 # Change session variables according to educate creds.
 session = boto3.session.Session(
-    aws_access_key_id="ASIA4DOD5SYHFUCRSRYC",
-    aws_secret_access_key="vPYH6f+Ag9vt/y1AIh8HS6zbwRNMwxFwW+OlEQb5",
-    aws_session_token="FwoGZXIvYXdzECMaDFVT6hpIJy70639LfyLNAddfn61akoC1iX3t3TBsFFEKwExVzHzD0VNsmFo53/SdqLs6lJE9RQC/rwgjY0STHLcvIHxJ4y/OU2xMpSiFv07jZ443Na9CG1LW3NfFXS+3WYUcck4YfEJqy0cBtilxbGCWrOuHyuRlWXM994IBWrrpVRFBcTpW8lIuFJmBlNntzXw5UExGQ511/DKAHgoeCOq/k2VIT823Kc8m1aBac8KsYbHq65GU5PLOHjq+N/9H7KAcib2RChDOJ42qsRqM0JagzMWfDbzT2rfWaiso8cjj/QUyLUpKD+3d261smqZIQ0jKc8lMBAvPFFek5gZZSO1hjm2lOxm4PmEnIfw2u9V8lA==",
+    aws_access_key_id="ASIA4DOD5SYHB3LZVG4Z",
+    aws_secret_access_key="EAJ3yZwMuOprO1V9u5Sk3cslMlu92qYbPiSLC0uf",
+    aws_session_token="FwoGZXIvYXdzECUaDF84TkCSYzTQBGnRwCLNAXKYJ/KzB5aqxn6Ke41vByB13xt+nqNCtMWJ7IrBEYHtUiToJOh+LaTdFtVuH4QQeK8uu41eFqp/XkazvEYKfgOTZnEzqSLAHpEoGm8LWuPDoG7Csg42XD8TVAONGXhB8jsS8DtiirZzsDAHmbDdQlEJma1yjslbpBtDrKPc6Yt7NK9lIdrnFpzltZSHrrHy0LHEFM+9AhNZOFdOU16xYYQottRO/PAyXbFQhIP22X2nLIz3+jsia9/ZK9cl/W9Jz1V3qRo7aHYpM3swGswo8/zj/QUyLadSpvI8tsO25v0XJI3csqGzy+zX1+jhY0pdjlcDR4OmRM+6qmWBGR6/SUJ/nA==",
     region_name="us-east-1"
 )
 
@@ -123,7 +123,7 @@ mysql_routine = [
     "echo Updating system packages .....",
     "sudo apt update",
     "echo Install MySQL .....",
-    "sudo apt-get install mysql-server",
+    "sudo apt install mysql-server -y",
     "mkdir data",
     "cd data/",
     "echo Downloading data .....",
