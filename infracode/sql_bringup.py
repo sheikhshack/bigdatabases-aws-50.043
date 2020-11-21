@@ -115,11 +115,12 @@ print('{}: Success! Server running and ready!'.format(mysql_instance[0].id))
 ############## Phase 4: Setting up MySQL instance ##################
 mysql_instance[0].load()
 print('{0}: Success! Server currently on IP address {1}'.format(mysql_instance[0].id,mysql_instance[0].public_dns_name))
-sleep(50)
+sleep(5)
 
 # Command for settling ssh nonsenses
 mysql_routine = [
     "cd ~",
+    "wget --output-document=setup_sql_instance.sh https://raw.githubusercontent.com/sheikhshack/bigdatabases-aws-50.043/infra/infracode/my_SQLScripts/create_admin_user.sql?token=AKXRJGP5RTEIOHROWCMKZXK7YHA2A"
     "echo Updating system packages .....",
     "sudo apt-get update",
     "echo Install MySQL .....",
