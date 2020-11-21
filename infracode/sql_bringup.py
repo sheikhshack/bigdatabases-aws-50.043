@@ -36,12 +36,19 @@ def setup_ssh_client(key_file, IP_address):
 
 ############## Phase 0: Instantiating BOTO ##################
 # Change session variables according to educate creds.
-session = boto3.Session(aws_access_key_id="ASIA4GA3HFDIEN3D2N6P",
-    aws_secret_access_key="tVip6WIr8819oqgLg/tSDy4TQdx2GrpYPVTU4h1p",
-    aws_session_token="FwoGZXIvYXdzECYaDMnawRtmg1nb7foMUiLNAY+tedC2xkzY/x+H60pZ5Z23RC1UHxc2dv46YWds+j2PAcXBbEADUbhTaJSe+CpZw0m9K2SyDzVzLoUXf7rFghgbYQX1vesiSDcZZoP6HRhaX/pNE1YGlHYto2ZhRlBv1uViNMFdbQ9t5jXfo+l7Ziua3cCJZ4UKGHHe8da3Na4WnqKc04/9CsDLFs+CdhbVXT3ICyouab1//7RTDV6P6WpL1N4mxPJNtUotgsG3BAAgN/CNVgnlvgOhIJj5hpf0nFJgdtBloxbsH6RJdb0o7Ifk/QUyLXQ3E9hUfoaJdRESZOD3GOxo4v27IVj+bvcCs6eeNMfdQE8nxUA4cODEcRW4bw==",
+session = boto3.Session(
+    aws_access_key_id="ASIA4GA3HFDIMENQWXMS",
+    aws_secret_access_key="vca0lV4I9+g/mtJ7aYmUruUDFEKdFCbN8pwwWQQt",
+    aws_session_token="FwoGZXIvYXdzECcaDJHr5yD1EWHU+Z7hLiLNAYyrSXzXMIG1eZ/gWzjQJGNYTOir/B0LhGVUhk5tzwmGtsOciZ0mIivMUL9EJzMJITrndtnLdSmH+QKhilRUnGeFBbNu2APyixFKLf9DQIzW7mH5KL3FX+rJjQ3/aoQ/Stm8DsWvPBHUmzFwtxgz0vP7lsNQpKN7BCASj62xBjDt4+inSUhxfFlnHw4CzQWri3rVZ6PduhyJCqORo8Tm38bAgMemh9qe3cPnfKZ0CjD3RvobXzJuaWzxoJz4iWWzZxQZDHh8F5Cnw9CueIEorLTk/QUyLcQOeh7AwKfF597wONlBjPqn4oHVQtF64sMy2XyDkMt5N/O+rL1N2+X7MCTp7w==",
     region_name="us-east-1"
-
 )
+
+# session = boto3.Session(
+#     aws_access_key_id="ASIA4DOD5SYHC3COV45W",
+#     aws_secret_access_key="qYX/Veo3HXRnT2qCQQdm8RW9ojzMacCcRtlRCBT7",
+#     aws_session_token="FwoGZXIvYXdzECcaDL01tmrxtMNbyOegrCLNAb8eOpf5hG1wIv3D0U/tNGFoTpXDqTxrrPvf1Qvqy63nn7aSZ0b2X3jJV7Q0rs2YH11KQSCQ1sG4JSLalWnUXTsDW9r/ePAGYRsV0sPeE8CIwmnYm+SFqTWgvGCWaBfJqUSxOem2dStzcFkEdAWeUaLy/a6D0nr1fO053QvDUxhi0jitUAYciBbDGt/JioAfcdW00DzoPIPx90P4dD4QKngiB4lCVkvRff1wVS6r5RDQlTRUvgtQGsiRbuW0LtzplMXpvApDsvbjJfBOSbsoi7nk/QUyLe3rZR0cS2SgyudbFNpPM+5RGXkBlpCLDdlEqBx2BUyTZXI1AvCDX8BWTPyHaA==",
+#     region_name="us-east-1"
+# )
 
 # TODO: Uncomment this and comment out the next 2 'session' lines if you running with config file instead
 # ec2 = boto3.client('ec2')
@@ -77,7 +84,7 @@ except InvalidGroup.Duplicate as e:
 
 ############## Phase 2: Sorting out key pairs for SSH ##################
 # Key Pairs - https://boto3.amazonaws.com/v1/documentation/api/latest/guide/ec2-example-key-pairs.html
-key_name_provided = 'BOTO_TEST_RUN_SQL'
+key_name_provided = 'BOTO_TEST_RUN_SQL2'
 try:
     curr_key = ec2.describe_key_pairs(KeyNames=[key_name_provided])
     print('\nKey Pair found. Moving Forwards .....')
@@ -115,7 +122,7 @@ print('{}: Success! Server running and ready!'.format(mysql_instance[0].id))
 ############## Phase 4: Setting up MySQL instance ##################
 mysql_instance[0].load()
 print('{0}: Success! Server currently on IP address {1}'.format(mysql_instance[0].id,mysql_instance[0].public_dns_name))
-sleep(5)
+sleep(25)
 
 # Command for settling ssh nonsenses
 mysql_routine = [
