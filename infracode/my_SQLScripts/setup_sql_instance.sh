@@ -15,6 +15,9 @@ wget --output-document=create_admin_user.sql https://raw.githubusercontent.com/s
 wget --output-document=create_tables.sql https://raw.githubusercontent.com/sheikhshack/bigdatabases-aws-50.043/infra/infracode/my_SQLScripts/create_tables.sql?token=AKXRJGIYFYKIUIOZAJM7JT27YHA3C
 wget --output-document=load_data.sql https://raw.githubusercontent.com/sheikhshack/bigdatabases-aws-50.043/infra/infracode/my_SQLScripts/load_data.sql?token=AKXRJGNZP6VRDC5LODINHF27YHA4E
 echo Executing data migration SQL scripts .....
+echo Create new user
 sudo mysql -u root < create_admin_user.sql
+echo Create relevant tables
 sudo mysql -u root < create_tables.sql
+echo Load data from sources
 sudo mysql -u root < load_data.sql
