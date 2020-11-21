@@ -37,9 +37,9 @@ def setup_ssh_client(key_file, IP_address):
 ############## Phase 0: Instantiating BOTO ##################
 
 session = boto3.session.Session(
-    aws_access_key_id="ASIA4DOD5SYHGTDUC4FL",
-    aws_secret_access_key="+yD29gum10xa3M/RZw/avopZdzwBHVJIslV8GNKR",
-    aws_session_token="FwoGZXIvYXdzEB8aDOGWUnCAY4kY53ITaCLNAUKrnvQueHI7r8fG6f2j/+eyGd2hb0n/2iJQs9oM7a4hfqv1jaJ0+nUQv+08F5U7kvMiDvtv6GUa+JELhJecbFPeEH8N2UU//FgHKdcmqX/I+xWjCRUgtZ1dfrb5cVGAXk1mgLXLvYAQATGAkwiQoH5n8rFrbkitHTYIKrSl8jPCDzjhV1VbTyK6t22VSFERpopzdzEdKymPC1Ojon3ezR+XY17rSy1dnoOJB9BxP1uR7593MJDYWEbfc5cIo/ste25kq1BMdj5JwdUCTY8o7NXi/QUyLeLGowZ9Ayr68NrzgfQNQpWJ/uTdWRXDLM3ql/IMKxzYduYfMNFLW1o1gWmOQw==",
+    aws_access_key_id="ASIA4DOD5SYHA3OIEZPX",
+    aws_secret_access_key="2Pix1HI2Jjc9dfZBaCtu5/sa+rnFpu6uwbMaLKsi",
+    aws_session_token="FwoGZXIvYXdzECIaDOQ/vJSCXPuyxn4ciiLNATv4FXIYjXFrSrq4XcUgrxWcWYmf2+kIvbObZamgu4mX/8vlZHpbSCfoh/WCGyRo2B8s1W+iPzdN6elqE0aXQBtdD1c1m+nKZEC58YgZUg3y3+hODJ5oduQ36jQp0TtlfBhkBTBZeXGD1XXKu7nbXCNMTb4Tz5DAVraWqsLK//ol/Wifi7c5z2fRGQZYzy5qQGh1w+frDeJfsXsoRL5pXwF2f1/2GKv0E4inJJENX7lcNZtjVcdldFyqcl/PmZG+Lj6GPRx5+yUuQBk6Q5ko3KXj/QUyLRcjzXoeYZaWcnvFKMrBKqIiK+nGPclcykJ5GCRJkc5dSXp3Bu18vTuYhX0RMA==",
     region_name="us-east-1"
 )
 
@@ -70,6 +70,9 @@ try:
 
 except ClientError as e:
     print(e)
+except InvalidGroup.Duplicate as e:
+    print(e) 
+
 
 ############## Phase 2: Sorting out key pairs for SSH ##################
 # Key Pairs - https://boto3.amazonaws.com/v1/documentation/api/latest/guide/ec2-example-key-pairs.html
@@ -94,11 +97,13 @@ except ClientError:  # means it doesnt exit
 mysql_instance = ec2_res.create_instances(
     ImageId=UBUNTU_AMI_ID,
     InstanceType='t2.small',
-    SecurityGroups=[SERVER_GROUP],
+    SecurityGroups=['sg-062d6048efb488eb6'],
     MaxCount=1,
     MinCount=1,
     KeyName=key_name_provided
 )
+
+#     SecurityGroups=[SERVER_GROUP],
 
 print('{}: Provisioning and setting up instance'.format(mysql_instance[0].id))
 mysql_instance[0].wait_until_exists()
@@ -110,7 +115,7 @@ print('{}: Success! Server running and ready!'.format(mysql_instance[0].id))
 ############## Phase 4: Setting up MySQL instance ##################
 mysql_instance[0].load()
 print('{0}: Success! Server currently on IP address {1}'.format(mysql_instance[0].id,mysql_instance[0].public_dns_name))
-sleep(50)
+sleep(190)
 
 # Command for settling ssh nonsenses
 mysql_routine = [
@@ -118,7 +123,7 @@ mysql_routine = [
     "echo Updating system packages .....",
     "sudo apt update",
     "echo Install MySQL .....",
-    "sudo apt-get install mysql-server -y",
+    "sudo apt-get install mysql-server",
     "mkdir data",
     "cd data/",
     "echo Downloading data .....",
@@ -126,9 +131,9 @@ mysql_routine = [
     "wget https://www.dropbox.com/s/2ph07tvq6jcijo8/kindle_Review_User_Reduced.csv",
     "cd ..",
     "echo Downloading data migration SQL scripts .....",
-    "wget https://raw.githubusercontent.com/sheikhshack/bigdatabases-aws-50.043/infra/infracode/my_SQLScripts/create_admin_user.sql?token=AKXRJGP5RTEIOHROWCMKZXK7YHA2A",
-    "wget https://raw.githubusercontent.com/sheikhshack/bigdatabases-aws-50.043/infra/infracode/my_SQLScripts/create_tables.sql?token=AKXRJGIYFYKIUIOZAJM7JT27YHA3C",
-    "wget https://raw.githubusercontent.com/sheikhshack/bigdatabases-aws-50.043/infra/infracode/my_SQLScripts/load_data.sql?token=AKXRJGNZP6VRDC5LODINHF27YHA4E",
+    "wget --output-document=create_admin_user.sql https://raw.githubusercontent.com/sheikhshack/bigdatabases-aws-50.043/infra/infracode/my_SQLScripts/create_admin_user.sql?token=AKXRJGP5RTEIOHROWCMKZXK7YHA2A",
+    "wget --output-document=create_tables.sql https://raw.githubusercontent.com/sheikhshack/bigdatabases-aws-50.043/infra/infracode/my_SQLScripts/create_tables.sql?token=AKXRJGIYFYKIUIOZAJM7JT27YHA3C",
+    "wget --output-document=load_data.sql https://raw.githubusercontent.com/sheikhshack/bigdatabases-aws-50.043/infra/infracode/my_SQLScripts/load_data.sql?token=AKXRJGNZP6VRDC5LODINHF27YHA4E",
     "echo Executing data migration SQL scripts .....",
     "sudo mysql -u root < create_admin_user.sql"
     "sudo mysql -u root < create_tables.sql"
