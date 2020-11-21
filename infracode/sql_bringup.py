@@ -35,19 +35,20 @@ def setup_ssh_client(key_file, IP_address):
     return ssh_client
 
 ############## Phase 0: Instantiating BOTO ##################
-
+# Change session variables according to educate creds.
 session = boto3.session.Session(
-    aws_access_key_id="ASIA4DOD5SYHA3OIEZPX",
-    aws_secret_access_key="2Pix1HI2Jjc9dfZBaCtu5/sa+rnFpu6uwbMaLKsi",
-    aws_session_token="FwoGZXIvYXdzECIaDOQ/vJSCXPuyxn4ciiLNATv4FXIYjXFrSrq4XcUgrxWcWYmf2+kIvbObZamgu4mX/8vlZHpbSCfoh/WCGyRo2B8s1W+iPzdN6elqE0aXQBtdD1c1m+nKZEC58YgZUg3y3+hODJ5oduQ36jQp0TtlfBhkBTBZeXGD1XXKu7nbXCNMTb4Tz5DAVraWqsLK//ol/Wifi7c5z2fRGQZYzy5qQGh1w+frDeJfsXsoRL5pXwF2f1/2GKv0E4inJJENX7lcNZtjVcdldFyqcl/PmZG+Lj6GPRx5+yUuQBk6Q5ko3KXj/QUyLRcjzXoeYZaWcnvFKMrBKqIiK+nGPclcykJ5GCRJkc5dSXp3Bu18vTuYhX0RMA==",
+    aws_access_key_id="ASIA4DOD5SYHFUCRSRYC",
+    aws_secret_access_key="vPYH6f+Ag9vt/y1AIh8HS6zbwRNMwxFwW+OlEQb5",
+    aws_session_token="FwoGZXIvYXdzECMaDFVT6hpIJy70639LfyLNAddfn61akoC1iX3t3TBsFFEKwExVzHzD0VNsmFo53/SdqLs6lJE9RQC/rwgjY0STHLcvIHxJ4y/OU2xMpSiFv07jZ443Na9CG1LW3NfFXS+3WYUcck4YfEJqy0cBtilxbGCWrOuHyuRlWXM994IBWrrpVRFBcTpW8lIuFJmBlNntzXw5UExGQ511/DKAHgoeCOq/k2VIT823Kc8m1aBac8KsYbHq65GU5PLOHjq+N/9H7KAcib2RChDOJ42qsRqM0JagzMWfDbzT2rfWaiso8cjj/QUyLUpKD+3d261smqZIQ0jKc8lMBAvPFFek5gZZSO1hjm2lOxm4PmEnIfw2u9V8lA==",
     region_name="us-east-1"
 )
 
+# TODO: Uncomment this and comment out the next 2 'session' lines if you running with config file instead
+# ec2 = boto3.client('ec2')
+# ec2_res = boto3.resource('ec2')
+
 ec2 = session.client('ec2')
 ec2_res = session.resource('ec2')
-
-# ec2 = boto3.client('ec2')  # type: botostubs.EC2
-# ec2_res = boto3.resource('ec2') # TODO: Johnson this one is the high level API version
 
 ############## Phase 1: Sorting out secuirity groups ##################
 # Security Policies - https://boto3.amazonaws.com/v1/documentation/api/latest/guide/ec2-example-security-group.html
@@ -97,7 +98,6 @@ except ClientError:  # means it doesnt exit
 mysql_instance = ec2_res.create_instances(
     ImageId=UBUNTU_AMI_ID,
     InstanceType='t2.small',
-    SecurityGroups=['sg-062d6048efb488eb6'],
     MaxCount=1,
     MinCount=1,
     KeyName=key_name_provided
@@ -115,7 +115,7 @@ print('{}: Success! Server running and ready!'.format(mysql_instance[0].id))
 ############## Phase 4: Setting up MySQL instance ##################
 mysql_instance[0].load()
 print('{0}: Success! Server currently on IP address {1}'.format(mysql_instance[0].id,mysql_instance[0].public_dns_name))
-sleep(190)
+sleep(50)
 
 # Command for settling ssh nonsenses
 mysql_routine = [
@@ -138,8 +138,6 @@ mysql_routine = [
     "sudo mysql -u root < create_admin_user.sql"
     "sudo mysql -u root < create_tables.sql"
     "sudo mysql -u root < load_data.sql"
-
-
 ]
 
 # "echo Open instance connection to all IP address .....",
