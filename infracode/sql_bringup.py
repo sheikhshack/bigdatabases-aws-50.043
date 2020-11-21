@@ -130,7 +130,8 @@ mysql_routine = [
     "wget --output-document=setup_sql_instance.sh https://raw.githubusercontent.com/sheikhshack/bigdatabases-aws-50.043/infra/infracode/my_SQLScripts/setup_sql_instance.sh?token=AKXRJGLFQQ5HVYZMWJ2VRAS7YJFXO",
     "chmod +x setup_sql_instance.sh",
     "./setup_sql_instance.sh",
-    "sudo sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mysql/mysql.conf.d/mysqld.cnf"
+    "sudo sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mysql/mysql.conf.d/mysqld.cnf",
+    "sudo systemctl restart mysql"
     
 ]
 
