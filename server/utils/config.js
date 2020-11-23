@@ -9,7 +9,7 @@ let SQL_USR = process.env.SQL_USR
 let SQL_PASS = process.env.SQL_PASS
 let MONGO_DB_SHORT = 'logger'
 
-const sequelize = new Sequelize('kindleReview', SQL_USR, SQL_PASS, {
+const sequelize = new Sequelize('kindleReviews', SQL_USR, SQL_PASS, {
     host: SQL_IP_ADDR,
     dialect: 'mysql'
 })

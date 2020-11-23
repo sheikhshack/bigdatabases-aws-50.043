@@ -20,6 +20,7 @@ const bookSchema = mongoose.Schema({
     categories: { type: Array },
     reviewCount: {type: Number, default: 0},
     id: false,
+    haveTitle: { type: Boolean, default: true}
 
 }, {
     timestamps: true,
@@ -41,7 +42,7 @@ bookSchema.set('toJSON', {
 // Virtualisations
 
 bookSchema.virtual('related_buys', {
-    ref: 'meta_Kindle_12k',
+    ref: 'kindle_Metadata',
     localField: 'related.also_bought',
     foreignField: 'asin',
     justOne: false,
@@ -49,7 +50,7 @@ bookSchema.virtual('related_buys', {
 })
 
 bookSchema.virtual('related_views', {
-    ref: 'meta_Kindle_12k',
+    ref: 'kindle_Metadata',
     localField: 'related.also_viewed',
     foreignField: 'asin',
     justOne: false,
@@ -57,10 +58,10 @@ bookSchema.virtual('related_views', {
 })
 
 bookSchema.virtual('related_views_and_buys', {
-    ref: 'meta_Kindle_12k',
+    ref: 'kindle_Metadata',
     localField: 'related.buy_after_viewing',
     foreignField: 'asin',
     justOne: false,
     options: { select: 'title author asin imUrl -_id ' }
 })
-module.exports = mongoose.model('meta_Kindle_12k', bookSchema, 'meta_Kindle_12k');
+module.exports = mongoose.model('kindle_Metadata', bookSchema, 'kindle_Metadata');

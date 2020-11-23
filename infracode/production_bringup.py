@@ -139,7 +139,7 @@ sleep(50)
 # ]
 webserver_routine = [
     "cd ~; wget https://www.dropbox.com/s/8luth3csksbsbct/buildimage.tar.gz?dl=1 -O - | tar -xz ",
-    "sed -i 's_<SQLIP>_'54.205.94.117'_g;s_<MONGODBURI>_'mongodb+srv://jeroee:jerokok97@testdb.cpfwr.mongodb.net/testDb?retryWrites=true'_g;s_<MONGODBURILOG>_'mongodb+srv://jeroee:jerokok97@testdb.cpfwr.mongodb.net/testDb?retryWrites=true'_g' server/.env",
+    "sed -i 's_<SQLIP>_54.205.94.117_g;s_<MONGODBURI>_1.1.1.1_g' server/.env",
     "wget -O - https://www.dropbox.com/s/cuu04w8mtmt5yc5/server_init.sh | bash"
 
 ]

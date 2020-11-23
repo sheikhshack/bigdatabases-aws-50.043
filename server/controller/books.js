@@ -30,8 +30,7 @@ bookRouter.get('/from=:value1/to=:value2', async (req, res) => {
 bookRouter.get('/page=:pagenumber&limit=:limitnumber', async (req, res) => {
     const pageNumber = parseInt(req.params.pagenumber) - 1
     const limitNumber = parseInt(req.params.limitnumber)
-    const selectedMetadata = await Meta.find({}, { title: 1, asin: 1, imUrl: 1, price: 1, author: 1, _id: 0 })
-        .skip(pageNumber * limitNumber).limit(limitNumber)
+    const selectedMetadata = await Meta.find({}, { title: 1, asin: 1, imUrl: 1, price: 1, author: 1, _id: 0 }).skip(pageNumber * limitNumber).limit(limitNumber)
     res.json(selectedMetadata)
 })
 //query for books by author
