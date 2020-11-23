@@ -84,7 +84,7 @@ except ClientError as e:
 
 ############## Phase 2: Sorting out key pairs for SSH ##################
 # Key Pairs - https://boto3.amazonaws.com/v1/documentation/api/latest/guide/ec2-example-key-pairs.html
-key_name_provided = 'BOTO_TEST_MONGO'
+key_name_provided = 'TEST_KEY1'
 try:
     curr_key = ec2.describe_key_pairs(KeyNames=[key_name_provided])
     print('\nKey Pair found. Moving Forwards .....')
