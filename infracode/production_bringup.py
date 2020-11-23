@@ -8,7 +8,10 @@ from time import sleep
 # import scp
 
 # Defaults
-UBUNTU_AMI_ID = 'ami-00ddb0e5626798373'  # Default Ubuntu 16.04 for US-East region
+# UBUNTU_AMI_ID = 'ami-0f82752aa17ff8f5d'  # Default Ubuntu 16.04 for US-East region
+
+UBUNTU_AMI_ID = 'ami-00ddb0e5626798373'  # Default Ubuntu 18.04 for US-East region
+
 SECURITY_PERMISSIONS = {
     'Server': [
         {'IpProtocol': 'tcp',

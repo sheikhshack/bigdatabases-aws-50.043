@@ -69,7 +69,7 @@ vpc_id = response.get('Vpcs', [{}])[0].get('VpcId', '')
 
 try:
     response = ec2.create_security_group(GroupName=SERVER_GROUP,
-                                         Description='For the React App + Server Deployment',
+                                         Description='For the Mongo DB',
                                          VpcId=vpc_id)
     security_group_id = response['GroupId']
     print('Security Group Created %s in vpc %s.' % (security_group_id, vpc_id))
@@ -140,4 +140,4 @@ for command in mongo_routine:
     print(stderr.read().decode('utf=8'))
 c.close()
 
-print('(+) ---- Successfully deployed server at: {0}:5000'.format(mongo_instance[0].public_dns_name))
+print('(+) ---- Successfully deployed server at: {0}:27017'.format(mongo_instance[0].public_dns_name))

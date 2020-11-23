@@ -8,7 +8,7 @@ from time import sleep
 # import scp
 
 # Defaults
-UBUNTU_AMI_ID = 'ami-0f82752aa17ff8f5d'  # Default Ubuntu 16.04 for US-East region
+UBUNTU_AMI_ID = 'ami-00ddb0e5626798373'  # Default Ubuntu 16.04 for US-East region
 SECURITY_PERMISSIONS = {
     'MySQL': [
             {'IpProtocol': 'tcp',
@@ -36,26 +36,21 @@ def setup_ssh_client(key_file, IP_address):
 
 ############## Phase 0: Instantiating BOTO ##################
 # Change session variables according to educate creds.
-session = boto3.Session(
-    aws_access_key_id="ASIA4GA3HFDIHPBM6YN5",
-    aws_secret_access_key="d00nebDEuwVeqe7c/Yqz9xqUQHShcOGZxsLInHeM",
-    aws_session_token="FwoGZXIvYXdzECgaDDreuhrhVngcW0czbiLNAaxBDgkSIScb0HKsTISTfpx6WK/btFiS2o28zJsh8dGGVU8rusLUyN6j3bwRmmVFDTwLs5b5HhioC1M+UJuPcnL0ySMU7/UrULfCweoDN0Kye503QYvBOWV8pSCr6TsANQcqau/ujo7rFmGty1IUD97puaGa6TDas5YfU/lJE/whJkKvYsMqk5mLeolEN4g58ZZnANAEBUEovg9zwE8MBsMGfh3BsKLo1r1qM7xxHDsrOBUQmnirh1tQmkbj9Hsv0qifmWpSr+JTqHerwFso6crk/QUyLWzwvRDIqVOQQXrIbL9FW9BqKUABzJG4eP4TcgbsFXt4n5wxB3lcxPIUZLmRIA==",
-    region_name="us-east-1"
-)
-
 # session = boto3.Session(
-#     aws_access_key_id="ASIA4DOD5SYHC3COV45W",
-#     aws_secret_access_key="qYX/Veo3HXRnT2qCQQdm8RW9ojzMacCcRtlRCBT7",
-#     aws_session_token="FwoGZXIvYXdzECcaDL01tmrxtMNbyOegrCLNAb8eOpf5hG1wIv3D0U/tNGFoTpXDqTxrrPvf1Qvqy63nn7aSZ0b2X3jJV7Q0rs2YH11KQSCQ1sG4JSLalWnUXTsDW9r/ePAGYRsV0sPeE8CIwmnYm+SFqTWgvGCWaBfJqUSxOem2dStzcFkEdAWeUaLy/a6D0nr1fO053QvDUxhi0jitUAYciBbDGt/JioAfcdW00DzoPIPx90P4dD4QKngiB4lCVkvRff1wVS6r5RDQlTRUvgtQGsiRbuW0LtzplMXpvApDsvbjJfBOSbsoi7nk/QUyLe3rZR0cS2SgyudbFNpPM+5RGXkBlpCLDdlEqBx2BUyTZXI1AvCDX8BWTPyHaA==",
+#     aws_access_key_id="ASIA4GA3HFDIHPBM6YN5",
+#     aws_secret_access_key="d00nebDEuwVeqe7c/Yqz9xqUQHShcOGZxsLInHeM",
+#     aws_session_token="FwoGZXIvYXdzECgaDDreuhrhVngcW0czbiLNAaxBDgkSIScb0HKsTISTfpx6WK/btFiS2o28zJsh8dGGVU8rusLUyN6j3bwRmmVFDTwLs5b5HhioC1M+UJuPcnL0ySMU7/UrULfCweoDN0Kye503QYvBOWV8pSCr6TsANQcqau/ujo7rFmGty1IUD97puaGa6TDas5YfU/lJE/whJkKvYsMqk5mLeolEN4g58ZZnANAEBUEovg9zwE8MBsMGfh3BsKLo1r1qM7xxHDsrOBUQmnirh1tQmkbj9Hsv0qifmWpSr+JTqHerwFso6crk/QUyLWzwvRDIqVOQQXrIbL9FW9BqKUABzJG4eP4TcgbsFXt4n5wxB3lcxPIUZLmRIA==",
 #     region_name="us-east-1"
 # )
 
-# TODO: Uncomment this and comment out the next 2 'session' lines if you running with config file instead
-# ec2 = boto3.client('ec2')
-# ec2_res = boto3.resource('ec2')
+# ec2 = session.client('ec2')
+# ec2_res = session.resource('ec2')
 
-ec2 = session.client('ec2')
-ec2_res = session.resource('ec2')
+
+# TODO: Uncomment this and comment out the next 2 'session' lines if you running with config file instead
+ec2 = boto3.client('ec2')
+ec2_res = boto3.resource('ec2')
+
 
 ############## Phase 1: Sorting out secuirity groups ##################
 # Security Policies - https://boto3.amazonaws.com/v1/documentation/api/latest/guide/ec2-example-security-group.html
@@ -79,7 +74,7 @@ try:
 except ClientError as e:
     print(e)
 except InvalidGroup.Duplicate as e:
-    print(e) 
+    print(e)
 
 
 ############## Phase 2: Sorting out key pairs for SSH ##################
@@ -132,7 +127,7 @@ mysql_routine = [
     "./setup_sql_instance.sh",
     "sudo sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mysql/mysql.conf.d/mysqld.cnf",
     "sudo systemctl restart mysql"
-    
+
 ]
 
 # "echo Open instance connection to all IP address .....",
