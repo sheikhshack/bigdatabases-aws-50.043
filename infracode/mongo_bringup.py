@@ -124,7 +124,7 @@ print('{0}: Success! Server currently on IP address {1}'.format(mongo_instance[0
 sleep(20)
 
 mongo_routine = [
-    "wget https://www.dropbox.com/s/mrzi4x03kkh4i19/mongo_setup.sh?dl=1 -O mongo_setup.sh",
+    "wget https://raw.githubusercontent.com/sheikhshack/bigdatabases-aws-50.043/infra/infracode/mongoScripts/mongo_setup.sh?token=AG2OQBXPRMCKI6KDPZS2C5S7YT572 -O mongo_setup.sh",
     "chmod +x mongo_setup.sh",
     "./mongo_setup.sh"
 

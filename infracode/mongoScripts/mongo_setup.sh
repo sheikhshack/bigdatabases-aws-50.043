@@ -48,7 +48,7 @@ sudo service mongod restart
 # import dataset
 {
     echo "Importing dataset"
-    mongoimport --db metadata --collection kindle_Metadata --file metadata.json --authenticationDatabase admin --username 'jeroe' --password 'Helloworld!'
+    mongoimport --db metadata --collection kindle_Metadata --file metadata.json --authenticationDatabase admin --username 'jeroe' --password 'Helloworld1!'
     # mongoimport -d isit_database_mongo -c kindle_metadata --file meta_Kindle_Store.json --authenticationDatabase admin --username 'admin' --password 'password' --legacy
     # mongoimport -d isit_database_mongo -c categories --drop --file categories.json --authenticationDatabase admin --username 'admin' --password 'password'
 } || {
