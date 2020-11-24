@@ -173,13 +173,22 @@ mysql_routine = [
 ]
 
 mongo_routine = [
-    "wget https://raw.githubusercontent.com/sheikhshack/bigdatabases-aws-50.043/infra/infracode/mongoScripts/mongo_setup.sh?token=AG2OQBXPRMCKI6KDPZS2C5S7YT572 -O mongo_setup.sh",
+    "wget https://raw.githubusercontent.com/sheikhshack/bigdatabases-aws-50.043/infra/infracode/mongoScripts/mongo_setup.sh?token=AG2OQBXOZT3DK7QDQM5KV6S7Y2OHU -O mongo_setup.sh",
     "chmod +x mongo_setup.sh",
     "./mongo_setup.sh"
 ]
 
+webserver_routine = [
+    "cd ~; wget https://www.dropbox.com/s/kz8jz3irepuzw10/buildimage.tar.gz?dl=1  -O - | tar -xz ",
+    "sed -i 's_<SQLIP>_{0}_g;s_<MONGODBURI>_{1}_g' server/.env".format(instances[2].public_dns_name, instances[1].public_dns_name),
+    "wget -O - https://www.dropbox.com/s/cuu04w8mtmt5yc5/server_init.sh | bash"
+
+]
+
 c1 = setup_ssh_client(SSH_KEY_NAME+'.pem', instances[1].public_dns_name)
 c2 = setup_ssh_client(SSH_KEY_NAME+'.pem', instances[2].public_dns_name)
+c3 = setup_ssh_client(SSH_KEY_NAME+'.pem', instances[0].public_dns_name)
+
 
 for command in mongo_routine:
     print("Executing {}".format( command ))
@@ -196,3 +205,11 @@ for command in mysql_routine:
     print( "Errors")
     print(stderr.read().decode('utf=8'))
 c2.close()
+
+for command in webserver_routine:
+    print("Executing {}".format( command ))
+    stdin , stdout, stderr = c3.exec_command(command)
+    print(stdout.read().decode('utf=8'))
+    print( "Errors")
+    print(stderr.read().decode('utf=8'))
+c3.close()
