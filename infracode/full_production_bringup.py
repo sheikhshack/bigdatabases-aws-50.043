@@ -100,6 +100,13 @@ def create_security_groups_aws(group_name, description):
         print(e)
         return security_group_id
 
+def get_existing_subnet():
+#     subnet = ec2_res.create_subnet(CidrBlock = '172.31.64.0/20', VpcId= vpc_id)
+    response = ec2.describe_subnets()
+    subnet = response.get('Subnets', [{}])[0].get('SubnetId', '')
+    return subnet
+
+
 
 def init_ssh_key(key_name):
     # Key Pairs - https://boto3.amazonaws.com/v1/documentation/api/latest/guide/ec2-example-key-pairs.html
@@ -118,7 +125,7 @@ def init_ssh_key(key_name):
 def fire_off_instance(subnet_id, key_name):
     # Managing EC2 Instances - https://boto3.amazonaws.com/v1/documentation/api/latest/guide/ec2-example-managing-instances.html
     # Additional Docs - https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2.html#EC2.Subnet.create_instances
-    # The following are Subnet class instances for provisioning (from docs)
+    # Using create_instances with ec2_res allows all instances to be deployed in the same subnet by default
     initiated_instances = []
     for inst_cfg in instance_configs:
         curr_instance = ec2_res.create_instances(
@@ -150,6 +157,7 @@ def report_instances(instances):
 ############## Phase 1: Sorting out security groups ##################
 # TODO: Test --------- Done, NO ISSUES
 # Security Policies - https://boto3.amazonaws.com/v1/documentation/api/latest/guide/ec2-example-security-group.html
+main_subnet = get_existing_subnet()
 sgid_webserver = create_security_groups_aws('WebserverSecurity', 'For webapp and backend server')
 sgid_mongo = create_security_groups_aws('MongoSecurity', 'For MongoDB database server')
 sgid_mysql = create_security_groups_aws('MySQLSecurity', 'For MySQL database server')
@@ -157,7 +165,7 @@ sgid_mysql = create_security_groups_aws('MySQLSecurity', 'For MySQL database ser
 ############## Phase 2: Provisioning SSH Key (Single) ##################
 init_ssh_key(SSH_KEY_NAME)
 ############## Phase 3: Firing off the instances ##################
-instances  = fire_off_instance('null', SSH_KEY_NAME)
+instances  = fire_off_instance(main_subnet, SSH_KEY_NAME)
 instances = report_instances(instances)
 
 ############## Phase 4: Setting up within the instance ##################
@@ -180,7 +188,7 @@ mongo_routine = [
 
 webserver_routine = [
     "cd ~; wget https://www.dropbox.com/s/kz8jz3irepuzw10/buildimage.tar.gz?dl=1  -O - | tar -xz ",
-    "sed -i 's_<SQLIP>_{0}_g;s_<MONGODBURI>_{1}_g' server/.env".format(instances[2].public_dns_name, instances[1].public_dns_name),
+    "sed -i 's_<SQLIP>_{0}_g;s_<MONGODBURI>_{1}_g' server/.env".format(instances[2].private_dns_name, instances[1].private_dns_name),
     "wget -O - https://www.dropbox.com/s/cuu04w8mtmt5yc5/server_init.sh | bash"
 
 ]
