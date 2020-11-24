@@ -13,7 +13,7 @@ from time import sleep
 UBUNTU_AMI_ID = 'ami-00ddb0e5626798373'  # Default Ubuntu 18.04 for US-East region
 
 SECURITY_PERMISSIONS = {
-    'Server': [
+    'Webserver': [
         {'IpProtocol': 'tcp',
          'FromPort': 80,
          'ToPort': 80,
@@ -48,7 +48,6 @@ SECURITY_PERMISSIONS = {
              'IpRanges': [{'CidrIp': '0.0.0.0/0'}]}
         ]
 }
-SERVER_GROUP = 'SECURITY_GROUP_SERVER_TESTTESTTEST'
 
 
 ########## Helper functions ##########
@@ -60,6 +59,26 @@ def setup_ssh_client(key_file, IP_address):
     ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh_client.connect(hostname=IP_address, username='ubuntu', pkey=pem)
     return ssh_client
+
+
+def create_security_groups_aws(group_name, description, vpc_id ) :
+    try:
+        response = ec2.create_security_group(GroupName=group_name,
+                                             Description=description,
+                                             VpcId=vpc_id)
+        security_group_id = response['GroupId']
+        print('Security Group Created %s in vpc %s.' % (security_group_id, vpc_id))
+
+        # Ingress security group
+        data = ec2.authorize_security_group_ingress(GroupId=security_group_id,
+                                                    IpPermissions=SECURITY_PERMISSIONS['group_name'])
+        print('Ingress Successfully Set %s' % data)
+        return security_group_id
+
+    except ClientError as e:
+        print(e)
+        return security_group_id
+
 
 ############## Phase 0: Instantiating BOTO ##################
 

@@ -99,7 +99,7 @@ except ClientError:  # means it doesnt exit
 # The following are Subnet class instances for provisioning (from docs)
 mysql_instance = ec2_res.create_instances(
     ImageId=UBUNTU_AMI_ID,
-    InstanceType='t2.small',
+    InstanceType='t2.medium',
     SecurityGroups=[SERVER_GROUP],
     MaxCount=1,
     MinCount=1,

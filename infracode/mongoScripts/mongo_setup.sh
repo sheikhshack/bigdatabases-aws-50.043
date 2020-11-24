@@ -15,7 +15,8 @@ echo "---Setting Up MongoDB--- "
 
 # Download data
 {
-    wget https://www.dropbox.com/s/pcs7b9x70cwiki8/meta_Compiled_Count_haveTitle.json?dl=1 -O metadata.json
+    wget https://www.dropbox.com/s/uh7mwjfy6ur8tg0/meta_Compiled_Count_trueTitle.json?dl=1 -O metadata1.json
+    wget https://www.dropbox.com/s/vt9s3gqp5tsakqn/meta_Compiled_Count_falseTitle.json?dl=1 -O metadata2.json
 } || {
     # catch
     echo "ERROR: downloading data"
@@ -48,7 +49,8 @@ sudo service mongod restart
 # import dataset
 {
     echo "Importing dataset"
-    mongoimport --db metadata --collection kindle_Metadata --file metadata.json --authenticationDatabase admin --username 'jeroe' --password 'Helloworld1!'
+    mongoimport --db metadata --collection kindle_Metadata --file metadata1.json --authenticationDatabase admin --username 'jeroe' --password 'Helloworld1!'
+    mongoimport --db metadata --collection kindle_Metadata --file metadata2.json --authenticationDatabase admin --username 'jeroe' --password 'Helloworld1!'
     # mongoimport -d isit_database_mongo -c kindle_metadata --file meta_Kindle_Store.json --authenticationDatabase admin --username 'admin' --password 'password' --legacy
     # mongoimport -d isit_database_mongo -c categories --drop --file categories.json --authenticationDatabase admin --username 'admin' --password 'password'
 } || {
