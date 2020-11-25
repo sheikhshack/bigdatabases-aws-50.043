@@ -23,6 +23,7 @@ import Chip from "@material-ui/core/Chip";
 import ReviewCard from '../components/ReviewCard.js'
 import AddReviewForm from '../components/AddReviewForm.js'
 import '../styles/fullBook.css'
+import { get } from 'lodash'
 
 const SingularRelated = ({ relatedItem, juiced }) => {
     const history = useHistory()
@@ -124,13 +125,9 @@ const FullBookInfo = ({ asin }) => {
         }
 
     }, [reload])
-
-    const addMoreReviews = async () =>{
-        return await reviewService.reviewsBasedonAsin(asin,lastReviewPulled+1,lastReviewPulled+numReviewsToPull)
-    }
     
     const handlePageFlip = async (event, value) => {
-        if (value >= (noOfPages-1)){
+        if (value >= (noOfPages-1) && !allReviewsPulled){
             console.log(value)
             console.log(noOfPages)
             const getMoreReviews = await reviewService.reviewsBasedonAsin(asin,lastReviewPulled+1,numReviewsToPull)
@@ -139,20 +136,14 @@ const FullBookInfo = ({ asin }) => {
                 console.log('Got new reviews')
                 await setLastReviewPulled(lastReviewPulled+getMoreReviews.length)
                 var oldReviews = [...reviews]
-                console.log("Old set of reviews")
-                // console.log(reviews)
-                // console.log(getMoreReviews)
                 const newReviews = oldReviews.concat(getMoreReviews)
-                console.log("New set of reviews")
-                console.log(newReviews)
-                // console.log(newReviews.length)
-                // newReviews.push(getMoreReviews)
-                console.log("post state change")
                 await setReviews(newReviews)
-                console.log(reviews)
                 await setNoOfPages(Math.ceil(reviews.length / reviewsPerPage))
-                console.log("New pages")
-                console.log(noOfPages)
+            }
+            else if (getMoreReviews.length == 0){
+                console.log('All reviews pulled')
+                console.log(lastReviewPulled)
+                await setAllReviewsPulled(true)
             }
         }
         setCurrentPage(value);
