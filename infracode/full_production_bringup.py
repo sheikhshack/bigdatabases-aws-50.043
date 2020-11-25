@@ -5,7 +5,6 @@ from botocore.exceptions import ClientError
 import paramiko
 import os, sys, threading
 from time import sleep
-import scp
 
 # Default configurations for full bringup
 UBUNTU_AMI_ID = 'ami-00ddb0e5626798373'  # Default Ubuntu 18.04 for US-East region
@@ -155,7 +154,10 @@ def report_instances(instances):
     return instances
 
 
-
+def init_common_placement():
+        res = ec2_res.get_all_placement_groups(groupnames=['50043_team5_placment'], filters=None, dry_run=False)
+        if len(res) == 0:
+            ec2_res.create_placement_group('50043_team5_placment', strategy='cluster', dry_run=False)
 
 
 ############## Phase 1: Sorting out security groups ##################
@@ -175,6 +177,19 @@ instances = report_instances(instances)
 ############## Phase 4: Setting up within the instance ##################
 sleep(20) # Sanity sleep for ec2
 
+def ssh_routes(routine_details, key):
+    c = setup_ssh_client(key, routine_details['ip'])
+    for command in routine_details['routine']:
+        print("Executing {}".format(command))
+        stdin, stdout, stderr = c.exec_command(command)
+        print(stdout.read().decode('utf=8'))
+        print("Errors")
+        print(stderr.read().decode('utf=8'))
+
+    c.close()
+
+
+# TODO: Modify code for webserver so that it can be threaded too
 mysql_routine = [
     "cd ~",
     "wget --output-document=setup_sql_instance.sh https://raw.githubusercontent.com/sheikhshack/bigdatabases-aws-50.043/infra/infracode/my_SQLScripts/setup_sql_instance.sh?token=AKXRJGLFQQ5HVYZMWJ2VRAS7YJFXO",
@@ -196,28 +211,21 @@ webserver_routine = [
     "wget -O - https://www.dropbox.com/s/cuu04w8mtmt5yc5/server_init.sh | bash"
 
 ]
+threaders = [{
+    'routine': mysql_routine,
+    'ip': instances[2].public_dns_name},
+    {'routine': mongo_routine,
+     'ip': instances[1].public_dns_name}]
+threads = []
+for h in threaders:
+    t = threading.Thread(target=ssh_routes, args=(h,SSH_KEY_NAME+'.pem', ))
+    t.start()
+    threads.append(t)
+for t in threads:
+    t.join()
 
 
-c1 = setup_ssh_client(SSH_KEY_NAME+'.pem', instances[1].public_dns_name)
-c2 = setup_ssh_client(SSH_KEY_NAME+'.pem', instances[2].public_dns_name)
 c3 = setup_ssh_client(SSH_KEY_NAME+'.pem', instances[0].public_dns_name)
-
-
-for command in mongo_routine:
-    print("Executing {}".format( command ))
-    stdin , stdout, stderr = c1.exec_command(command)
-    print(stdout.read().decode('utf=8'))
-    print( "Errors")
-    print(stderr.read().decode('utf=8'))
-c1.close()
-
-for command in mysql_routine:
-    print("Executing {}".format( command ))
-    stdin , stdout, stderr = c2.exec_command(command)
-    print(stdout.read().decode('utf=8'))
-    print( "Errors")
-    print(stderr.read().decode('utf=8'))
-c2.close()
 
 for command in webserver_routine:
     print("Executing {}".format( command ))
