@@ -3,7 +3,7 @@ import botostubs
 import boto3
 from botocore.exceptions import ClientError
 import paramiko
-import os
+import os, sys, threading
 from time import sleep
 import scp
 
@@ -48,8 +48,8 @@ SECURITY_PERMISSIONS = {
 
 instance_configs = [
     {'SecurityGroup': ['WebserverSecurity'], 'Type':'t2.small'},
-    {'SecurityGroup': ['MongoSecurity'], 'Type':'t2.small'},
-    {'SecurityGroup': ['MySQLSecurity'], 'Type':'t2.small'}]
+    {'SecurityGroup': ['MongoSecurity'], 'Type':'t2.medium'},
+    {'SecurityGroup': ['MySQLSecurity'], 'Type':'t2.medium'}]
 
 
 webserver_routine = [
@@ -128,13 +128,17 @@ def fire_off_instance(subnet_id, key_name):
     # Using create_instances with ec2_res allows all instances to be deployed in the same subnet by default
     initiated_instances = []
     for inst_cfg in instance_configs:
+        tag_purpose_test = {"Key": "Grade", "Value": "Test"}
+
         curr_instance = ec2_res.create_instances(
             ImageId=UBUNTU_AMI_ID,
             InstanceType=inst_cfg['Type'],  # 't2.small'
             SecurityGroups=inst_cfg['SecurityGroup'],
             MaxCount=1,
             MinCount=1,
-            KeyName=key_name
+            KeyName=key_name,
+            TagSpecifications=[{'ResourceType': 'instance',
+                                'Tags': [tag_purpose_test]}]
         )
         initiated_instances.append(curr_instance[0])
     return initiated_instances
@@ -192,6 +196,7 @@ webserver_routine = [
     "wget -O - https://www.dropbox.com/s/cuu04w8mtmt5yc5/server_init.sh | bash"
 
 ]
+
 
 c1 = setup_ssh_client(SSH_KEY_NAME+'.pem', instances[1].public_dns_name)
 c2 = setup_ssh_client(SSH_KEY_NAME+'.pem', instances[2].public_dns_name)
