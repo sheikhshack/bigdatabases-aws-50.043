@@ -27,6 +27,11 @@ def teardown_production_systems(active_instances):
     ec2_res.instances.filter(InstanceIds=active_instances).terminate()
     return True
 
+def init_common_placement():
+
+    ec2_res.create_placement_group('50043_team5_placement', strategy='cluster', dry_run=False)
+
+
 related_instances = get_related_instances(SSH_KEY_NAME)
 print(related_instances)
 print('Tearing down the wall')

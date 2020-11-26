@@ -6,7 +6,7 @@ CREATE TABLE kindle_Users (
 reviewerID varchar(255) NOT NULL,
 reviewerName varchar(255) NOT NULL,
 email varchar(255) NOT NULL,
-passwordHash varchar(255) DEFAULT "password123",
+passwordHash varchar(255) DEFAULT "$2b$10$gWG5pJVIqHcVO5Ch1u6dsOdpPUlvC2eJTJxOshjbUojxqewiK8Cwm",
 PRIMARY KEY (reviewerID),
 UNIQUE KEY(email)
 );

@@ -155,9 +155,9 @@ def report_instances(instances):
 
 
 def init_common_placement():
-        res = ec2_res.get_all_placement_groups(groupnames=['50043_team5_placment'], filters=None, dry_run=False)
+        res = ec2_res.get_all_placement_groups(groupnames=['50043_team5_placement'], filters=None, dry_run=False)
         if len(res) == 0:
-            ec2_res.create_placement_group('50043_team5_placment', strategy='cluster', dry_run=False)
+            ec2_res.create_placement_group('50043_team5_placement', strategy='cluster', dry_run=False)
 
 
 ############## Phase 1: Sorting out security groups ##################
