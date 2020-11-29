@@ -4,10 +4,11 @@ import boto3
 from botocore.exceptions import ClientError
 import paramiko
 import sys
+from time import sleep
 
 cluster_name =sys.argv[1]
 
-# TODO: Sheikh, should we give a sleep here to ensure that all the instances are in a running state. 
+# TODO: Sheikh, should we give a sleep here to ensure that all the instances are in a running state.
 # Not too sure if we should since flintrock installs Spark and stuff, so I assume it will be running for sure.
 
 
@@ -63,10 +64,13 @@ master_node_details = get_masternode_IP(master_node_name)
 master_ssh_client = setup_ssh_client(master_node_details["KeyName"]+'.pem',master_node_details["IP"])
 
 # Closing connection for safety
-master_ssh_client.close()
 
 ############## Phase 3: Ingest data from SQL database ##################
 
+stdin , stdout, stderr = master_ssh_client.exec_command('wget -O - https://www.dropbox.com/s/dv8rsslh47eynfd/SQL_Ingestion.sh | bash')
+print(stdout.read().decode('utf=8'))
+print( "Errors")
+print(stderr.read().decode('utf=8'))
 
 ############## Phase 4: Ingest data from Mongo database ##################
 

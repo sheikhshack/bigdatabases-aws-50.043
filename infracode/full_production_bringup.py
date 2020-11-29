@@ -47,7 +47,7 @@ SECURITY_PERMISSIONS = {
 
 instance_configs = [
     {'SecurityGroup': ['WebserverSecurity'], 'Type':'t2.small'},
-    {'SecurityGroup': ['MongoSecurity'], 'Type':'t2.medium'},
+    {'SecurityGroup': ['MongoSecurity'], 'Type':'t2.small'},
     {'SecurityGroup': ['MySQLSecurity'], 'Type':'t2.medium'}]
 
 

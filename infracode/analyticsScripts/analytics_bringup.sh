@@ -11,8 +11,7 @@ read -p "Please enter a name for your cluster. Do not use whitespaces (e.g. Grp5
 python3 verify_key.py Grp5cluster_$NUM_CHILD
 
 echo "Beginning cluster bring up"
-flintrock launch $CLUSTER_NAME --num-slaves $NUM_CHILD --spark-version 3.0.1 --hdfs-version 3.3 --ec2-key-name Grp5cluster_$NUM_CHILD --ec2-identity-file Grp5cluster_$NUM_CHILD.pem --ec2-ami ami-04d29b6f966df1537 --ec2-instance-type t2.medium --ec2-user ec2-user
-
+flintrock launch $CLUSTER_NAME --num-slaves $NUM_CHILD --spark-version 3.0.1 --hdfs-version 3.3.0 --ec2-key-name Grp5cluster_$NUM_CHILD --ec2-identity-file Grp5cluster_$NUM_CHILD.pem --ec2-ami ami-04d29b6f966df1537 --ec2-instance-type t2.medium --ec2-user ec2-user --install-hdfs --install-spark
 echo "Proceeding to data ingestion"
 # wget the python file to ingest data
 # wget ....
