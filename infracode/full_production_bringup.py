@@ -192,7 +192,7 @@ def ssh_routes(routine_details, key):
 # TODO: Modify code for webserver so that it can be threaded too
 mysql_routine = [
     "cd ~",
-    "wget --output-document=setup_sql_instance.sh https://raw.githubusercontent.com/sheikhshack/bigdatabases-aws-50.043/infra/infracode/my_SQLScripts/setup_sql_instance.sh?token=AKXRJGLFQQ5HVYZMWJ2VRAS7YJFXO",
+    "wget --output-document=setup_sql_instance.sh https://www.dropbox.com/s/2c7gpdj1v9b6wkj/setup_sql_instance.sh",
     "chmod +x setup_sql_instance.sh",
     "./setup_sql_instance.sh",
     "sudo sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mysql/mysql.conf.d/mysqld.cnf",

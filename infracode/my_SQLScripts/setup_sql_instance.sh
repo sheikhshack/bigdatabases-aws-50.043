@@ -11,9 +11,9 @@ wget https://www.dropbox.com/s/mg2b09plxocrgi6/kindle_Users.csv
 wget https://www.dropbox.com/s/2ph07tvq6jcijo8/kindle_Review_User_Reduced.csv
 cd ..
 echo Downloading data migration SQL scripts .....
-wget --output-document=create_admin_user.sql https://raw.githubusercontent.com/sheikhshack/bigdatabases-aws-50.043/infra/infracode/my_SQLScripts/create_admin_user.sql?token=AKXRJGP5RTEIOHROWCMKZXK7YHA2A
-wget --output-document=create_tables.sql https://raw.githubusercontent.com/sheikhshack/bigdatabases-aws-50.043/infra/infracode/my_SQLScripts/create_tables.sql?token=AKXRJGIYFYKIUIOZAJM7JT27YHA3C
-wget --output-document=load_data.sql https://raw.githubusercontent.com/sheikhshack/bigdatabases-aws-50.043/infra/infracode/my_SQLScripts/load_data.sql?token=AKXRJGNZP6VRDC5LODINHF27YHA4E
+wget --output-document=create_admin_user.sql https://www.dropbox.com/s/uu3bk0mkmcy5y9j/create_admin_user.sql
+wget --output-document=create_tables.sql https://www.dropbox.com/s/l6fvlra9w7hx4oe/create_tables.sql
+wget --output-document=load_data.sql https://www.dropbox.com/s/tqgx8wnn3r4nb7o/load_data.sql
 echo Executing data migration SQL scripts .....
 echo Create new user
 sudo mysql -u root -p50043 < create_admin_user.sql

@@ -5,7 +5,7 @@ from botocore.exceptions import ClientError
 import paramiko
 import sys
 
-given_key_name =sys.argv[1]
+given_key_name ='Grp5cluster_1'
 
 ec2 = boto3.client('ec2')  # type: botostubs.EC2
 ec2_res = boto3.resource('ec2')
