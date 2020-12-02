@@ -1,3 +1,4 @@
+
 echo Updating system packages .....
 sudo apt-get update
 echo Install MySQL .....
@@ -21,3 +22,5 @@ echo Create relevant -p tables
 sudo mysql -u root -p50043 < create_tables.sql
 echo Load data from sources
 sudo mysql -u root -p50043 < load_data.sql
+sudo sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mysql/mysql.conf.d/mysqld.cnf
+sudo systemctl restart mysql

@@ -1,10 +1,22 @@
 import os
-# import botostubs
 import boto3
 from botocore.exceptions import ClientError
 import paramiko
 import os, sys, threading
-from time import sleep
+import time
+
+# Aesthetics
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
 
 # Default configurations for full production bring-up
 UBUNTU_AMI_ID = 'ami-00ddb0e5626798373'  # Default Ubuntu 18.04 for US-East region
@@ -59,12 +71,12 @@ SECURITY_DEFAULTS = {
 }
 
 INSTANCE_DEFAULTS = [
-    {'SecurityGroup': [SECURITY_DEFAULTS['WEBSERVER']['Name']], 'Type': 't2.small', 'ContainerName': 'GP5Webserver'},
-    {'SecurityGroup': [SECURITY_DEFAULTS['MONGODB']['Name']], 'Type': 't2.small', 'ContainerName': 'GP5Mongo'},
-    {'SecurityGroup': [SECURITY_DEFAULTS['MYSQLDB']['Name']], 'Type': 't2.small', 'ContainerName': 'GP5MySQL'}]
+    {'SecurityGroup': [SECURITY_DEFAULTS['WEBSERVER']['Name']], 'Type': 't2.medium', 'ContainerName': 'GP5Webserver'},
+    {'SecurityGroup': [SECURITY_DEFAULTS['MONGODB']['Name']], 'Type': 't2.medium', 'ContainerName': 'GP5Mongo'},
+    {'SecurityGroup': [SECURITY_DEFAULTS['MYSQLDB']['Name']], 'Type': 't2.medium', 'ContainerName': 'GP5MySQL'}]
 
 # User set configs here
-SSH_KEY_NAME = 'ENGTESTKEY'
+SSH_KEY_NAME = 'THREADEDENGTEST'
 
 # Inits the session via hidden aws file
 ec2 = boto3.client('ec2')
@@ -77,7 +89,6 @@ vpc_id = response.get('Vpcs', [{}])[0].get('VpcId', '')
 # From https://gist.github.com/batok/2352501
 def setup_ssh_client(key_file, IP_address):
     retry = True
-    print('Using key file ', key_file)
     pem = paramiko.RSAKey.from_private_key_file(key_file)
     ssh_client = paramiko.SSHClient()
     ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -154,8 +165,6 @@ def fire_off_instance(key_name, instance_configs):
 def report_instances(instances):
     for instance in instances:
         print('{}: Provisioning and setting up instance'.format(instance.id))
-        instance.wait_until_exists()
-        print('{}: Server setted up and provisioned. Awaiting Run'.format(instance.id))
         instance.wait_until_running()
         print('{}: Success! Server running and ready!'.format(instance.id))
         instance.load()
@@ -170,51 +179,33 @@ def ssh_run_batched_commands(routine_details, key):
         stdin, stdout, stderr = c.exec_command(single_command)
         stdout.read().decode('utf=8')
         error = stderr.read().decode('utf=8')
-        if error and len(error) != 0:
-            print('Error executing command: {0} with len {1}'.format(error, len(error)))
+        # # if error and len(error) != 0:
+        #     print(bcolors.WARNING + 'Error executing command: {0} with len {1}'.format(error, len(error)))
     print('Successfully executed: ', routine_details['description'])
     c.close()
 
 ############## Phase 1: Sorting out security groups ##################
-# TODO: Test --------- Done, NO ISSUES
+start_time = time.perf_counter()
 # Security Policies - https://boto3.amazonaws.com/v1/documentation/api/latest/guide/ec2-example-security-group.html
-
+print(bcolors.HEADER + '-- GP5 Script: Creating necessary security configurations' + bcolors.ENDC)
 sgid_webserver = create_security_groups_aws(SECURITY_DEFAULTS['WEBSERVER'])
 sgid_mongo = create_security_groups_aws(SECURITY_DEFAULTS['MONGODB'])
 sgid_mysql = create_security_groups_aws(SECURITY_DEFAULTS['MYSQLDB'])
 
 ############## Phase 2: Provisioning SSH Key (Single) ##################
+print(bcolors.HEADER + '-- GP5 Script: Creating SSH-Key based on preferred name provided' + bcolors.ENDC)
+
 init_ssh_key(SSH_KEY_NAME)
 ############## Phase 3: Firing off the instances ##################
+print(bcolors.HEADER + '-- GP5 Script: Firing Instances x3 for Production' + bcolors.ENDC)
 instances = fire_off_instance(SSH_KEY_NAME, INSTANCE_DEFAULTS)
 instances = report_instances(instances)
 
 
 ############## Phase 4: Setting up within the instance ##################
 
-
-
-
-
-
-# TODO: Modify code for webserver so that it can be threaded too
-mysql_routine = [
-    "cd ~",
-    "wget --output-document=setup_sql_instance.sh https://www.dropbox.com/s/2c7gpdj1v9b6wkj/setup_sql_instance.sh",
-    "chmod +x setup_sql_instance.sh",
-    "./setup_sql_instance.sh",
-    "sudo sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mysql/mysql.conf.d/mysqld.cnf",
-    "sudo systemctl restart mysql"
-]
-
-# TODO: Suggested truncation to wget https://raw.githubusercontent.com/sheikhshack/bigdatabases-aws-50.043/infra/infracode/mongoScripts/mongo_setup.sh?token=AG2OQBXOZT3DK7QDQM5KV6S7Y2OHU -O mongo_setup.sh" | bash
-mongo_routine = [
-    "wget https://raw.githubusercontent.com/sheikhshack/bigdatabases-aws-50.043/infra/infracode/mongoScripts/mongo_setup.sh?token=AG2OQBXOZT3DK7QDQM5KV6S7Y2OHU -O mongo_setup.sh",
-    "chmod +x mongo_setup.sh",
-    "./mongo_setup.sh"
-]
-
-# Refer to script server_init.sh
+mysql_routine = ["wget -qO - https://www.dropbox.com/s/2c7gpdj1v9b6wkj/setup_sql_instance.sh | bash -"]
+mongo_routine = ["wget -qO - https://www.dropbox.com/s/fucvpkhbzhwrlun/mongo_setup.sh | bash -"]
 webserver_routine = ["wget -qO - https://www.dropbox.com/s/cuu04w8mtmt5yc5/server_init.sh | bash -s {0} {1}".format(instances[2].private_dns_name, instances[1].private_dns_name)]
 
 command_threaders = [{
@@ -229,9 +220,7 @@ command_threaders = [{
      'description': 'Webserver bringup script'}
 ]
 
-# threaders = [{
-#     'routine': mysql_routine,
-#     'ip': instances[2].public_dns_name}]
+print(bcolors.HEADER + '-- GP5 Script: Running Parallel Scripts' + bcolors.ENDC)
 
 threads = []
 for h in command_threaders:
@@ -240,5 +229,23 @@ for h in command_threaders:
     threads.append(t)
 for t in threads:
     t.join()
+
+
+# Results and aesthetics printing
+print(bcolors.HEADER + '-- GP5 Script: Finished Production Deployment' + bcolors.ENDC)
+
+print('-' * 30)
+print(bcolors.OKCYAN + 'Credentials used for Database as such\nUsername: jeroe\nPassword: HelloWorld1!' + bcolors.ENDC)
+print('-' * 30)
+
+
+print('-' * 30)
+print(bcolors.OKGREEN + 'MYSQL Database deployed in server: {0}\nMongo Database deployed in server: {1}\nWebserver '
+                        'deployed over at : http://{2}:5000'.format(instances[2].public_dns_name, instances[1].public_dns_name, instances[0].public_dns_name) + bcolors.ENDC)
+
+print('-' * 30)
+
+end_time = time.perf_counter()
+print('Total time taken: ', end_time - start_time)
 
 
