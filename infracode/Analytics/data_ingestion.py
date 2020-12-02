@@ -62,7 +62,6 @@ master_node_details = get_masternode_IP(master_node_name)
 # print("Master node IP: {} \nMaster key usedd: {}".format(master_node_details["IP"],master_node_details["KeyName"]))
 
 print("Sleep 30 for sanity and wait initialise")
-sleep(30)
 ############## Phase 2: Attempting to establish ssh connection to master node ##################
 master_ssh_client = setup_ssh_client(master_node_details["KeyName"]+'.pem',master_node_details["IP"])
 

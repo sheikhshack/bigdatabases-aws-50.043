@@ -15,14 +15,10 @@ SECURITY_DEFAULTS = {
             {'IpProtocol': 'tcp',
              'FromPort': 9864,
              'ToPort': 9871,
-             'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
-            {'IpProtocol': 'tcp',
-             'FromPort': 22,
-             'ToPort': 22,
              'IpRanges': [{'CidrIp': '0.0.0.0/0'}]}
         ],
         'Description': '50.043 GP5: flintrock configurations',
-        'Name': 'flintrockGRP5'
+        'Name': 'flintrock'
     }
 }
 
