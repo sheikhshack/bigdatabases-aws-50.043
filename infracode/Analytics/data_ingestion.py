@@ -64,13 +64,15 @@ master_node_details = get_masternode_IP(master_node_name)
 master_ssh_client = setup_ssh_client(master_node_details["KeyName"]+'.pem',master_node_details["IP"])
 
 # Closing connection for safety
+master_ssh_client.close()
+print("closing ssh conneciton for safety")
 
 ############## Phase 3: Ingest data from SQL database ##################
 
-stdin , stdout, stderr = master_ssh_client.exec_command('wget -O - https://www.dropbox.com/s/dv8rsslh47eynfd/SQL_Ingestion.sh | bash')
-print(stdout.read().decode('utf=8'))
-print( "Errors")
-print(stderr.read().decode('utf=8'))
+# stdin , stdout, stderr = master_ssh_client.exec_command('wget -O - https://www.dropbox.com/s/dv8rsslh47eynfd/SQL_Ingestion.sh | bash')
+# print(stdout.read().decode('utf=8'))
+# print( "Errors")
+# print(stderr.read().decode('utf=8'))
 
 ############## Phase 4: Ingest data from Mongo database ##################
 

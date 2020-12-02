@@ -79,7 +79,7 @@ except InvalidGroup.Duplicate as e:
 
 ############## Phase 2: Sorting out key pairs for SSH ##################
 # Key Pairs - https://boto3.amazonaws.com/v1/documentation/api/latest/guide/ec2-example-key-pairs.html
-key_name_provided = 'TEST_KEY1'
+key_name_provided = 'TEST_SQL1'
 try:
     curr_key = ec2.describe_key_pairs(KeyNames=[key_name_provided])
     print('\nKey Pair found. Moving Forwards .....')
@@ -122,7 +122,7 @@ sleep(25)
 # Command for settling ssh nonsenses
 mysql_routine = [
     "cd ~",
-    "wget --output-document=setup_sql_instance.sh https://raw.githubusercontent.com/sheikhshack/bigdatabases-aws-50.043/infra/infracode/my_SQLScripts/setup_sql_instance.sh?token=AKXRJGLFQQ5HVYZMWJ2VRAS7YJFXO",
+    "wget --output-document=setup_sql_instance.sh https://www.dropbox.com/s/2c7gpdj1v9b6wkj/setup_sql_instance.sh",
     "chmod +x setup_sql_instance.sh",
     "./setup_sql_instance.sh",
     "sudo sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mysql/mysql.conf.d/mysqld.cnf",
