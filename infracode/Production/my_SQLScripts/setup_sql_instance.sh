@@ -16,8 +16,10 @@ wget --output-document=create_tables.sql https://www.dropbox.com/s/l6fvlra9w7hx4
 wget --output-document=load_data.sql https://www.dropbox.com/s/tqgx8wnn3r4nb7o/load_data.sql
 echo Executing data migration SQL scripts .....
 echo Create new user
-sudo mysql -u root -p50043 < create_admin_user.sql
+sudo mysql -u root -pcd < create_admin_user.sql
 echo Create relevant -p tables
 sudo mysql -u root -p50043 < create_tables.sql
 echo Load data from sources
 sudo mysql -u root -p50043 < load_data.sql
+sudo sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mysql/mysql.conf.d/mysqld.cnf
+sudo systemctl restart mysql

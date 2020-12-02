@@ -213,9 +213,9 @@ mysql_routine = [
     "cd ~",
     "wget --output-document=setup_sql_instance.sh https://www.dropbox.com/s/2c7gpdj1v9b6wkj/setup_sql_instance.sh",
     "chmod +x setup_sql_instance.sh",
-    "./setup_sql_instance.sh",
-    "sudo sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mysql/mysql.conf.d/mysqld.cnf",
-    "sudo systemctl restart mysql"
+    "./setup_sql_instance.sh"
+    # "sudo sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mysql/mysql.conf.d/mysqld.cnf",
+    # "sudo systemctl restart mysql"
 ]
 
 
