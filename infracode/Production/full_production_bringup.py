@@ -63,12 +63,11 @@ INSTANCE_DEFAULTS = [
     {'SecurityGroup': [SECURITY_DEFAULTS['MONGODB']['Name']], 'Type': 't2.small', 'ContainerName': 'GP5Mongo'},
     {'SecurityGroup': [SECURITY_DEFAULTS['MYSQLDB']['Name']], 'Type': 't2.small', 'ContainerName': 'GP5MySQL'}]
 
-
 # User set configs here
 SSH_KEY_NAME = 'ENGTESTKEY'
 
 # Inits the session via hidden aws file
-ec2 = boto3.client('ec2')  # type: botostubs.EC2
+ec2 = boto3.client('ec2')
 ec2_res = boto3.resource('ec2')
 response = ec2.describe_vpcs()
 vpc_id = response.get('Vpcs', [{}])[0].get('VpcId', '')
@@ -112,14 +111,6 @@ def create_security_groups_aws(security_detail):
     except ClientError as e:
         print(e)
         return security_group_id
-
-
-# TODO: TO BE REMOVED
-# def get_existing_subnet():
-#     #     subnet = ec2_res.create_subnet(CidrBlock = '172.31.64.0/20', VpcId= vpc_id)
-#     response = ec2.describe_subnets()
-#     subnet = response.get('Subnets', [{}])[0].get('SubnetId', '')
-#     return subnet
 
 
 # TODO : DONE
@@ -172,11 +163,17 @@ def report_instances(instances):
     return instances
 
 
-def init_common_placement():
-    res = ec2_res.get_all_placement_groups(groupnames=['50043_team5_placement'], filters=None, dry_run=False)
-    if len(res) == 0:
-        ec2_res.create_placement_group('50043_team5_placement', strategy='cluster', dry_run=False)
-
+def ssh_run_batched_commands(routine_details, key):
+    c = setup_ssh_client(key, routine_details['ip'])
+    print('Executing: ', routine_details['description'])
+    for single_command in routine_details['routine']:
+        stdin, stdout, stderr = c.exec_command(single_command)
+        stdout.read().decode('utf=8')
+        error = stderr.read().decode('utf=8')
+        if error and len(error) != 0:
+            print('Error executing command: {0} with len {1}'.format(error, len(error)))
+    print('Successfully executed: ', routine_details['description'])
+    c.close()
 
 ############## Phase 1: Sorting out security groups ##################
 # TODO: Test --------- Done, NO ISSUES
@@ -192,20 +189,12 @@ init_ssh_key(SSH_KEY_NAME)
 instances = fire_off_instance(SSH_KEY_NAME, INSTANCE_DEFAULTS)
 instances = report_instances(instances)
 
+
 ############## Phase 4: Setting up within the instance ##################
-# sleep(20)  # Sanity sleep for ec2
 
 
-def ssh_routes(routine_details, key):
-    c = setup_ssh_client(key, routine_details['ip'])
-    for command in routine_details['routine']:
-        print("Executing {}".format(command))
-        stdin, stdout, stderr = c.exec_command(command)
-        print(stdout.read().decode('utf=8'))
-        print("Errors")
-        print(stderr.read().decode('utf=8'))
 
-    c.close()
+
 
 
 # TODO: Modify code for webserver so that it can be threaded too
@@ -213,12 +202,10 @@ mysql_routine = [
     "cd ~",
     "wget --output-document=setup_sql_instance.sh https://www.dropbox.com/s/2c7gpdj1v9b6wkj/setup_sql_instance.sh",
     "chmod +x setup_sql_instance.sh",
-    "./setup_sql_instance.sh"
-    # "sudo sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mysql/mysql.conf.d/mysqld.cnf",
-    # "sudo systemctl restart mysql"
+    "./setup_sql_instance.sh",
+    "sudo sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mysql/mysql.conf.d/mysqld.cnf",
+    "sudo systemctl restart mysql"
 ]
-
-
 
 # TODO: Suggested truncation to wget https://raw.githubusercontent.com/sheikhshack/bigdatabases-aws-50.043/infra/infracode/mongoScripts/mongo_setup.sh?token=AG2OQBXOZT3DK7QDQM5KV6S7Y2OHU -O mongo_setup.sh" | bash
 mongo_routine = [
@@ -227,39 +214,31 @@ mongo_routine = [
     "./mongo_setup.sh"
 ]
 
-# TODO: Fix into single command
-webserver_routine = [
-    "cd ~; wget https://www.dropbox.com/s/kz8jz3irepuzw10/buildimage.tar.gz?dl=1  -O - | tar -xz ",
-    "sed -i 's_<SQLIP>_{0}_g;s_<MONGODBURI>_{1}_g' server/.env".format(instances[2].private_dns_name,
-                                                                       instances[1].private_dns_name),
-    "wget -O - https://www.dropbox.com/s/cuu04w8mtmt5yc5/server_init.sh | bash"
+# Refer to script server_init.sh
+webserver_routine = ["wget -qO - https://www.dropbox.com/s/cuu04w8mtmt5yc5/server_init.sh | bash -s {0} {1}".format(instances[2].private_dns_name, instances[1].private_dns_name)]
 
+command_threaders = [{
+    'routine': mysql_routine,
+    'ip': instances[2].public_dns_name,
+    'description':'Mysql Database bringup script '},
+    {'routine': mongo_routine,
+     'ip': instances[1].public_dns_name,
+     'description': 'Mongo Database bringup script'},
+    {'routine': webserver_routine,
+     'ip': instances[0].public_dns_name,
+     'description': 'Webserver bringup script'}
 ]
+
 # threaders = [{
 #     'routine': mysql_routine,
-#     'ip': instances[2].public_dns_name},
-#     {'routine': mongo_routine,
-#      'ip': instances[1].public_dns_name}]
-
-threaders = [{
-    'routine': mysql_routine,
-    'ip': instances[2].public_dns_name}]
-
+#     'ip': instances[2].public_dns_name}]
 
 threads = []
-for h in threaders:
-    t = threading.Thread(target=ssh_routes, args=(h, SSH_KEY_NAME + '.pem',))
+for h in command_threaders:
+    t = threading.Thread(target=ssh_run_batched_commands, args=(h, SSH_KEY_NAME + '.pem',))
     t.start()
     threads.append(t)
 for t in threads:
     t.join()
 
-c3 = setup_ssh_client(SSH_KEY_NAME + '.pem', instances[0].public_dns_name)
 
-for command in webserver_routine:
-    print("Executing {}".format(command))
-    stdin, stdout, stderr = c3.exec_command(command)
-    print(stdout.read().decode('utf=8'))
-    print("Errors")
-    print(stderr.read().decode('utf=8'))
-c3.close()
