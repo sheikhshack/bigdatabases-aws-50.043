@@ -84,7 +84,7 @@ except ClientError as e:
 
 ############## Phase 2: Sorting out key pairs for SSH ##################
 # Key Pairs - https://boto3.amazonaws.com/v1/documentation/api/latest/guide/ec2-example-key-pairs.html
-key_name_provided = 'TEST_KEY_MONGO'
+key_name_provided = 'TEST_KEY1'
 try:
     curr_key = ec2.describe_key_pairs(KeyNames=[key_name_provided])
     print('\nKey Pair found. Moving Forwards .....')
@@ -124,7 +124,7 @@ print('{0}: Success! Server currently on IP address {1}'.format(mongo_instance[0
 sleep(20)
 
 mongo_routine = [
-    "wget https://www.dropbox.com/s/fucvpkhbzhwrlun/mongo_setup.sh?dl=0 -O mongo_setup.sh",
+    "wget https://raw.githubusercontent.com/sheikhshack/bigdatabases-aws-50.043/infra/infracode/mongoScripts/mongo_setup.sh?token=AG2OQBXPRMCKI6KDPZS2C5S7YT572 -O mongo_setup.sh",
     "chmod +x mongo_setup.sh",
     "./mongo_setup.sh"
 
