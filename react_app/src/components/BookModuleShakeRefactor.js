@@ -124,23 +124,23 @@ const BookModuleShakeRefactor = () => {
     }, [currPage, sortMech, order])
     return (
         <>
-            <Box display='flex' justifyContent='flex-start'>
-                <Sorter sortMech={sortMech} setSortMech={setSortMech} order={order} setOrder={setOrder} setCurrPage={setCurrPage} />
 
-                <Grid container spacing={0} direction="column" alignItems='center'>
-                    <div className='cons'>
-                        <div className='Books'>
-                            {books.map(book =>
-                                <ShakeSingularBook key={book.asin} book={book} />
-                            )}
-                        </div>
+            <Sorter sortMech={sortMech} setSortMech={setSortMech} order={order} setOrder={setOrder} setCurrPage={setCurrPage} />
 
-                        <Box display='flex' justifyContent='center'>
-                            <PaginatorSimple currPage={currPage} setCurrPage={setCurrPage} />
-                        </Box>
+            <Grid container spacing={0} direction="column" alignItems='center'>
+                <div className='cons'>
+                    <div className='Books'>
+                        {books.map(book =>
+                            <ShakeSingularBook key={book.asin} book={book} />
+                        )}
                     </div>
-                </Grid>
-            </Box>
+
+                    <Box display='flex' justifyContent='center'>
+                        <PaginatorSimple currPage={currPage} setCurrPage={setCurrPage} />
+                    </Box>
+                </div>
+            </Grid>
+
         </>
 
     )
