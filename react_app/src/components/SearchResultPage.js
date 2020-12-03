@@ -7,7 +7,7 @@ import React, { useEffect, useState, useRef, useCallback } from 'react'
 import ShakeSingularBook from './ShakeSingularBook'
 import bookService from '../services/bookService'
 import { makeStyles } from '@material-ui/core/styles'
-
+import { useHistory } from 'react-router-dom'
 
 
 
@@ -18,7 +18,8 @@ const handleAlertClick = () => {
 }
 
 const SearchResultPage = ({searchtype,searchinput}) => {
-
+    
+    const history = useHistory()
     const [books, setBooks] = useState([])
     console.log('search type (resultpage) is:'+searchtype)
     console.log('search input (resultpage) is:'+searchinput)
@@ -40,7 +41,10 @@ const SearchResultPage = ({searchtype,searchinput}) => {
                     //     console.log("theres nothing")
                     // }
                     setBooks(bookData)        
-                }   
+                } 
+                if (searchtype == "Asin"){
+                    history.push(`/book/${searchinput}`)
+                }
                 else {
                     console.log("theres nothing")
                     // handleAlertClick()

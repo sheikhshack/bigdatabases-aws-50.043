@@ -54,6 +54,7 @@ const Navigation = ({ user }) => {
     const options = [
         { name: 'Title', value: 'title' },
         { name: 'Author', value: 'author' },
+        { name: 'Asin', value: 'asin' },
     ]
 
     const useStyles = makeStyles((theme) => ({
@@ -185,6 +186,7 @@ const Navigation = ({ user }) => {
                                 >
                                     <MenuItem value={'Title'}>Title</MenuItem>
                                     <MenuItem value={'Author'}>Author</MenuItem>
+                                    <MenuItem value={'Asin'}>Asin</MenuItem>
                                 </Select>
                             </div>
                             <div className={classes.search}>
