@@ -84,13 +84,6 @@ SECURITY_DEFAULTS = {
         }
 }
 
-INSTANCE_DEFAULTS = [
-    {'SecurityGroup': [SECURITY_DEFAULTS['WEBSERVER']['Name']], 'Type': 't2.medium', 'ContainerName': 'GP5Webserver'},
-    {'SecurityGroup': [SECURITY_DEFAULTS['MONGODB']['Name']], 'Type': 't2.medium', 'ContainerName': 'GP5Mongo'},
-    {'SecurityGroup': [SECURITY_DEFAULTS['MYSQLDB']['Name']], 'Type': 't2.medium', 'ContainerName': 'GP5MySQL'}]
-
-# User set configs here
-SSH_KEY_NAME = 'THREADEDENGTEST'
 
 # Inits the session via hidden aws file
 ec2 = boto3.client('ec2')
@@ -198,77 +191,87 @@ def ssh_run_batched_commands(routine_details, key):
     print('Successfully executed: ', routine_details['description'])
     c.close()
 
-############## Phase 1: Sorting out security groups ##################
-start_time = time.perf_counter()
-# Security Policies - https://boto3.amazonaws.com/v1/documentation/api/latest/guide/ec2-example-security-group.html
-print(bcolors.HEADER + '-- GP5 Script: Creating necessary security configurations' + bcolors.ENDC)
-sgid_webserver = create_security_groups_aws(SECURITY_DEFAULTS['WEBSERVER'])
-sgid_mongo = create_security_groups_aws(SECURITY_DEFAULTS['MONGODB'])
-sgid_mysql = create_security_groups_aws(SECURITY_DEFAULTS['MYSQLDB'])
+def main(SSH_KEY_NAME, instance_type):
 
-############## Phase 2: Provisioning SSH Key (Single) ##################
-print(bcolors.HEADER + '-- GP5 Script: Creating SSH-Key based on preferred name provided' + bcolors.ENDC)
-
-init_ssh_key(SSH_KEY_NAME)
-############## Phase 3: Firing off the instances ##################
-print(bcolors.HEADER + '-- GP5 Script: Firing Instances x3 for Production' + bcolors.ENDC)
-instances = fire_off_instance(SSH_KEY_NAME, INSTANCE_DEFAULTS)
-instances = report_instances(instances)
+    ############## USER SET CONFIGS #######################
+    INSTANCE_DEFAULTS = [
+        {'SecurityGroup': [SECURITY_DEFAULTS['WEBSERVER']['Name']], 'Type': 't2.medium',
+         'ContainerName': 'GP5Webserver'},
+        {'SecurityGroup': [SECURITY_DEFAULTS['MONGODB']['Name']], 'Type': instance_type, 'ContainerName': 'GP5Mongo'},
+        {'SecurityGroup': [SECURITY_DEFAULTS['MYSQLDB']['Name']], 'Type': instance_type, 'ContainerName': 'GP5MySQL'}]
 
 
-############## Phase 4: Setting up within the instance ##################
+    ############## Phase 1: Sorting out security groups ##################
+    start_time = time.perf_counter()
+    # Security Policies - https://boto3.amazonaws.com/v1/documentation/api/latest/guide/ec2-example-security-group.html
+    print(bcolors.HEADER + '-- GP5 Bringup Script: Creating necessary security configurations' + bcolors.ENDC)
+    sgid_webserver = create_security_groups_aws(SECURITY_DEFAULTS['WEBSERVER'])
+    sgid_mongo = create_security_groups_aws(SECURITY_DEFAULTS['MONGODB'])
+    sgid_mysql = create_security_groups_aws(SECURITY_DEFAULTS['MYSQLDB'])
 
-mysql_routine = ["wget -qO - https://www.dropbox.com/s/2c7gpdj1v9b6wkj/setup_sql_instance.sh | bash -"]
-mongo_routine = ["wget -qO - https://www.dropbox.com/s/fucvpkhbzhwrlun/mongo_setup.sh | bash -"]
-webserver_routine = ["wget -qO - https://www.dropbox.com/s/cuu04w8mtmt5yc5/server_init.sh | bash -s {0} {1}".format(instances[2].private_dns_name, instances[1].private_dns_name)]
-webserver_routine_final = ["sudo pm2 restart index"]
+    ############## Phase 2: Provisioning SSH Key (Single) ##################
+    print(bcolors.HEADER + '-- GP5 Bringup Script: Creating SSH-Key based on preferred name provided' + bcolors.ENDC)
 
-command_threaders = [{
-    'routine': mysql_routine,
-    'ip': instances[2].public_dns_name,
-    'description':'Mysql Database bringup script '},
-    {'routine': mongo_routine,
-     'ip': instances[1].public_dns_name,
-     'description': 'Mongo Database bringup script'},
-    {'routine': webserver_routine,
-     'ip': instances[0].public_dns_name,
-     'description': 'Webserver bringup script'}
-]
-
-print(bcolors.HEADER + '-- GP5 Script: Running Parallel Scripts' + bcolors.ENDC)
-
-threads = []
-for h in command_threaders:
-    t = threading.Thread(target=ssh_run_batched_commands, args=(h, SSH_KEY_NAME + '.pem',))
-    t.start()
-    threads.append(t)
-for t in threads:
-    t.join()
-
-# PM2 startup once the dbs are up and running
-final_thread  = {
-    'routine': webserver_routine_final,
-     'ip': instances[0].public_dns_name,
-     'description': 'Webserver Finalised script'}
-
-ssh_run_batched_commands(final_thread, SSH_KEY_NAME + '.pem')
+    init_ssh_key(SSH_KEY_NAME)
+    ############## Phase 3: Firing off the instances ##################
+    print(bcolors.HEADER + '-- GP5 Bringup Script: Firing Instances x3 for Production' + bcolors.ENDC)
+    instances = fire_off_instance(SSH_KEY_NAME, INSTANCE_DEFAULTS)
+    instances = report_instances(instances)
 
 
-# Results and aesthetics printing
-print(bcolors.HEADER + '-- GP5 Script: Finished Production Deployment' + bcolors.ENDC)
+    ############## Phase 4: Setting up within the instance ##################
 
-print('-' * 30)
-print(bcolors.OKCYAN + 'Credentials used for Database as such\nUsername: jeroe\nPassword: HelloWorld1!' + bcolors.ENDC)
-print('-' * 30)
+    mysql_routine = ["wget -qO - https://www.dropbox.com/s/2c7gpdj1v9b6wkj/setup_sql_instance.sh | bash -"]
+    mongo_routine = ["wget -qO - https://www.dropbox.com/s/fucvpkhbzhwrlun/mongo_setup.sh | bash -"]
+    webserver_routine = ["wget -qO - https://www.dropbox.com/s/cuu04w8mtmt5yc5/server_init.sh | bash -s {0} {1}".format(instances[2].private_dns_name, instances[1].private_dns_name)]
+    webserver_routine_final = ["sudo pm2 restart index"]
+
+    command_threaders = [{
+        'routine': mysql_routine,
+        'ip': instances[2].public_dns_name,
+        'description':'Mysql Database bringup script '},
+        {'routine': mongo_routine,
+         'ip': instances[1].public_dns_name,
+         'description': 'Mongo Database bringup script'},
+        {'routine': webserver_routine,
+         'ip': instances[0].public_dns_name,
+         'description': 'Webserver bringup script'}
+    ]
+
+    print(bcolors.HEADER + '-- GP5 Bringup Script: Running Parallel Scripts' + bcolors.ENDC)
+
+    threads = []
+    for h in command_threaders:
+        t = threading.Thread(target=ssh_run_batched_commands, args=(h, SSH_KEY_NAME + '.pem',))
+        t.start()
+        threads.append(t)
+    for t in threads:
+        t.join()
+
+    # PM2 startup once the dbs are up and running
+    final_thread  = {
+        'routine': webserver_routine_final,
+         'ip': instances[0].public_dns_name,
+         'description': 'Webserver Finalised script'}
+
+    ssh_run_batched_commands(final_thread, SSH_KEY_NAME + '.pem')
 
 
-print('-' * 30)
-print(bcolors.OKGREEN + 'MYSQL Database deployed in server: {0}\nMongo Database deployed in server: {1}\nWebserver '
-                        'deployed over at : http://{2}:5000'.format(instances[2].public_dns_name, instances[1].public_dns_name, instances[0].public_dns_name) + bcolors.ENDC)
+    # Results and aesthetics printing
+    print(bcolors.HEADER + '-- GP5 Bringup Script: Finished Production Deployment' + bcolors.ENDC)
 
-print('-' * 30)
+    print('-' * 30)
+    print(bcolors.OKCYAN + 'Credentials used for Database as such\nUsername: jeroe\nPassword: HelloWorld1!' + bcolors.ENDC)
+    print('-' * 30)
 
-end_time = time.perf_counter()
-print('Total time taken: ', end_time - start_time)
+
+    print('-' * 30)
+    print(bcolors.OKGREEN + 'MYSQL Database deployed in server: {0}\nMongo Database deployed in server: {1}\nWebserver '
+                            'deployed over at : http://{2}:5000'.format(instances[2].public_dns_name, instances[1].public_dns_name, instances[0].public_dns_name) + bcolors.ENDC)
+
+    print('-' * 30)
+
+    end_time = time.perf_counter()
+    print('Total time taken: ', end_time - start_time)
 
 
