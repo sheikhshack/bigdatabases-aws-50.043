@@ -2,6 +2,8 @@ import argparse
 import subprocess
 import full_production_bringup
 import teardown_systems
+import os
+import data_ingestion
 
 # Aesthetics
 class bcolors:
@@ -15,6 +17,7 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
+KEY_NAME = 'GP5_Master_Key'
 
 def bringup(args):
 
@@ -31,7 +34,14 @@ def bringup(args):
 
 
 def modify():
-    pass
+    print('Tearing down analytics cluster')
+    os.system('flintrock destroy GP5Analytics')
+    print('Teardown complete')
+    print('Rebuilding cluster with new nodes')
+    os.system('./analytics_bringup.sh {0} {1}'.format(mod_nodes,'GP5_MasterKey'))
+    print("Clusters brought up, next to ingestion")
+
+    data_ingestion.ingest_data(KEY_NAME)
 
 def teardown(args):
     current_config = (bcolors.BOLD + "Teardown with the following configs: \n"
@@ -39,7 +49,6 @@ def teardown(args):
     print(current_config)
     if args.mode == 'full':
         teardown_systems.main_full('BATCHMODE')
-
 
 
 if __name__ == "__main__":
@@ -67,7 +76,7 @@ if __name__ == "__main__":
 
     # Sub command - bringup
     bringup_parser = subparsers.add_parser('bringup')
-    bringup_parser.add_argument('-n', dest='nodes', help='Enter number of (worker) nodes for Analytics system',
+    bringup_parser.add_argument('-n', dest='init_nodes', help='Enter number of (worker) nodes for Analytics system',
                                 type=int, required=True)
     bringup_parser.add_argument('-tp', dest='instance_type_prod', help='Enter type of nodes for Production system',
                                 choices={"t2.2xlarge", "t2.xlarge", "t2.large", "t2.medium"}, default="t2.medium")
@@ -82,7 +91,7 @@ if __name__ == "__main__":
 
     # Sub command - modify
     modify_parser = subparsers.add_parser('modify')
-    modify_parser.add_argument('-n', dest='nodes', help='Enter number of (worker) nodes to rescale to', type=int,
+    modify_parser.add_argument('-n', dest='mod_nodes', help='Enter number of (worker) nodes to rescale to', type=int,
                                required=True, default=4)
     modify_parser.add_argument('-t', dest='instance_type', help='Enter type of (worker) nodes for Analytics system',
                                choices={"t2.2xlarge", "t2.xlarge", "t2.large", "t2.medium"}, default="t2.medium")
