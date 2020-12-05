@@ -1,6 +1,6 @@
 import argparse
 import subprocess
-import full_production_bringup
+import full_bringup
 import teardown_systems
 import os
 import data_ingestion
@@ -29,7 +29,10 @@ def bringup(args):
                       "   - Also Running: {4}\n" + bcolors.ENDC).format(args.instance_type_prod, args.instance_type_node, args.nodes,
                                                        args.mode, args.actions)
     print(current_config)
-    full_production_bringup.main(SSH_KEY_NAME='BATCHMODE', instance_type=args.instance_type_prod)
+    if args.mode == 'production-only':
+        full_bringup.main('BATCHMODE', args.instance_type_prod)
+    else:
+        full_bringup.main('BATCHMODE', args.instance_type_prod, args.instance_type_node, args.nodes)
 
 
 
@@ -79,14 +82,14 @@ if __name__ == "__main__":
     bringup_parser.add_argument('-n', dest='init_nodes', help='Enter number of (worker) nodes for Analytics system',
                                 type=int, required=True)
     bringup_parser.add_argument('-tp', dest='instance_type_prod', help='Enter type of nodes for Production system',
-                                choices={"t2.2xlarge", "t2.xlarge", "t2.large", "t2.medium"}, default="t2.medium")
+                                choices={"t2.small", "t2.2xlarge", "t2.xlarge", "t2.large", "t2.medium"}, default="t2.medium")
     bringup_parser.add_argument('-tn', dest='instance_type_node',
                                 help='Enter type of (worker) nodes for Analytics system',
-                                choices={"t2.2xlarge", "t2.xlarge", "t2.large", "t2.medium"}, default='t2.xlarge')
+                                choices={"t2.small", "t2.2xlarge", "t2.xlarge", "t2.large", "t2.medium"}, default='t2.xlarge')
     bringup_parser.add_argument('-a', dest='actions', help='Actions: Run special analytics scripts',
                                 choices={"tfidf", "pearson", "both"})
     bringup_parser.add_argument('-m', dest='mode', help='Mode: Specify the type of bring-up desired',
-                                choices={"production-only", "full-ecosystem"}, default="full-ecosystem")
+                                choices={"production-only", "full"}, default="full-ecosystem")
     bringup_parser.set_defaults(func=bringup)
 
     # Sub command - modify

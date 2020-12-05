@@ -4,6 +4,7 @@ from botocore.exceptions import ClientError
 import paramiko
 import os, sys, threading
 import time
+from threading import Thread
 
 # Aesthetics
 class bcolors:
@@ -80,7 +81,7 @@ SECURITY_DEFAULTS = {
                  'IpRanges': [{'CidrIp': '0.0.0.0/0'}]}
             ],
             'Description': '50.043 GP5: flintrock configurations',
-            'Name': 'flintrock'
+            'Name': 'FlintRockGroup5'
         }
 }
 
@@ -191,12 +192,22 @@ def ssh_run_batched_commands(routine_details, key):
     print('Successfully executed: ', routine_details['description'])
     c.close()
 
-def main(SSH_KEY_NAME, instance_type):
+def launch_flintrock(instance_type, node_count, key):
+    print('Running Flintrock')
+    os.system('''flintrock launch GP5Analytics --num-slaves {0} --spark-version 3.0.1 --hdfs-version 3.2.1 \
+              --ec2-security-group FlintRockGroup5 --ec2-key-name {1} --ec2-identity-file {1}.pem --ec2-ami ami-04d29b6f966df1537 \
+              --ec2-instance-type {2} --ec2-user ec2-user --install-hdfs --install-spark'''.format(node_count, key, instance_type))
 
+    # os.system('''flintrock --debug launch GP5Analytics --num-slaves {0} --spark-version 3.0.1 --hdfs-version 3.2.1 \
+    #               --ec2-key-name {1} --ec2-identity-file {1}.pem --ec2-ami ami-04d29b6f966df1537 \
+    #               --ec2-instance-type {2} --ec2-user ec2-user --install-hdfs --install-spark'''.format(1, 'BATCHMODE',
+    #                                                                                                    't2.small'))
+
+def main(SSH_KEY_NAME, instance_type, flint_type=None, node_count=None):
+    flint_thread = None
     ############## USER SET CONFIGS #######################
     INSTANCE_DEFAULTS = [
-        {'SecurityGroup': [SECURITY_DEFAULTS['WEBSERVER']['Name']], 'Type': 't2.medium',
-         'ContainerName': 'GP5Webserver'},
+        {'SecurityGroup': [SECURITY_DEFAULTS['WEBSERVER']['Name']], 'Type': 't2.medium','ContainerName': 'GP5Webserver'},
         {'SecurityGroup': [SECURITY_DEFAULTS['MONGODB']['Name']], 'Type': instance_type, 'ContainerName': 'GP5Mongo'},
         {'SecurityGroup': [SECURITY_DEFAULTS['MYSQLDB']['Name']], 'Type': instance_type, 'ContainerName': 'GP5MySQL'}]
 
@@ -208,6 +219,12 @@ def main(SSH_KEY_NAME, instance_type):
     sgid_webserver = create_security_groups_aws(SECURITY_DEFAULTS['WEBSERVER'])
     sgid_mongo = create_security_groups_aws(SECURITY_DEFAULTS['MONGODB'])
     sgid_mysql = create_security_groups_aws(SECURITY_DEFAULTS['MYSQLDB'])
+    if flint_type:
+        print(bcolors.HEADER + '-- GP5 Bringup Script: Initiating Analytics Bringup' + bcolors.ENDC)
+        sgid_flintrock = create_security_groups_aws(SECURITY_DEFAULTS['FLINTROCK'])
+        # proceed to immediately subprocess the function
+        flint_thread = Thread(target=launch_flintrock, args= (flint_type, node_count, SSH_KEY_NAME, ))
+        flint_thread.start()
 
     ############## Phase 2: Provisioning SSH Key (Single) ##################
     print(bcolors.HEADER + '-- GP5 Bringup Script: Creating SSH-Key based on preferred name provided' + bcolors.ENDC)
@@ -272,6 +289,12 @@ def main(SSH_KEY_NAME, instance_type):
     print('-' * 30)
 
     end_time = time.perf_counter()
-    print('Total time taken: ', end_time - start_time)
+    print('Total time taken for production: ', end_time - start_time)
+
+    if flint_type:
+        print('-- GP5 Bringup Script: Waiting for Analystics Bringup thread to finish...')
+        flint_thread.join()
+        print(bcolors.HEADER + '-- GP5 Bringup Script: Finished AnalyticsDeployment. See the line before this for master address' + bcolors.ENDC)
+        print('-' * 30)
 
 
