@@ -119,7 +119,7 @@ if __name__ == "__main__":
                                 type=int, required=True)
     bringup_parser.add_argument('-tp', dest='instance_type_prod', help='Enter type of nodes for Production system',
                                 choices=["t2.small", "t2.2xlarge", "t2.xlarge", "t2.large", "t2.medium"],
-                                default="t2.medium")
+                                default="t2.large")
     bringup_parser.add_argument('-tn', dest='instance_type_node',
                                 help='Enter type of (worker) nodes for Analytics system',
                                 choices=["t2.small", "t2.2xlarge", "t2.xlarge", "t2.large", "t2.medium"],
