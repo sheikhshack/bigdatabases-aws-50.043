@@ -101,7 +101,9 @@ if __name__ == "__main__":
     subparsers = parser.add_subparsers(help='sub-command help')
 
     # Sub command - bringup
-    bringup_parser = subparsers.add_parser('bringup')
+    bringup_parser = subparsers.add_parser('bringup', description='This command will allow specific bringup of the entire system / subsystems')
+    bringup_parser.add_argument('-m', dest='mode', help='Mode: Specify the type of bring-up desired',
+                                choices=["production-only", "full"], default="full")
     bringup_parser.add_argument('-n', dest='init_nodes', help='Enter number of (worker) nodes for Analytics system',
                                 type=int, required=True)
     bringup_parser.add_argument('-tp', dest='instance_type_prod', help='Enter type of nodes for Production system',
@@ -113,17 +115,24 @@ if __name__ == "__main__":
                                 default='t2.xlarge')
     bringup_parser.add_argument('-a', dest='actions', help='Actions: Run special analytics scripts',
                                 choices=["tfidf", "pearson", "both"])
-    bringup_parser.add_argument('-m', dest='mode', help='Mode: Specify the type of bring-up desired',
-                                choices={"production-only", "full"}, default="full")
+
     bringup_parser.set_defaults(func=bringup)
 
     # Sub command - modify
-    modify_parser = subparsers.add_parser('modify')
+    modify_parser = subparsers.add_parser('modify', description='This command will allow you to modify the analytics system, such as reclustering and adjusting node types')
     modify_parser.add_argument('-n', dest='mod_nodes', help='Enter number of (worker) nodes to rescale to', type=int,
                                required=True, default=4)
     modify_parser.add_argument('-t', dest='mod_instance_type', help='Enter type of (worker) nodes for Analytics system',
                                choices={"t2.2xlarge", "t2.xlarge", "t2.large", "t2.medium"}, default="t2.medium")
     modify_parser.set_defaults(func=modify)
+
+    # Sub command - ingest current state
+    ingest_parser = subparsers.add_parser('ingest', description='This command will trigger ingestion from mongo/mysql at runtime into the HDFS')
+
+    # ingest_parser.add_argument('-h', help='This command will trigger ingestion from mongo/mysql at runtime into the '
+    #                                       'hdfs')
+
+    # modify_parser.set_defaults(func=ingest)
 
     # Sub command - teardown
     teardown_parser = subparsers.add_parser('teardown')
