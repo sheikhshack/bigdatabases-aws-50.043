@@ -1,0 +1,1 @@
+tar -czvf buildimage.tar.gz server
