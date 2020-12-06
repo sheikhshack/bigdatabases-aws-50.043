@@ -64,6 +64,10 @@ def teardown(args):
         print(bcolors.HEADER + '-- GP5 Teardown Script: Begin Analytics cluster teardown' + bcolors.ENDC)
         os.system('echo "y" | flintrock destroy GP5Analytics')
         print(bcolors.HEADER + '-- GP5 Teardown Script: Analytics cluster teardown complete' + bcolors.ENDC)
+    else: 
+        print(bcolors.HEADER + '-- GP5 Teardown Script: Begin Analytics cluster teardown' + bcolors.ENDC)
+        os.system('echo "y" | flintrock destroy GP5Analytics')
+        print(bcolors.HEADER + '-- GP5 Teardown Script: Analytics cluster teardown complete' + bcolors.ENDC)
 
 
 
