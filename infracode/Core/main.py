@@ -20,7 +20,7 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 
-MASTER_KEY = 'TESTFIN1'
+MASTER_KEY = 'MASTERONE'
 
 
 def bringup(args):

@@ -49,14 +49,18 @@ def get_databases_IP(ec2_res):
     MySQL_instance = ec2_res.instances.filter(
         Filters=[{'Name': 'tag:Name', 'Values': ['GP5MySQL']}])
 
-    mysql_ip = list(map(lambda x: x.public_ip_address, MySQL_instance))[0]
-    print(mysql_ip)
+    mysql_ip = list(map(lambda x: x.public_ip_address, MySQL_instance))
+    mysql_ip = [i for i in mysql_ip if i]
+    mysql_ip = mysql_ip[0]
+
     print(bcolors.HEADER + 'MySQL server found at {}'.format(mysql_ip) + bcolors.ENDC)
 
     Mongo_instance = ec2_res.instances.filter(
         Filters=[{'Name': 'tag:Name', 'Values': ['GP5Mongo']}])
 
-    mongo_ip = list(map(lambda x: x.public_ip_address, Mongo_instance))[0]
+    mongo_ip = list(map(lambda x: x.public_ip_address, Mongo_instance))
+    mongo_ip = [i for i in mongo_ip if i]
+    mongo_ip = mongo_ip[0]
     print(bcolors.HEADER + 'Mongo server found at {}'.format(mongo_ip) + bcolors.ENDC)
 
     database_IPs = {
