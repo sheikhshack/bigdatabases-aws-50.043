@@ -32,6 +32,7 @@ python3 init.py --help
 
 #### Bringing up all EC2 instances
 Our script allow you the liberty to choose which systems you would like to bring up. You are also given the option to bring up all instances at once.
+**Note: Please adjust mode to sequential via `-c sequential` if the script doesn't run properly or running on cheap instance**
 
 ```
 python3 init.py bringup [-n numWorkerNodes] [-tp productionInstanceType] [-tn analyticsInstanceType] [-a analyticsScripts] [-m modeOfBringUp] [-c enableThreading]
