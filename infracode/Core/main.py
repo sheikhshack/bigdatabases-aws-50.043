@@ -4,7 +4,7 @@ import full_bringup
 import teardown_systems
 import os
 import data_ingestion
-
+import analytics
 
 # Aesthetics
 class bcolors:
@@ -58,8 +58,18 @@ def modify(args):
     print(bcolors.HEADER + 'Analytics Cluster bring up successful' + bcolors.ENDC)
     print(bcolors.HEADER + 'Begin data ingestion' + bcolors.ENDC)
 
-    # TODO: Need to finish up the data ingestion part
-    # data_ingestion.ingest_data(KEY_NAME)
+def ingest():
+    current_config = (bcolors.BOLD + "Beginning data ingestion \n" + bcolors.ENDC)
+    print(current_config)
+    data_ingestion.ingest_data(KEY_NAME)
+
+def analytics(args):
+
+    current_config = (bcolors.BOLD + "Beginning data analytics \n" + bcolors.ENDC)
+    print(current_config)
+    # TODO: Need to push the analytics to dropbox
+    analytics.analyse_data(KEY_NAME,args.actions,args.vocab)
+
 
 
 def teardown(args):
@@ -113,9 +123,6 @@ if __name__ == "__main__":
                                 help='Enter type of (worker) nodes for Analytics system',
                                 choices=["t2.small", "t2.2xlarge", "t2.xlarge", "t2.large", "t2.medium"],
                                 default='t2.xlarge')
-    bringup_parser.add_argument('-a', dest='actions', help='Actions: Run special analytics scripts',
-                                choices=["tfidf", "pearson", "both"])
-
     bringup_parser.set_defaults(func=bringup)
 
     # Sub command - modify
@@ -128,11 +135,16 @@ if __name__ == "__main__":
 
     # Sub command - ingest current state
     ingest_parser = subparsers.add_parser('ingest', description='This command will trigger ingestion from mongo/mysql at runtime into the HDFS')
+    ingest_parser.set_defaults(func=ingest)
 
-    # ingest_parser.add_argument('-h', help='This command will trigger ingestion from mongo/mysql at runtime into the '
-    #                                       'hdfs')
 
-    # modify_parser.set_defaults(func=ingest)
+    # Sub command - run analytics task
+    analytics_parser = subparsers.add_parser('analytics', description='This command will trigger ingestion from mongo/mysql at runtime into the HDFS')
+    analytics_parser.add_argument('-a', dest='actions', help='Actions: Run special analytics scripts',
+                                choices=["tfidf", "pearson", "both"],default="both")
+    analytics_parser.add_argument('-v', dest='vocab', help='Enter a vocab size for tf-idf',
+                                type=int, default="20")
+    analytics_parser.set_defaults(func=analytics)
 
     # Sub command - teardown
     teardown_parser = subparsers.add_parser('teardown')
