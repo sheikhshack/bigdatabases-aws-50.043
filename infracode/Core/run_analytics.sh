@@ -8,7 +8,7 @@ FILE=analytics.py
 if [ ! -f "$FILE" ];
 then 
     # TODO: do this dropbox link
-    wget dropbox.com/analytics.py -O analytics.py
+    wget https://www.dropbox.com/s/wgo75gl22v86yvw/analytics.py?dl=0 -O analytics.py
 fi
 
 if [ $1 = "pearson" ]

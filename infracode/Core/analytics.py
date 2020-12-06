@@ -48,7 +48,7 @@ def perform_analytics(key_file,master_node_IP,analyse_mode,vocab_size):
                             "   - Vocab size : {1}\n" + bcolors.ENDC).format(analyse_mode, vocab_size)
 
     analytics_client = setup_ssh_client(key_file,master_node_IP)
-    stdin, stdout, stderr = master_client.exec_command(data_analytics_routine)
+    stdin, stdout, stderr = analytics_client.exec_command(data_analytics_routine)
     stdout.read().decode('utf=8')
     error = stderr.read().decode('utf=8')
     analytics_client.close()
