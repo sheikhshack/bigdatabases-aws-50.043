@@ -27,7 +27,9 @@ def get_master_node_IP(ec2_res):
     Master_node = ec2_res.instances.filter(
         Filters=[{'Name': 'tag:Name', 'Values': ['GP5Analytics-master']}])
 
-    master_ip = list(map(lambda x: x.public_ip_address, Master_node))[0]
+    master_ip = list(map(lambda x: x.public_ip_address, Master_node))
+    master_ip = [i for i in master_ip if i]
+    master_ip = master_ip[0]
     print(bcolors.HEADER + 'Master Node found at {}'.format(master_ip) + bcolors.ENDC)
 
     return master_ip
@@ -54,16 +56,16 @@ def setup_ssh_client(key_file, IP_address):
 
     return ssh_client
 
-def retrieve_data(master_node_ip, analyse_mode, key_file):
-    # tf_idf_data = '/home/ec2-user/analytics_output/tf_idf'
-    # "tfidf", "pearson", "both"
-    print('Retrieving analytic mode: {0} results'.format(analyse_mode))
-    if analyse_mode == 'tfidf':
-        os.system('scp -i -r ec2-user@{0}:~/analytics_output/tf_idf ~/tf_idf'.format(master_node_ip))
-    elif analyse_mode == 'pearson':
-        os.system()
-    else:
-        os.system()
+# def retrieve_data(master_node_ip, analyse_mode, key_file):
+#     # tf_idf_data = '/home/ec2-user/analytics_output/tf_idf'
+#     # "tfidf", "pearson", "both"
+#     print('Retrieving analytic mode: {0} results'.format(analyse_mode))
+#     if analyse_mode == 'tfidf':
+#         os.system('scp -i -r ec2-user@{0}:~/analytics_output/tf_idf ~/tf_idf'.format(master_node_ip))
+#     elif analyse_mode == 'pearson':
+#         os.system()
+#     else:
+#         os.system()
 
 
 

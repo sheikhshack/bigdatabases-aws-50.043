@@ -33,7 +33,9 @@ def get_master_node_IP(ec2_res):
     Master_node = ec2_res.instances.filter(
         Filters=[{'Name': 'tag:Name', 'Values': ['GP5Analytics-master']}])
 
-    master_ip = list(map(lambda x: x.private_ip_address, Master_node))[0]
+    master_ip = list(map(lambda x: x.public_ip_address, Master_node))
+    master_ip = [i for i in master_ip if i]
+    master_ip = master_ip[0]
     print(bcolors.HEADER + 'Master Node found at {}'.format(master_ip) + bcolors.ENDC)
 
     return master_ip
@@ -78,6 +80,7 @@ def get_databases_IP(ec2_res):
 
 def setup_ssh_client(key_file, IP_address):
     retry = True
+
     pem = paramiko.RSAKey.from_private_key_file(key_file)
     ssh_client = paramiko.SSHClient()
     ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -88,7 +91,7 @@ def setup_ssh_client(key_file, IP_address):
             break
         except:
             retry = True
-
+    print("SSHed in successfully into node")
     return ssh_client
 
 
@@ -104,6 +107,7 @@ def cluster_data_ingestion(key_file, master_node_ip, mysql_ip, mongo_ip):
     data_ingestion_routine = "wget -qO - https://www.dropbox.com/s/0bbjoroaaij57oy/data_ingestion.sh| bash -s {0} {1}".format(
         mysql_ip, mongo_ip)
 
+    print(bcolors.HEADER + "Data ingestion in progress \n" + bcolors.ENDC)
     master_client = setup_ssh_client(key_file, master_node_ip)
     stdin, stdout, stderr = master_client.exec_command(data_ingestion_routine)
     stdout.read().decode('utf=8')
