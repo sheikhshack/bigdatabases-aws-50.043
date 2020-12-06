@@ -61,14 +61,14 @@ def modify(args):
 def ingest():
     current_config = (bcolors.BOLD + "Beginning data ingestion \n" + bcolors.ENDC)
     print(current_config)
-    data_ingestion.ingest_data(MASTER_KEY)
+    data_ingestion.ingest_data(MASTER_KEY+'.pem')
 
 def analytics(args):
 
     current_config = (bcolors.BOLD + "Beginning data analytics \n" + bcolors.ENDC)
     print(current_config)
     # TODO: Need to push the analytics to dropbox
-    analytics.analyse_data(MASTER_KEY, args.actions, args.vocab)
+    analytics.analyse_data(MASTER_KEY'.pem', args.actions, args.vocab)
 
 
 

@@ -68,7 +68,7 @@ def retrieve_data(master_node_ip, analyse_mode, key_file):
 
 
 def perform_analytics(key_file, master_node_IP, analyse_mode, vocab_size):
-    data_analytics_routine = "wget -qO - https://www.dropbox.com/s/2c7gpdj1v9b6wkj/run_analytics.sh | bash -s {0} {1}".format(
+    data_analytics_routine = "wget -qO - https://www.dropbox.com/s/5s3nrwgrduxt72v/run_analytics.sh | bash -s {0} {1}".format(
         analyse_mode, vocab_size)
 
     print(bcolors.HEADER + "Executing analytics scripts with the following configs\n"
