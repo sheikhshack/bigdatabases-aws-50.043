@@ -56,19 +56,6 @@ def setup_ssh_client(key_file, IP_address):
 
     return ssh_client
 
-# def retrieve_data(master_node_ip, analyse_mode, key_file):
-#     # tf_idf_data = '/home/ec2-user/analytics_output/tf_idf'
-#     # "tfidf", "pearson", "both"
-#     print('Retrieving analytic mode: {0} results'.format(analyse_mode))
-#     if analyse_mode == 'tfidf':
-#         os.system('scp -i -r ec2-user@{0}:~/analytics_output/tf_idf ~/tf_idf'.format(master_node_ip))
-#     elif analyse_mode == 'pearson':
-#         os.system()
-#     else:
-#         os.system()
-
-
-
 
 def perform_analytics(key_file, master_node_IP, analyse_mode, vocab_size):
     data_analytics_routine = "wget -qO - https://www.dropbox.com/s/5s3nrwgrduxt72v/run_analytics.sh | bash -s {0} {1}".format(
@@ -86,6 +73,8 @@ def perform_analytics(key_file, master_node_IP, analyse_mode, vocab_size):
     print(error)
     analytics_client.close()
     print(bcolors.HEADER + "Data analytics job completed\n" + bcolors.ENDC)
+    print(bcolors.OKBLUE + "Access data via SSH with key {0} using ec2-user@{1}\n".format(key_file, master_node_IP) + bcolors.ENDC)
+    print(bcolors.OKBLUE + "Directory of results is /home/ec2-user/analytics_output/".format(key_file, master_node_IP) + bcolors.ENDC)
 
 
 def analyse_data(key_file, analyse_mode, vocab_size=20):

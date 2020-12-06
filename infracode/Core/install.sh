@@ -5,7 +5,6 @@ sudo apt-get install -y python3-pip
 python3 -m pip install --upgrade setuptools
 python3 -m pip install boto3 paramiko
 
-
 # Installation of experimental grade flintrock
 python3 -m pip install git+https://github.com/nchammas/flintrock
 
@@ -29,5 +28,8 @@ else
     echo "AWS Config Exists, Pushing thru at the speed of light"
 fi
 echo "Done Installation of dependencies, our GP5 Scripts should now be runnable :)"
-
-
+echo "Retrieving the script from Dropbox"
+wget -O res.tar.gz https://www.dropbox.com/s/qna3xewb96rv8g5/script.tar.gz?dl=0
+tar -xzvf res.tar.gz
+cd Core
+echo "Please Run the steps in the readme next"

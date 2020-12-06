@@ -205,7 +205,7 @@ def launch_flintrock(instance_type, node_count, key):
               --ec2-instance-type {2} --ec2-user ec2-user --install-hdfs --install-spark'''.format(node_count, key, instance_type))
 
 
-def main(SSH_KEY_NAME, instance_type, flint_type=None, node_count=None):
+def main(SSH_KEY_NAME, instance_type, flint_type=None, node_count=None, mode=None):
     flint_thread = None
     ############## USER SET CONFIGS #######################
     INSTANCE_DEFAULTS = [
@@ -230,11 +230,13 @@ def main(SSH_KEY_NAME, instance_type, flint_type=None, node_count=None):
 
     ############## Phase 3.0: Running flint (if required) ##################
     if flint_type:
-        print(bcolors.HEADER + '-- GP5 Bringup Script: Initiating Analytics Bringup' + bcolors.ENDC)
         sgid_flintrock = create_security_groups_aws(SECURITY_DEFAULTS['FLINTROCK'])
-        # proceed to immediately subprocess the function
-        flint_thread = Thread(target=launch_flintrock, args= (flint_type, node_count, SSH_KEY_NAME, ))
-        flint_thread.start()
+        if mode == 'parallel':
+            print(bcolors.HEADER + '-- GP5 Bringup Script: Initiating Analytics Bringup' + bcolors.ENDC)
+            # proceed to immediately subprocess the function
+            flint_thread = Thread(target=launch_flintrock, args= (flint_type, node_count, SSH_KEY_NAME, ))
+            flint_thread.start()
+
 
     ############## Phase 3.1: Firing off the instances ##################
 
@@ -298,10 +300,16 @@ def main(SSH_KEY_NAME, instance_type, flint_type=None, node_count=None):
     end_time = time.perf_counter()
     print('Total time taken for production: ', end_time - start_time)
 
-    if flint_type:
+    if flint_type and mode == "sequential":
+        print('-- GP5 Bringup Script: Waiting for Analystics Bringup thread to finish...')
+        launch_flintrock(flint_type, node_count, SSH_KEY_NAME)
+        print(bcolors.HEADER + '-- GP5 Bringup Script: Finished AnalyticsDeployment. See the line before this for master address' + bcolors.ENDC)
+
+    if flint_type and mode == 'parallel':
         print('-- GP5 Bringup Script: Waiting for Analystics Bringup thread to finish...')
         flint_thread.join()
         print(bcolors.HEADER + '-- GP5 Bringup Script: Finished AnalyticsDeployment. See the line before this for master address' + bcolors.ENDC)
         print('-' * 30)
+
 
 

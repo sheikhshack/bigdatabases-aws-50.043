@@ -20,7 +20,7 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 
-MASTER_KEY = 'MASTERONE'
+MASTER_KEY = 'GP5_GRANDMASTERKEY'
 
 
 def bringup(args):
@@ -34,9 +34,9 @@ def bringup(args):
                                                                                 args.mode)
     print(current_config)
     if args.mode == 'production-only':
-        full_bringup.main(MASTER_KEY, args.instance_type_prod)
+        full_bringup.main(MASTER_KEY, args.instance_type_prod, mode=args.run_mode)
     else:
-        full_bringup.main(MASTER_KEY, args.instance_type_prod, args.instance_type_node, args.init_nodes)
+        full_bringup.main(MASTER_KEY, args.instance_type_prod, args.instance_type_node, args.init_nodes, mode=args.run_mode)
 
 
 def modify(args):
@@ -54,9 +54,9 @@ def modify(args):
               --ec2-instance-type {2} --ec2-user ec2-user --install-hdfs --install-spark'''.format(args.mod_nodes,
                                                                                                    MASTER_KEY,
                                                                                                    args.mod_instance_type))
-    print("Clusters brought up, next to ingestion")
+
+    print("Clusters brought up, please remember to re-run ingestion at runtime for updated ingestion :)")
     print(bcolors.HEADER + 'Analytics Cluster bring up successful' + bcolors.ENDC)
-    print(bcolors.HEADER + 'Begin data ingestion' + bcolors.ENDC)
 
 
 def ingest(args):
@@ -124,6 +124,10 @@ if __name__ == "__main__":
                                 help='Enter type of (worker) nodes for Analytics system',
                                 choices=["t2.small", "t2.2xlarge", "t2.xlarge", "t2.large", "t2.medium"],
                                 default='t2.xlarge')
+    bringup_parser.add_argument('-c', dest='run_mode',
+                                help='Enter this to control parallelism',
+                                choices=["parallel", "sequential"],
+                                default='parallel')
     bringup_parser.set_defaults(func=bringup)
 
     # Sub command - modify
