@@ -3,6 +3,7 @@ import boto3
 from botocore.exceptions import ClientError
 import paramiko
 
+
 ##################################################################################
 
 # This file is responsible for handling data ingestion from the production
@@ -21,38 +22,38 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-# This function is responsible for obtaining the IP address of the Master Node of 
+
+# This function is responsible for obtaining the IP address of the Master Node of
 # the analytics cluster. Uses boto3 to query the aws profile for the instance that
 # acts as the Master Node
 # Input(s): boto3 ec2 resource
 # Output(s): String of Public IPv4 address of the Master Node
 
 def get_master_node_IP(ec2_res):
-
     Master_node = ec2_res.instances.filter(
         Filters=[{'Name': 'tag:Name', 'Values': ['GP5Analytics-master']}])
 
-    print(bcolors.HEADER + 'Master Node found at {}' + bcolors.ENDC).format(Master_node.public_ip_address)
+    print(bcolors.HEADER + 'Master Node found at {}'.format(Master_node.public_ip_address) + bcolors.ENDC)
 
     return Master_node.public_ip_address
 
-# This function is responsible for obtaining the IP address of the Master Node of 
+
+# This function is responsible for obtaining the IP address of the Master Node of
 # the analytics cluster. Uses boto3 to query the aws profile for the database 
 # instances 
 # Input(s): boto3 ec2 resource
 # Output(s): Dictionary containing IPv4 address for both MySQL and MongoDB
 
 def get_databases_IP(ec2_res):
-
     MySQL_instance = ec2_res.instances.filter(
         Filters=[{'Name': 'tag:Name', 'Values': ['GP5MySQL']}])
 
-    print(bcolors.HEADER + 'MySQL server found at {}' + bcolors.ENDC).format(MySQL_instance.public_ip_address)
-    
+    print(bcolors.HEADER + 'MySQL server found at {}' + bcolors.ENDC)
+
     Mongo_instance = ec2_res.instances.filter(
         Filters=[{'Name': 'tag:Name', 'Values': ['GP5Mongo']}])
-    
-    print(bcolors.HEADER + 'Mongo server found at {}' + bcolors.ENDC).format(Mongo_instance.public_ip_address)
+
+    print(bcolors.HEADER + 'Mongo server found at {}'.format(Mongo_instance.public_ip_address) + bcolors.ENDC)
 
     database_IPs = {
         'MySQL': MySQL_instance.public_ip_address,
@@ -89,18 +90,17 @@ def setup_ssh_client(key_file, IP_address):
 # Input(s): RSA .pem key file, master node IP address, MySQL database IP address, Mongo database IP address
 # Output(s): NIL
 
-def cluster_data_ingestion(key_file,Master_node_IP,MySQL_IP,Mongo_IP):
+def cluster_data_ingestion(key_file, master_node_ip, mysql_ip, mongo_ip):
     # TODO: Prep data ingestion and move to dropbox
-    data_ingestion_routine = "wget -qO - https://www.dropbox.com/s/2c7gpdj1v9b6wkj/data_ingestion.sh | bash -s {0} {1}".format(MySQL_IP,Mongo_IP)
+    data_ingestion_routine = "wget -qO - https://www.dropbox.com/s/2c7gpdj1v9b6wkj/data_ingestion.sh | bash -s {0} {1}".format(
+        mysql_ip, mongo_ip)
 
-    
-    master_client = setup_ssh_client(key_file,Master_node_address)
+    master_client = setup_ssh_client(key_file, master_node_ip)
     stdin, stdout, stderr = master_client.exec_command(data_ingestion_routine)
     stdout.read().decode('utf=8')
     error = stderr.read().decode('utf=8')
     master_client.close()
-    print(bcolors.HEADER + "Data ingestion job completed\n"+ bcolors.ENDC)
-
+    print(bcolors.HEADER + "Data ingestion job completed\n" + bcolors.ENDC)
 
 
 # This function puts together all the helper functions above into an accessible function for export
@@ -108,10 +108,9 @@ def cluster_data_ingestion(key_file,Master_node_IP,MySQL_IP,Mongo_IP):
 # Output(s): NIL
 
 def ingest_data(key_file):
-
     ec2_res = boto3.resource('ec2')
 
     master_node_IP = get_master_node_IP(ec2_res)
     database_IPs = get_databases_IP(ec2_res)
 
-    cluster_data_ingestion(key_file,master_node_IP,database_IPs['MySQL'],database_IPs['Mongo'])
+    cluster_data_ingestion(key_file, master_node_IP, database_IPs['MySQL'], database_IPs['Mongo'])
