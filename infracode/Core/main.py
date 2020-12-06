@@ -4,7 +4,7 @@ import full_bringup
 import teardown_systems
 import os
 import data_ingestion
-import analytics
+import analytics_systems
 
 
 # Aesthetics
@@ -69,7 +69,7 @@ def analytics(args):
     current_config = (bcolors.BOLD + "Beginning data analytics \n" + bcolors.ENDC)
     print(current_config)
     # TODO: Need to push the analytics to dropbox
-    analytics.analyse_data(MASTER_KEY + '.pem', args.actions, args.vocab)
+    analytics_systems.analyse_data(MASTER_KEY + '.pem', args.actions, args.vocab)
 
 
 def teardown(args):

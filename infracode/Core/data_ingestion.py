@@ -33,7 +33,7 @@ def get_master_node_IP(ec2_res):
     Master_node = ec2_res.instances.filter(
         Filters=[{'Name': 'tag:Name', 'Values': ['GP5Analytics-master']}])
 
-    master_ip = list(map(lambda x: x.public_ip_address, Master_node))[0]
+    master_ip = list(map(lambda x: x.private_ip_address, Master_node))[0]
     print(bcolors.HEADER + 'Master Node found at {}'.format(master_ip) + bcolors.ENDC)
 
     return master_ip
@@ -49,7 +49,7 @@ def get_databases_IP(ec2_res):
     MySQL_instance = ec2_res.instances.filter(
         Filters=[{'Name': 'tag:Name', 'Values': ['GP5MySQL']}])
 
-    mysql_ip = list(map(lambda x: x.public_ip_address, MySQL_instance))
+    mysql_ip = list(map(lambda x: x.private_ip_address, MySQL_instance))
     mysql_ip = [i for i in mysql_ip if i]
     mysql_ip = mysql_ip[0]
 
@@ -58,14 +58,14 @@ def get_databases_IP(ec2_res):
     Mongo_instance = ec2_res.instances.filter(
         Filters=[{'Name': 'tag:Name', 'Values': ['GP5Mongo']}])
 
-    mongo_ip = list(map(lambda x: x.public_ip_address, Mongo_instance))
+    mongo_ip = list(map(lambda x: x.private_ip_address, Mongo_instance))
     mongo_ip = [i for i in mongo_ip if i]
     mongo_ip = mongo_ip[0]
     print(bcolors.HEADER + 'Mongo server found at {}'.format(mongo_ip) + bcolors.ENDC)
 
     database_IPs = {
         'MySQL': mysql_ip,
-        'Mongo': mysql_ip
+        'Mongo': mongo_ip
     }
     return database_IPs
 
@@ -83,7 +83,7 @@ def setup_ssh_client(key_file, IP_address):
     ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     while retry:
         try:
-            ssh_client.connect(hostname=IP_address, username='ubuntu', pkey=pem)
+            ssh_client.connect(hostname=IP_address, username='ec2-user', pkey=pem)
             print('Success connect')
             break
         except:
@@ -100,6 +100,7 @@ def setup_ssh_client(key_file, IP_address):
 
 def cluster_data_ingestion(key_file, master_node_ip, mysql_ip, mongo_ip):
     # TODO: Prep data ingestion and move to dropbox
+    print('Ingesting mysql', mysql_ip, 'and mongo', mongo_ip)
     data_ingestion_routine = "wget -qO - https://www.dropbox.com/s/0bbjoroaaij57oy/data_ingestion.sh| bash -s {0} {1}".format(
         mysql_ip, mongo_ip)
 
