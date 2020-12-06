@@ -1,5 +1,4 @@
 import os
-import botostubs
 import boto3
 from botocore.exceptions import ClientError
 import paramiko
@@ -21,7 +20,7 @@ class bcolors:
 
 
 # Inits the session via hidden aws file
-ec2 = boto3.client('ec2')  # type: botostubs.EC2
+ec2 = boto3.client('ec2')
 ec2_res = boto3.resource('ec2')  # TODO: Johnson this one is the high level API version
 response = ec2.describe_vpcs()
 vpc_id = response.get('Vpcs', [{}])[0].get('VpcId', '')

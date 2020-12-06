@@ -26,25 +26,34 @@ def bringup(args):
                       "   - Analytics instance type: {1}\n"
                       "   - Number of datanodes: {2}\n"
                       "   - Mode : {3}\n"
-                      "   - Also Running: {4}\n" + bcolors.ENDC).format(args.instance_type_prod, args.instance_type_node, args.nodes,
+                      "   - Also Running: {4}\n" + bcolors.ENDC).format(args.instance_type_prod, args.instance_type_node, args.init_nodes,
                                                        args.mode, args.actions)
     print(current_config)
     if args.mode == 'production-only':
         full_bringup.main('BATCHMODE', args.instance_type_prod)
     else:
-        full_bringup.main('BATCHMODE', args.instance_type_prod, args.instance_type_node, args.nodes)
+        full_bringup.main('BATCHMODE', args.instance_type_prod, args.instance_type_node, args.init_nodes)
 
 
 
-def modify():
-    print('Tearing down analytics cluster')
-    os.system('flintrock destroy GP5Analytics')
-    print('Teardown complete')
-    print('Rebuilding cluster with new nodes')
-    os.system('./analytics_bringup.sh {0} {1}'.format(mod_nodes,'GP5_MasterKey'))
+def modify(args):
+    current_config = (bcolors.BOLD + "Modifying cluster with the following configs: \n"
+                      "   - Analytics instance type: {0}\n"
+                      "   - Number of datanodes: {1}\n" + bcolors.ENDC).format(args.mod_instance_type, args.mod_nodes)
+    print(current_config)
+    print(bcolors.HEADER + 'Begin Analytics cluster teardown' + bcolors.ENDC)
+    os.system('echo "y" | flintrock destroy GP5Analytics')
+    print(bcolors.HEADER + 'Bring up Analytics cluster with new nodes' + bcolors.ENDC)
+    # TODO: Need to change this key file
+    os.system('''flintrock launch GP5Analytics --num-slaves {0} --spark-version 3.0.1 --hdfs-version 3.2.1 \
+              --ec2-security-group FlintRockGroup5 --ec2-key-name {1} --ec2-identity-file {1}.pem --ec2-ami ami-04d29b6f966df1537 \
+              --ec2-instance-type {2} --ec2-user ec2-user --install-hdfs --install-spark'''.format(args.mod_nodes, BATCHMODE, args.mod_instance_type))
     print("Clusters brought up, next to ingestion")
+    print(bcolors.HEADER + 'Analytics Cluster bring up successful' + bcolors.ENDC)
+    print(bcolors.HEADER + 'Begin data ingestion' + bcolors.ENDC)
 
-    data_ingestion.ingest_data(KEY_NAME)
+    # TODO: Need to finish up the data ingestion part
+    # data_ingestion.ingest_data(KEY_NAME)
 
 def teardown(args):
     current_config = (bcolors.BOLD + "Teardown with the following configs: \n"
@@ -52,6 +61,10 @@ def teardown(args):
     print(current_config)
     if args.mode == 'full':
         teardown_systems.main_full('BATCHMODE')
+        print(bcolors.HEADER + '-- GP5 Teardown Script: Begin Analytics cluster teardown' + bcolors.ENDC)
+        os.system('echo "y" | flintrock destroy GP5Analytics')
+        print(bcolors.HEADER + '-- GP5 Teardown Script: Analytics cluster teardown complete' + bcolors.ENDC)
+
 
 
 if __name__ == "__main__":
@@ -96,8 +109,9 @@ if __name__ == "__main__":
     modify_parser = subparsers.add_parser('modify')
     modify_parser.add_argument('-n', dest='mod_nodes', help='Enter number of (worker) nodes to rescale to', type=int,
                                required=True, default=4)
-    modify_parser.add_argument('-t', dest='instance_type', help='Enter type of (worker) nodes for Analytics system',
+    modify_parser.add_argument('-t', dest='mod_instance_type', help='Enter type of (worker) nodes for Analytics system',
                                choices={"t2.2xlarge", "t2.xlarge", "t2.large", "t2.medium"}, default="t2.medium")
+    modify_parser.set_defaults(func=modify)
 
     # Sub command - teardown
     teardown_parser = subparsers.add_parser('teardown')
