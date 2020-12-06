@@ -5,6 +5,7 @@ import teardown_systems
 import os
 import data_ingestion
 
+
 # Aesthetics
 class bcolors:
     HEADER = '\033[95m'
@@ -17,29 +18,32 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-KEY_NAME = 'GP5_Master_Key'
+
+MASTER_KEY = 'BATCHMODEVERS'
+
 
 def bringup(args):
-
     current_config = (bcolors.BOLD + "Running with the following configs: \n"
-                      "   - Production instance type: {0}\n"
-                      "   - Analytics instance type: {1}\n"
-                      "   - Number of datanodes: {2}\n"
-                      "   - Mode : {3}\n"
-                      "   - Also Running: {4}\n" + bcolors.ENDC).format(args.instance_type_prod, args.instance_type_node, args.init_nodes,
-                                                       args.mode, args.actions)
+                                     "   - Production instance type: {0}\n"
+                                     "   - Analytics instance type: {1}\n"
+                                     "   - Number of datanodes: {2}\n"
+                                     "   - Mode : {3}\n"
+                                     "   - Also Running: {4}\n" + bcolors.ENDC).format(args.instance_type_prod,
+                                                                                       args.instance_type_node,
+                                                                                       args.init_nodes,
+                                                                                       args.mode, args.actions)
     print(current_config)
     if args.mode == 'production-only':
-        full_bringup.main('BATCHMODE', args.instance_type_prod)
+        full_bringup.main(MASTER_KEY, args.instance_type_prod)
     else:
-        full_bringup.main('BATCHMODE', args.instance_type_prod, args.instance_type_node, args.init_nodes)
-
+        full_bringup.main(MASTER_KEY, args.instance_type_prod, args.instance_type_node, args.init_nodes)
 
 
 def modify(args):
     current_config = (bcolors.BOLD + "Modifying cluster with the following configs: \n"
-                      "   - Analytics instance type: {0}\n"
-                      "   - Number of datanodes: {1}\n" + bcolors.ENDC).format(args.mod_instance_type, args.mod_nodes)
+                                     "   - Analytics instance type: {0}\n"
+                                     "   - Number of datanodes: {1}\n" + bcolors.ENDC).format(args.mod_instance_type,
+                                                                                              args.mod_nodes)
     print(current_config)
     print(bcolors.HEADER + 'Begin Analytics cluster teardown' + bcolors.ENDC)
     os.system('echo "y" | flintrock destroy GP5Analytics')
@@ -47,7 +51,9 @@ def modify(args):
     # TODO: Need to change this key file
     os.system('''flintrock launch GP5Analytics --num-slaves {0} --spark-version 3.0.1 --hdfs-version 3.2.1 \
               --ec2-security-group FlintRockGroup5 --ec2-key-name {1} --ec2-identity-file {1}.pem --ec2-ami ami-04d29b6f966df1537 \
-              --ec2-instance-type {2} --ec2-user ec2-user --install-hdfs --install-spark'''.format(args.mod_nodes, BATCHMODE, args.mod_instance_type))
+              --ec2-instance-type {2} --ec2-user ec2-user --install-hdfs --install-spark'''.format(args.mod_nodes,
+                                                                                                   MASTER_KEY,
+                                                                                                   args.mod_instance_type))
     print("Clusters brought up, next to ingestion")
     print(bcolors.HEADER + 'Analytics Cluster bring up successful' + bcolors.ENDC)
     print(bcolors.HEADER + 'Begin data ingestion' + bcolors.ENDC)
@@ -55,25 +61,25 @@ def modify(args):
     # TODO: Need to finish up the data ingestion part
     # data_ingestion.ingest_data(KEY_NAME)
 
+
 def teardown(args):
     current_config = (bcolors.BOLD + "Teardown with the following configs: \n"
                                      "   - Type of teardown: {0}\n" + bcolors.ENDC).format(args.mode)
     print(current_config)
     if args.mode == 'full':
-        teardown_systems.main_full('BATCHMODE')
+        teardown_systems.main_full(MASTER_KEY)
         print(bcolors.HEADER + '-- GP5 Teardown Script: Begin Analytics cluster teardown' + bcolors.ENDC)
         os.system('echo "y" | flintrock destroy GP5Analytics')
         print(bcolors.HEADER + '-- GP5 Teardown Script: Analytics cluster teardown complete' + bcolors.ENDC)
-    else: 
+    else:
         print(bcolors.HEADER + '-- GP5 Teardown Script: Begin Analytics cluster teardown' + bcolors.ENDC)
         os.system('echo "y" | flintrock destroy GP5Analytics')
         print(bcolors.HEADER + '-- GP5 Teardown Script: Analytics cluster teardown complete' + bcolors.ENDC)
-
 
 
 if __name__ == "__main__":
     # Prof like this can give extra credit
-    description_art =  bcolors.OKBLUE + r"""
+    description_art = bcolors.OKBLUE + r"""
    _____ _____  _____   _____  ___   ___  _  _  ____  
   / ____|  __ \| ____| | ____|/ _ \ / _ \| || ||___ \ 
  | |  __| |__) | |__   | |__ | | | | | | | || |_ __) |
@@ -90,7 +96,7 @@ if __name__ == "__main__":
 
     # Top level Parser
     parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
-                                     description= description_art,
+                                     description=description_art,
                                      epilog='Visit our readme :https://github.com/sheikhshack/bigdatabases-aws-50.043')
     subparsers = parser.add_subparsers(help='sub-command help')
 
@@ -99,14 +105,16 @@ if __name__ == "__main__":
     bringup_parser.add_argument('-n', dest='init_nodes', help='Enter number of (worker) nodes for Analytics system',
                                 type=int, required=True)
     bringup_parser.add_argument('-tp', dest='instance_type_prod', help='Enter type of nodes for Production system',
-                                choices={"t2.small", "t2.2xlarge", "t2.xlarge", "t2.large", "t2.medium"}, default="t2.medium")
+                                choices=["t2.small", "t2.2xlarge", "t2.xlarge", "t2.large", "t2.medium"],
+                                default="t2.medium")
     bringup_parser.add_argument('-tn', dest='instance_type_node',
                                 help='Enter type of (worker) nodes for Analytics system',
-                                choices={"t2.small", "t2.2xlarge", "t2.xlarge", "t2.large", "t2.medium"}, default='t2.xlarge')
+                                choices=["t2.small", "t2.2xlarge", "t2.xlarge", "t2.large", "t2.medium"],
+                                default='t2.xlarge')
     bringup_parser.add_argument('-a', dest='actions', help='Actions: Run special analytics scripts',
-                                choices={"tfidf", "pearson", "both"})
+                                choices=["tfidf", "pearson", "both"])
     bringup_parser.add_argument('-m', dest='mode', help='Mode: Specify the type of bring-up desired',
-                                choices={"production-only", "full"}, default="full-ecosystem")
+                                choices={"production-only", "full"}, default="full")
     bringup_parser.set_defaults(func=bringup)
 
     # Sub command - modify
@@ -124,6 +132,5 @@ if __name__ == "__main__":
     teardown_parser.set_defaults(func=teardown)
 
     # Sub command - run scripts
-
     args = parser.parse_args()
     args.func(args)

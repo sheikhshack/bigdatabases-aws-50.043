@@ -6,6 +6,12 @@ import os, sys, threading
 import time
 from threading import Thread
 
+##################################################################################
+
+# This file is responsible for handling the bringup of needed instances via BOTO, both production and analytics
+
+##################################################################################
+
 # Aesthetics
 class bcolors:
     HEADER = '\033[95m'
@@ -198,10 +204,6 @@ def launch_flintrock(instance_type, node_count, key):
               --ec2-security-group FlintRockGroup5 --ec2-key-name {1} --ec2-identity-file {1}.pem --ec2-ami ami-04d29b6f966df1537 \
               --ec2-instance-type {2} --ec2-user ec2-user --install-hdfs --install-spark'''.format(node_count, key, instance_type))
 
-    # os.system('''flintrock --debug launch GP5Analytics --num-slaves {0} --spark-version 3.0.1 --hdfs-version 3.2.1 \
-    #               --ec2-key-name {1} --ec2-identity-file {1}.pem --ec2-ami ami-04d29b6f966df1537 \
-    #               --ec2-instance-type {2} --ec2-user ec2-user --install-hdfs --install-spark'''.format(1, 'BATCHMODE',
-    #                                                                                                    't2.small'))
 
 def main(SSH_KEY_NAME, instance_type, flint_type=None, node_count=None):
     flint_thread = None
@@ -219,6 +221,14 @@ def main(SSH_KEY_NAME, instance_type, flint_type=None, node_count=None):
     sgid_webserver = create_security_groups_aws(SECURITY_DEFAULTS['WEBSERVER'])
     sgid_mongo = create_security_groups_aws(SECURITY_DEFAULTS['MONGODB'])
     sgid_mysql = create_security_groups_aws(SECURITY_DEFAULTS['MYSQLDB'])
+
+
+    ############## Phase 2: Provisioning SSH Key (Single) ##################
+    print(bcolors.HEADER + '-- GP5 Bringup Script: Creating SSH-Key based on preferred name provided' + bcolors.ENDC)
+
+    init_ssh_key(SSH_KEY_NAME)
+
+    ############## Phase 3.0: Running flint (if required) ##################
     if flint_type:
         print(bcolors.HEADER + '-- GP5 Bringup Script: Initiating Analytics Bringup' + bcolors.ENDC)
         sgid_flintrock = create_security_groups_aws(SECURITY_DEFAULTS['FLINTROCK'])
@@ -226,11 +236,8 @@ def main(SSH_KEY_NAME, instance_type, flint_type=None, node_count=None):
         flint_thread = Thread(target=launch_flintrock, args= (flint_type, node_count, SSH_KEY_NAME, ))
         flint_thread.start()
 
-    ############## Phase 2: Provisioning SSH Key (Single) ##################
-    print(bcolors.HEADER + '-- GP5 Bringup Script: Creating SSH-Key based on preferred name provided' + bcolors.ENDC)
+    ############## Phase 3.1: Firing off the instances ##################
 
-    init_ssh_key(SSH_KEY_NAME)
-    ############## Phase 3: Firing off the instances ##################
     print(bcolors.HEADER + '-- GP5 Bringup Script: Firing Instances x3 for Production' + bcolors.ENDC)
     instances = fire_off_instance(SSH_KEY_NAME, INSTANCE_DEFAULTS)
     instances = report_instances(instances)
