@@ -25,7 +25,7 @@ class bcolors:
 
 def get_master_node_IP(ec2_res):
     Master_node = ec2_res.instances.filter(
-        Filters=[{'Name': 'tag:Name', 'Values': ['GP5Analytics-master']}])
+        Filters=[{'Name': 'tag:Name', 'Values': ['GP5Analytics-master']}])[0]
 
     print(bcolors.HEADER + 'Master Node found at {}'.format(Master_node.public_ip_address) + bcolors.ENDC)
 

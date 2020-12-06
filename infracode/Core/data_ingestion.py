@@ -33,9 +33,10 @@ def get_master_node_IP(ec2_res):
     Master_node = ec2_res.instances.filter(
         Filters=[{'Name': 'tag:Name', 'Values': ['GP5Analytics-master']}])
 
-    print(bcolors.HEADER + 'Master Node found at {}'.format(Master_node.public_ip_address) + bcolors.ENDC)
+    master_ip = list(map(lambda x: x.public_ip_address, Master_node))[0]
+    print(bcolors.HEADER + 'Master Node found at {}'.format(master_ip) + bcolors.ENDC)
 
-    return Master_node.public_ip_address
+    return master_ip
 
 
 # This function is responsible for obtaining the IP address of the Master Node of
@@ -48,16 +49,19 @@ def get_databases_IP(ec2_res):
     MySQL_instance = ec2_res.instances.filter(
         Filters=[{'Name': 'tag:Name', 'Values': ['GP5MySQL']}])
 
-    print(bcolors.HEADER + 'MySQL server found at {}' + bcolors.ENDC)
+    mysql_ip = list(map(lambda x: x.public_ip_address, MySQL_instance))[0]
+    print(mysql_ip)
+    print(bcolors.HEADER + 'MySQL server found at {}'.format(mysql_ip) + bcolors.ENDC)
 
     Mongo_instance = ec2_res.instances.filter(
         Filters=[{'Name': 'tag:Name', 'Values': ['GP5Mongo']}])
 
-    print(bcolors.HEADER + 'Mongo server found at {}'.format(Mongo_instance.public_ip_address) + bcolors.ENDC)
+    mongo_ip = list(map(lambda x: x.public_ip_address, Mongo_instance))[0]
+    print(bcolors.HEADER + 'Mongo server found at {}'.format(mongo_ip) + bcolors.ENDC)
 
     database_IPs = {
-        'MySQL': MySQL_instance.public_ip_address,
-        'Mongo': Mongo_instance.public_ip_address
+        'MySQL': mysql_ip,
+        'Mongo': mysql_ip
     }
     return database_IPs
 
@@ -92,7 +96,7 @@ def setup_ssh_client(key_file, IP_address):
 
 def cluster_data_ingestion(key_file, master_node_ip, mysql_ip, mongo_ip):
     # TODO: Prep data ingestion and move to dropbox
-    data_ingestion_routine = "wget -qO - https://www.dropbox.com/s/2c7gpdj1v9b6wkj/data_ingestion.sh | bash -s {0} {1}".format(
+    data_ingestion_routine = "wget -qO - https://www.dropbox.com/s/0bbjoroaaij57oy/data_ingestion.sh| bash -s {0} {1}".format(
         mysql_ip, mongo_ip)
 
     master_client = setup_ssh_client(key_file, master_node_ip)

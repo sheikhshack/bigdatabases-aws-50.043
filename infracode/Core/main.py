@@ -6,6 +6,7 @@ import os
 import data_ingestion
 import analytics
 
+
 # Aesthetics
 class bcolors:
     HEADER = '\033[95m'
@@ -19,7 +20,7 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 
-MASTER_KEY = 'BATCHMODEVERS'
+MASTER_KEY = 'TESTFIN1'
 
 
 def bringup(args):
@@ -27,11 +28,10 @@ def bringup(args):
                                      "   - Production instance type: {0}\n"
                                      "   - Analytics instance type: {1}\n"
                                      "   - Number of datanodes: {2}\n"
-                                     "   - Mode : {3}\n"
-                                     "   - Also Running: {4}\n" + bcolors.ENDC).format(args.instance_type_prod,
-                                                                                       args.instance_type_node,
-                                                                                       args.init_nodes,
-                                                                                       args.mode, args.actions)
+                                     "   - Mode : {3}\n" + bcolors.ENDC).format(args.instance_type_prod,
+                                                                                args.instance_type_node,
+                                                                                args.init_nodes,
+                                                                                args.mode)
     print(current_config)
     if args.mode == 'production-only':
         full_bringup.main(MASTER_KEY, args.instance_type_prod)
@@ -58,18 +58,18 @@ def modify(args):
     print(bcolors.HEADER + 'Analytics Cluster bring up successful' + bcolors.ENDC)
     print(bcolors.HEADER + 'Begin data ingestion' + bcolors.ENDC)
 
-def ingest():
+
+def ingest(args):
     current_config = (bcolors.BOLD + "Beginning data ingestion \n" + bcolors.ENDC)
     print(current_config)
-    data_ingestion.ingest_data(MASTER_KEY+'.pem')
+    data_ingestion.ingest_data(MASTER_KEY + '.pem')
+
 
 def analytics(args):
-
     current_config = (bcolors.BOLD + "Beginning data analytics \n" + bcolors.ENDC)
     print(current_config)
     # TODO: Need to push the analytics to dropbox
-    analytics.analyse_data(MASTER_KEY'.pem', args.actions, args.vocab)
-
+    analytics.analyse_data(MASTER_KEY + '.pem', args.actions, args.vocab)
 
 
 def teardown(args):
@@ -111,7 +111,8 @@ if __name__ == "__main__":
     subparsers = parser.add_subparsers(help='sub-command help')
 
     # Sub command - bringup
-    bringup_parser = subparsers.add_parser('bringup', description='This command will allow specific bringup of the entire system / subsystems')
+    bringup_parser = subparsers.add_parser('bringup',
+                                           description='This command will allow specific bringup of the entire system / subsystems')
     bringup_parser.add_argument('-m', dest='mode', help='Mode: Specify the type of bring-up desired',
                                 choices=["production-only", "full"], default="full")
     bringup_parser.add_argument('-n', dest='init_nodes', help='Enter number of (worker) nodes for Analytics system',
@@ -126,7 +127,8 @@ if __name__ == "__main__":
     bringup_parser.set_defaults(func=bringup)
 
     # Sub command - modify
-    modify_parser = subparsers.add_parser('modify', description='This command will allow you to modify the analytics system, such as reclustering and adjusting node types')
+    modify_parser = subparsers.add_parser('modify',
+                                          description='This command will allow you to modify the analytics system, such as reclustering and adjusting node types')
     modify_parser.add_argument('-n', dest='mod_nodes', help='Enter number of (worker) nodes to rescale to', type=int,
                                required=True, default=4)
     modify_parser.add_argument('-t', dest='mod_instance_type', help='Enter type of (worker) nodes for Analytics system',
@@ -134,16 +136,17 @@ if __name__ == "__main__":
     modify_parser.set_defaults(func=modify)
 
     # Sub command - ingest current state
-    ingest_parser = subparsers.add_parser('ingest', description='This command will trigger ingestion from mongo/mysql at runtime into the HDFS')
+    ingest_parser = subparsers.add_parser('ingest',
+                                          description='This command will trigger ingestion from mongo/mysql at runtime into the HDFS')
     ingest_parser.set_defaults(func=ingest)
 
-
     # Sub command - run analytics task
-    analytics_parser = subparsers.add_parser('analytics', description='This command will trigger ingestion from mongo/mysql at runtime into the HDFS')
+    analytics_parser = subparsers.add_parser('analytics',
+                                             description='This command will trigger ingestion from mongo/mysql at runtime into the HDFS')
     analytics_parser.add_argument('-a', dest='actions', help='Actions: Run special analytics scripts',
-                                choices=["tfidf", "pearson", "both"],default="both")
+                                  choices=["tfidf", "pearson", "both"], default="both")
     analytics_parser.add_argument('-v', dest='vocab', help='Enter a vocab size for tf-idf',
-                                type=int, default="20")
+                                  type=int, default="20")
     analytics_parser.set_defaults(func=analytics)
 
     # Sub command - teardown

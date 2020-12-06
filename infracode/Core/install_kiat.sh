@@ -18,11 +18,14 @@ python3 -m pip install boto3 paramiko
 # Installation of experimental grade flintrock
 python3 -m pip install git+https://github.com/nchammas/flintrock
 
+#[ ! -d "$HOME/.aws" ] && echo "AWS Config Doesnt exist, Creating directory" \
+
 [ ! -d "$HOME/.aws" ] && echo "AWS Config Doesnt exist, Creating directory" \
 &&
 
 if [ ! -d "$HOME/.aws/credentials" ]
 then
+    echo "AWS Config Doesnt exist, Creating directory"
     read -p "Enter your access key ID: " ACCESS_KEY_ID
     read -p "Enter your secret access key: " ACCESS_KEY_SECRET
     read -p "Enter your access token (With the 2 equal signs): " ACCESS_TOKEN
