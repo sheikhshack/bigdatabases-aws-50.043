@@ -7,17 +7,17 @@ Since we will be running on a test environment base image of Ubuntu 16.04, our i
 
 Obtain our installation script and execute it with the command below.
 ```
-wget https://www.dropbox.com/s/1jnlp5wd7s9ojtu/install.sh && chmod +x install.sh
-
-./install.sh
-
+git clone https://github.com/sheikhshack/bigdatabases-aws-50.043.git
+cd bigdatabases-aws-50.043/infracode/Core/
+chmod +x install_kiat.sh
+./install_kiat.sh
 ```
 
 The installation script should prompt you to enter you AWS credentials and download the necessary dependencies,
 
-Once done, you can navigate to your `core` directory to see our init.py file. 
+Once done, you can navigate to your `core` directory to see our ~~init.py~~ `main.py` file. 
 
-This `init.py` file is responsible for 5 main functions
+This `main.py` file is responsible for 5 main functions
 1. [Bringing up all necessary EC2 instances](#bringing-up-all-ec2-instances)
 2. Ingesting data from Production databases
 3. Rescaling Analytics cluster
@@ -26,7 +26,7 @@ This `init.py` file is responsible for 5 main functions
 
 Check the documentation for the script on the terminal with
 ```
-python3 init.py --help
+python3 main.py --help
 ```
 
 
@@ -35,7 +35,7 @@ Our script allow you the liberty to choose which systems you would like to bring
 **Note: Please adjust mode to sequential via `-c sequential` if the script doesn't run properly or running on cheap instance**
 
 ```
-python3 init.py bringup [-n numWorkerNodes] [-tp productionInstanceType] [-tn analyticsInstanceType] [-a analyticsScripts] [-m modeOfBringUp] [-c enableThreading]
+python3 main.py bringup [-n numWorkerNodes] [-tp productionInstanceType] [-tn analyticsInstanceType] [-a analyticsScripts] [-m modeOfBringUp] [-c enableThreading]
 
 -n                Number of worker nodes for the analytics cluster
                   Any integer numbers (default: 4)
@@ -53,7 +53,7 @@ python3 init.py bringup [-n numWorkerNodes] [-tp productionInstanceType] [-tn an
                   Choices: "tfidf", "pearson", "both"
                   
                   
--a                Specify the type of bringup desired
+-m                Specify the type of bringup desired
                   Choices: "production-only", "full" (default: "full")
                   
                   
@@ -63,19 +63,19 @@ python3 init.py bringup [-n numWorkerNodes] [-tp productionInstanceType] [-tn an
 
 **NOTE**: If your system has any issues running the script, please run the bringup in sequential mode by using the command below
 ```
-python3 init.py bringup -a full -c sequential
+python3 main.py bringup -a full -c sequential
 ```
 
 Example usage: To bring up all instances at once, without running any analytics scripts with default instance types, use this command
 ```
-python3 init.py bringup -a full
+python3 main.py bringup -a full
 ```
 
 #### Ingesting data from Production databases
 You can use the script to ingest data from the production database to the analytics cluster once they are provisioned and running. To run the ingestion task, use this command
 
 ```
-python3 init.py ingest
+python3 main.py ingest
 ```
 
 
@@ -83,7 +83,7 @@ python3 init.py ingest
 Our script also allow you to rescale the analytics cluster once they are provisioned and running.
 
 ```
-python3 init.py modify [-n newNumWorkerNodes] [-t newAnalyticsInstanceType] 
+python3 main.py modify [-n newNumWorkerNodes] [-t newAnalyticsInstanceType] 
 
 -n                Number of worker nodes for the analytics cluster
                   Choices: Any integer numbers (default: 4)
@@ -96,7 +96,7 @@ python3 init.py modify [-n newNumWorkerNodes] [-t newAnalyticsInstanceType]
 
 Example usage: To rescale an existing cluster to 3 worker nodes with a t2.medium instance type, use this command
 ```
-python3 init.py modify -n 3 -t t2.medium
+python3 main.py modify -n 3 -t t2.medium
 ```
 
 After rescaling, we have opted not to make a copy of the ingested data and redistribute to the new clusters. The user can opt to run an ingest command to populate the cluster. This is to ensure that the latest data from the databases are ingested whenever rescaling takes place.
@@ -105,7 +105,7 @@ After rescaling, we have opted not to make a copy of the ingested data and redis
 You can use the script to run the analytics task on the analytics cluster once they are provisioned and running. Please see the documentation in [bringup](#bringing-up-all-ec2-instances)
 
 ```
-python3 init.py analytics [-a analyticsTask] [-v vocabSize] 
+python3 main.py analytics [-a analyticsTask] [-v vocabSize] 
 
 -a                Type of analytics scripts to run
                   Choice: "tfidf", "pearson", "both" (default: "both")
@@ -118,7 +118,7 @@ python3 init.py analytics [-a analyticsTask] [-v vocabSize]
 
 Example usage: To run both analytics task on the cluster with vocab size of 20, use this command
 ```
-python3 init.py analytics -a both 20
+python3 main.py analytics -a both 20
 ```
 
 The output of the analytics task is stored in both hdfs and the local storage of the master node.
@@ -139,7 +139,7 @@ ssh -i GP5_GRANDMASTERKEY.pem ec2-user@<master_node_IP>
 Our script also allow you to tear down the system of instances according to your preference.
 
 ```
-python3 init.py teardown [-m modeOfTearDown]
+python3 main.py teardown [-m modeOfTearDown]
 
 -m                Specify which systems to teardown
                   Choices: "analytics-only", "full" (default: "full")
